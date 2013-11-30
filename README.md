@@ -36,13 +36,13 @@ Well, there isn't one.
 Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
 
 ```bash
-$ istanbul cover bin/mini -- --formatter noop
+$ istanbul cover mini -- --formatter noop
 ```
 
 ## Installation
 
 ```bash
-npm install mini
+$ npm install mini
 ```
 
 ## Tests
