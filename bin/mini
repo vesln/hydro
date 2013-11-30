@@ -13,6 +13,7 @@ var path = require('path');
 
 var glob = require('glob');
 var program = require('commander');
+var load = require('refractory')(module, '../lib/mini/formatters', '{{HOME}}/.mini/formatters');
 
 /**
  * Internal dependencies.
@@ -24,7 +25,7 @@ program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
   .option('--formatters', 'display all formatters')
-  .option('--formatter', 'specify a formatter', 'list');
+  .option('--formatter <name>', 'specify a formatter', 'list');
 
 program.name = 'mini';
 
@@ -54,6 +55,19 @@ program.parse(process.argv);
 
 var pattern = program.args[0] || 'test/*.test.js';
 
+/**
+ * Formatter.
+ */
+
+var Formatter = null;
+
+try {
+  Formatter = load(program.formatter);
+} catch (err) {
+  console.error('Bad formatter: ' + program.formatter);
+  process.exit(1);
+}
+
 try {
   require(process.cwd() + '/test/mini.js');
 } catch(e) {}
@@ -65,6 +79,6 @@ glob(pattern, { sync: true }, function(err, files) {
   });
 });
 
-mini.run(function(failures) {
+mini.run(new Formatter, function(failures) {
   process.exit(failures.length ? 1 : 0);
 });
