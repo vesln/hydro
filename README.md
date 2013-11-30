@@ -8,6 +8,12 @@
 
 Teeny-weeny test runner for Node.js
 
+## Installation
+
+```bash
+$ npm install mini
+```
+
 ## Minimalistic example
 
 ```js
@@ -31,6 +37,8 @@ test('Great things in the future', function(done) {
 
 Well, there isn't one.
 
+## Running the tests
+
 ## Test coverage
 
 Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
@@ -39,11 +47,7 @@ Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
 $ istanbul cover mini -- --formatter noop
 ```
 
-## Installation
-
-```bash
-$ npm install mini
-```
+## Formatter output
 
 ## Tests
 
