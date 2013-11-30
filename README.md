@@ -6,7 +6,38 @@
 
 ## Synopsis
 
-## Description
+Teeny-weeny test runner for Node.js
+
+## Minimalistic example
+
+```js
+var test = require('mini');
+var assert = require('assert');
+
+// Sync
+
+test('Great things', function() {
+  assert(true === false);
+});
+
+// Async
+
+test('Great things in the future', function(done) {
+  done(assert(true === false));
+});
+```
+
+## More complex example
+
+Well, there isn't one.
+
+## Test coverage
+
+Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
+
+```bash
+$ istanbul cover bin/mini -- --formatter noop
+```
 
 ## Installation
 
