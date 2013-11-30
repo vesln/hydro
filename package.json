@@ -1,6 +1,6 @@
 {
   "name": "mini",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/mini.js",
   "homepage": "https://github.com/vesln/mini",
