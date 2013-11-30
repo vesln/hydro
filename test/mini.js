@@ -1,10 +1,15 @@
 /**
+ * Core dependencies.
+ */
+
+var join = require('path').join;
+
+/**
  * External dependencies.
  */
 
 var chai = require('chai');
 var nixt = require('nixt');
-var join = require('path').join;
 
 /**
  * Path to bin.
@@ -32,7 +37,5 @@ chai.Assertion.includeStack = true;
  */
 
 global.cli = function() {
-  return nixt({ newlines: false })
-    .cwd(bin)
-    .base('./mini ');
+  return nixt({ newlines: false }).cwd(bin).base('./mini ');
 };
