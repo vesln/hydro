@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 
 /**
+ * Core dependencies.
+ */
+
+var fs = require('fs');
+var path = require('path');
+
+/**
  * External dependencies.
  */
 
-var program = require('commander');
 var glob = require('glob');
+var program = require('commander');
 
 /**
  * Internal dependencies.
@@ -16,17 +23,40 @@ var mini = require('..');
 program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
-  .option('--formatters', 'display all formatters');
+  .option('--formatters', 'display all formatters')
+  .option('--formatter', 'specify a formatter', 'list');
 
 program.name = 'mini';
+
+program.on('formatters', function() {
+  var dir = fs.readdirSync(path.join(__dirname, '..', 'lib', 'mini', 'formatters'));
+  console.log();
+
+  dir.filter(function(file) {
+    return !/^\./.test(file);
+  }).forEach(function(file) {
+    console.log('    ' + file.replace(/\.js$/, ''));
+  });
+
+  console.log();
+  process.exit();
+});
+
+/**
+ * Parse the arguments.
+ */
+
+program.parse(process.argv);
+
+/**
+ * Glob pattern.
+ */
+
+var pattern = program.args[0] || 'test/*.test.js';
 
 try {
   require(process.cwd() + '/test/mini.js');
 } catch(e) {}
-
-program.parse(process.argv);
-
-var pattern = program.args[0] || 'test/*.test.js';
 
 glob(pattern, { sync: true }, function(err, files) {
   if (err) throw err;
@@ -36,5 +66,5 @@ glob(pattern, { sync: true }, function(err, files) {
 });
 
 mini.run(function(failures) {
-  process.exit(failures ? 1 : 0);
+  process.exit(failures.length ? 1 : 0);
 });
