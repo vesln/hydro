@@ -14,8 +14,9 @@ var glob = require('glob');
 var mini = require('..');
 
 program
-.usage('<path-to-tests>')
-.version(require('../package.json', 'utf8').version)
+  .usage('<path-to-tests>')
+  .version(require('../package.json', 'utf8').version)
+  .option('--formatters', 'display all formatters');
 
 program.name = 'mini';
 
@@ -34,4 +35,6 @@ glob(pattern, { sync: true }, function(err, files) {
   });
 });
 
-mini.run();
+mini.run(function(failures) {
+  process.exit(failures ? 1 : 0);
+});

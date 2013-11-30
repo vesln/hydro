@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "chai": "~1.8.1",
-    "jshint": "~2.3.0"
+    "jshint": "~2.3.0",
+    "nixt": "0.0.4"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",

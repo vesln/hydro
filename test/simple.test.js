@@ -12,14 +12,14 @@ test('Async', function(done) {
   process.nextTick(done);
 });
 
-test('Async fail', function(done) {
-  process.nextTick(function() {
-    done(new Error('bad'));
-  });
-});
-
 test('Async throws', function(done) {
   process.nextTick(function() {
     throw new Error('bad');
+  });
+});
+
+test('Async fail', function(done) {
+  process.nextTick(function() {
+    done(new Error('bad'));
   });
 });
