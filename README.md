@@ -4,9 +4,21 @@
 
 # mini
 
-## Synopsis
-
 Teeny-weeny test runner for Node.js
+
+## Usage
+
+```
+  Usage: mini <path-to-tests> (default test/*.test.js)
+
+  Options:
+
+    -h, --help          output usage information
+    -V, --version       output the version number
+    --formatters        display all formatters
+    --formatter <name>  specify a formatter
+    --setup <path>      specify a bootstrap file
+```
 
 ## Installation
 
@@ -37,7 +49,26 @@ test('Great things in the future', function(done) {
 
 Well, there isn't one.
 
-## Running the tests
+## Run the tests
+
+By default, mini will search for test/*.test.js:
+
+```bash
+$ mini
+```
+
+However, you can provide a custom glob:
+
+```bash
+$ mini spec/*.js
+```
+
+Mini can load a bootstrap file before requiring the tests files. The default
+location is `test/mini.js`, but you can change it to whatever you wish:
+
+```bash
+$ mini test/*.spec.js --setup test/bootstrap.js
+```
 
 ## Test coverage
 
@@ -49,13 +80,7 @@ $ istanbul cover mini -- --formatter noop
 
 ## Formatter output
 
-## Tests
-
-### Running the tests
-
-```bash
-$ npm test
-```
+## Alternative projects
 
 ## License
 
