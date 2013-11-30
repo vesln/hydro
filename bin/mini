@@ -85,11 +85,10 @@ try {
  * Find and run.
  */
 
-glob(pattern, { sync: true }, function(err, files) {
-  if (err) throw err;
-  files.forEach(function(file) {
-    require(path.resolve(file));
-  });
+var files = glob(pattern, { sync: true });
+
+files.forEach(function(file) {
+  require(path.resolve(file));
 });
 
 mini.run(new Formatter, function(tests) {
