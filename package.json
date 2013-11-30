@@ -23,6 +23,7 @@
   "dependencies": {
     "commander": "~2.1.0",
     "glob": "~3.2.7",
-    "ms": "~0.6.1"
+    "ms": "~0.6.1",
+    "callsite": "~1.0.0"
   }
 }
