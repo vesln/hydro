@@ -5,6 +5,7 @@
  */
 
 var program = require('commander');
+var glob = require('glob');
 
 /**
  * Internal dependencies.
@@ -13,14 +14,25 @@ var program = require('commander');
 var mini = require('..');
 
 program
-  .usage('<path-to-tests>')
-  .version(require('../package.json', 'utf8').version)
+.usage('<path-to-tests>')
+.version(require('../package.json', 'utf8').version)
 
 program.name = 'mini';
 
+try {
+  require(process.cwd() + '/test/setup.js');
+} catch(e) {
+}
+
 program.parse(process.argv);
 
-if (!program.args.length) {
-  program.help();
-  process.exit(1);
-}
+var pattern = program.args[0] || 'test/*.test.js';
+
+glob(pattern, { sync: true }, function(err, files) {
+  if (err) throw err;
+  files.forEach(function(file) {
+    require(process.cwd() + '/' + file);
+  });
+});
+
+mini.run();

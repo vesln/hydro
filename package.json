@@ -6,9 +6,7 @@
   "homepage": "https://github.com/vesln/mini",
   "scripts": {
     "test": "bin/mini",
-    "pretest": "jshint .",
-    "coverage": "istanbul cover bin/mini",
-    "coveralls": "istanbul cover bin/mini --report lcovonly && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "pretest": "jshint ."
   },
   "repository": {
     "type": "git",
@@ -16,13 +14,12 @@
   },
   "devDependencies": {
     "chai": "~1.8.1",
-    "jshint": "~2.3.0",
-    "coveralls": "~2.3.0",
-    "istanbul": "~0.1.44"
+    "jshint": "~2.3.0"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
   "dependencies": {
-    "commander": "~2.1.0"
+    "commander": "~2.1.0",
+    "glob": "~3.2.7"
   }
 }
