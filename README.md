@@ -63,14 +63,14 @@ However, you can provide a custom pattern:
 $ mini spec/*.js
 ```
 
-Mini can load a bootstrap file before requiring the tests files. The default
+Mini can load a bootstrap file before requiring the tests. The default
 location is `test/mini.js`, but you can change it to whatever you wish:
 
 ```bash
 $ mini test/*.spec.js --setup test/bootstrap.js
 ```
 
-## Test coverage
+### Test coverage
 
 Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
 
@@ -78,13 +78,27 @@ Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
 $ istanbul cover mini -- --formatter noop
 ```
 
-## Formatter output
+### Formatter output
 
 ![mini](http://f.cl.ly/items/3H0J403D0I07303a340q/Screen%20Shot%202013-11-30%20at%2010.44.44%20PM.png)
 
-## Custom formatters
+### Custom formatters
 
-## Alternative projects
+### Acknowledgements
+
+Mini is heavily influenced by [minitest](https://github.com/seattlerb/minitest)
+and [Mocha](https://github.com/visionmedia/mocha).
+
+### Alternative projects
+
+Mini is awesome, however it's really minimalistic and I plan to keep it that way. Sometimes you might need more
+than what it can offer, so here is a list of projects that you might find useful:
+
+- [Mocha](https://github.com/visionmedia/mocha)
+- [Jasmine](https://github.com/mhevery/jasmine-node)
+- [node-tap](https://github.com/isaacs/node-tap)
+- [Nodeunit](https://github.com/caolan/nodeunit)
+- [Vows](https://github.com/cloudhead/vows)
 
 ## License
 
