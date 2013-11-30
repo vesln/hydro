@@ -25,9 +25,14 @@ program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
   .option('--formatters', 'display all formatters')
-  .option('--formatter <name>', 'specify a formatter', 'list');
+  .option('--formatter <name>', 'specify a formatter', 'list')
+  .option('--setup <path>', 'specify a bootstrap file', 'test/mini.js');
 
 program.name = 'mini';
+
+/**
+ * List all formatters.
+ */
 
 program.on('formatters', function() {
   var dir = fs.readdirSync(path.join(__dirname, '..', 'lib', 'mini', 'formatters'));
@@ -56,7 +61,7 @@ program.parse(process.argv);
 var pattern = program.args[0] || 'test/*.test.js';
 
 /**
- * Formatter.
+ * Load the formatter.
  */
 
 var Formatter = null;
@@ -68,17 +73,28 @@ try {
   process.exit(1);
 }
 
+/**
+ * Try to load the bootstrap file.
+ */
+
 try {
-  require(process.cwd() + '/test/mini.js');
+  require(path.resolve(program.setup));
 } catch(e) {}
+
+/**
+ * Find and run.
+ */
 
 glob(pattern, { sync: true }, function(err, files) {
   if (err) throw err;
   files.forEach(function(file) {
-    require(process.cwd() + '/' + file);
+    require(path.resolve(file));
   });
 });
 
-mini.run(new Formatter, function(failures) {
-  process.exit(failures.length ? 1 : 0);
+mini.run(new Formatter, function(tests) {
+  tests.forEach(function(test) {
+    if (test.failed) process.exit(1);
+  });
+  process.exit(0);
 });
