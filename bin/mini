@@ -20,9 +20,8 @@ program
 program.name = 'mini';
 
 try {
-  require(process.cwd() + '/test/setup.js');
-} catch(e) {
-}
+  require(process.cwd() + '/test/mini.js');
+} catch(e) {}
 
 program.parse(process.argv);
 
