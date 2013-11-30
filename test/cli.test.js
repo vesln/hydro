@@ -16,6 +16,10 @@ test('--help', function(done) {
 
 test('--formatters', function(done) {
   cli()
+  .expect(function(res) {
+    var formatters = res.stdout.trim().replace(/ +(?= )/g, '').split(' ');
+    formatters.should.have.members(['noop', 'list']);
+  })
   .stdout(/list\s*noop/)
   .run('--formatters')
   .end(done);
