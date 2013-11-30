@@ -57,7 +57,7 @@ By default, mini will search for test/*.test.js:
 $ mini
 ```
 
-However, you can provide a custom glob:
+However, you can provide a custom pattern:
 
 ```bash
 $ mini spec/*.js
@@ -79,6 +79,10 @@ $ istanbul cover mini -- --formatter noop
 ```
 
 ## Formatter output
+
+![mini](http://f.cl.ly/items/3H0J403D0I07303a340q/Screen%20Shot%202013-11-30%20at%2010.44.44%20PM.png)
+
+## Custom formatters
 
 ## Alternative projects
 
