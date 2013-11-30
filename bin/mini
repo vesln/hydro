@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+/**
+ * External dependencies.
+ */
+
+var program = require('commander');
+
+/**
+ * Internal dependencies.
+ */
+
+var mini = require('..');
+
+program
+  .usage('<path-to-tests>')
+  .version(require('../package.json', 'utf8').version)
+
+program.name = 'mini';
+
+program.parse(process.argv);
+
+if (!program.args.length) {
+  program.help();
+  process.exit(1);
+}

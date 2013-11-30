@@ -1,0 +1,28 @@
+{
+  "name": "mini",
+  "version": "0.0.0",
+  "description": "Teeny-weeny test runner for Node.js",
+  "main": "./lib/mini.js",
+  "homepage": "https://github.com/vesln/mini",
+  "scripts": {
+    "test": "bin/mini",
+    "pretest": "jshint .",
+    "coverage": "istanbul cover bin/mini",
+    "coveralls": "istanbul cover bin/mini --report lcovonly && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vesln/mini"
+  },
+  "devDependencies": {
+    "chai": "~1.8.1",
+    "jshint": "~2.3.0",
+    "coveralls": "~2.3.0",
+    "istanbul": "~0.1.44"
+  },
+  "author": "Veselin Todorov <hi@vesln.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "~2.1.0"
+  }
+}
