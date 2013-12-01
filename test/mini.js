@@ -39,3 +39,9 @@ chai.Assertion.includeStack = true;
 global.cli = function() {
   return nixt({ newlines: false }).cwd(bin).base('./mini ');
 };
+
+/**
+ * Expose `mini`.
+ */
+
+global.test = require('..');

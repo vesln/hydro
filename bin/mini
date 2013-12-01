@@ -91,9 +91,6 @@ files.forEach(function(file) {
   require(path.resolve(file));
 });
 
-mini.run(new Formatter, function(tests) {
-  tests.forEach(function(test) {
-    if (test.failed) process.exit(1);
-  });
-  process.exit(0);
+mini.run(new Formatter, function(result) {
+  process.exit(result.failed.length);
 });

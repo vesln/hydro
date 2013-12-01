@@ -1,5 +1,3 @@
-var test = require('..');
-
 test('--version', function(done) {
   cli()
   .stdout(require('../package.json').version)

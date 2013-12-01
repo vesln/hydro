@@ -1,4 +1,3 @@
-var test = require('..');
 var fixtures = require('path').join(__dirname, 'fixtures');
 
 test('Passing tests', function(done) {
