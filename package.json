@@ -1,6 +1,7 @@
 {
   "name": "mini",
   "version": "0.1.0",
+  "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/mini.js",
   "homepage": "https://github.com/vesln/mini",
@@ -11,6 +12,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/vesln/mini"
+  },
+  "bin": {
+    "mini": "./bin/mini"
   },
   "devDependencies": {
     "chai": "~1.8.1",
