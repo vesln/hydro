@@ -24,27 +24,8 @@ var mini = require('..');
 program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
-  .option('--formatters', 'display all formatters')
   .option('--formatter <name>', 'specify a formatter', 'list')
   .option('--setup <path>', 'specify a bootstrap file', 'test/mini.js');
-
-/**
- * List all formatters.
- */
-
-program.on('formatters', function() {
-  var dir = fs.readdirSync(path.join(__dirname, '..', 'lib', 'mini', 'formatters'));
-  console.log();
-
-  dir.filter(function(file) {
-    return !/^\./.test(file);
-  }).forEach(function(file) {
-    console.log('    ' + file.replace(/\.js$/, ''));
-  });
-
-  console.log();
-  process.exit();
-});
 
 /**
  * Parse the arguments.
