@@ -68,6 +68,7 @@ try {
   Formatter = load(program.formatter);
 } catch (err) {
   console.error('Bad formatter: ' + program.formatter);
+  console.error(err.stack);
   process.exit(1);
 }
 
