@@ -20,7 +20,6 @@
     "chai": "~1.8.1",
     "jshint": "~2.3.0",
     "nixt": "0.0.4",
-    "refractory": "0.0.3"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
@@ -28,6 +27,7 @@
     "commander": "~2.1.0",
     "glob": "~3.2.7",
     "ms": "~0.6.1",
+    "refractory": "0.0.3",
     "callsite": "~1.0.0"
   }
 }
