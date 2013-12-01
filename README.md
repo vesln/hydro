@@ -78,9 +78,11 @@ Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
 $ istanbul cover mini -- --formatter noop
 ```
 
-### Formatter output
+### Formatters
 
-![mini](http://f.cl.ly/items/3H0J403D0I07303a340q/Screen%20Shot%202013-11-30%20at%2010.44.44%20PM.png)
+#### List - core
+
+![mini](http://f.cl.ly/items/1O1Z2o3H180p353u413k/mini.png)
 
 ### Custom formatters
 
