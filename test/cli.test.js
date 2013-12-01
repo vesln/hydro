@@ -20,7 +20,6 @@ test('--formatters', function(done) {
     var formatters = res.stdout.trim().replace(/ +(?= )/g, '').split(' ');
     formatters.should.have.members(['noop', 'list']);
   })
-  .stdout(/list\s*noop/)
   .run('--formatters')
   .end(done);
 });
