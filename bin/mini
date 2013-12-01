@@ -24,7 +24,7 @@ var mini = require('..');
 program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
-  .option('--formatter <name>', 'specify a formatter', 'list')
+  .option('--formatter <name>', 'specify a formatter', 'simple')
   .option('--setup <path>', 'specify a bootstrap file', 'test/mini.js');
 
 /**
