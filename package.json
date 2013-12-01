@@ -1,6 +1,6 @@
 {
   "name": "mini",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/mini.js",
@@ -19,7 +19,7 @@
   "devDependencies": {
     "chai": "~1.8.1",
     "jshint": "~2.3.0",
-    "nixt": "0.0.4",
+    "nixt": "0.0.4"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
