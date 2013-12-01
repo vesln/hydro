@@ -28,8 +28,6 @@ program
   .option('--formatter <name>', 'specify a formatter', 'list')
   .option('--setup <path>', 'specify a bootstrap file', 'test/mini.js');
 
-program.name = 'mini';
-
 /**
  * List all formatters.
  */
