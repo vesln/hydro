@@ -38,7 +38,7 @@ test('suites', function(done) {
 
     expected.forEach(function(expect, i) {
       tests[i].title.should.eq(expect.title);
-      tests[i].suite.title.should.eq(expect.suite);
+      tests[i].suite.should.eq(expect.suite);
     });
   })
   .end(done);

@@ -83,10 +83,11 @@ try {
 
 glob(pattern, { sync: true }).forEach(function(file) {
   var filepath = path.resolve(file);
-  hydro.suite(filepath);
+  hydro.resetSuite(filepath);
   require(filepath);
 });
 
 hydro.run(new Formatter, function(result) {
   process.exit(result.failed.length);
 });
+>>>>>>> Suite is now running its tests
