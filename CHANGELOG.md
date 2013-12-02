@@ -1,4 +1,17 @@
 
+0.5.0 / 2013-12-02
+==================
+
+ * Extract the base formatter and its related to a module
+ * Change the default glob pattern to test/*.js
+ * There is no need hydro-silent to be a core dependency
+ * Initial plugin architecture
+ * Introduce a test dispatcher
+ * Suite is now running its tests
+ * Move Formatter#displayGroup to the list formatter
+ * Introduce skipped tests
+ * bin: use v8-argv to allow harmony and other v8 args
+
 0.4.0 / 2013-12-02
 ==================
 
