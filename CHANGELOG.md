@@ -1,4 +1,13 @@
 
+0.3.0 / 2013-12-02
+==================
+
+  * mini -> hydro
+  * Improve the result format
+  * Export ms for formatters
+  * Introduce a new default formatter
+  * Remove --formatters
+
 0.2.0 / 2013-12-01
 ==================
 
