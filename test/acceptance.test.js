@@ -23,3 +23,23 @@ test('skipped tests', function(done) {
   .code(0)
   .end(done);
 });
+
+test('suites', function(done) {
+  cli()
+  .run(fixtures + '/suite.js --formatter test-json')
+  .expect(function(res) {
+    var tests = JSON.parse(res.stdout);
+    var expected = [
+      { title: 'a-test-1', suite: 'a' },
+      { title: 'a-test-2', suite: 'a' },
+      { title: 'b-test-1', suite: 'b' },
+      { title: 'b-test-2', suite: 'b' },
+    ];
+
+    expected.forEach(function(expect, i) {
+      tests[i].title.should.eq(expect.title);
+      tests[i].suite.title.should.eq(expect.suite);
+    });
+  })
+  .end(done);
+});

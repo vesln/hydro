@@ -27,17 +27,23 @@ var load = refractory(module, '../test/helpers');
 
 var hydro = require('..');
 
+/**
+ * Glob pattern.
+ */
+
+var pattern = null;
+
+/**
+ * Formatter.
+ */
+
+var Formatter = null;
+
 program
-  .usage('[debug] [files]')
+  .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
   .option('--formatter <name>', 'specify a formatter', 'hydro-simple')
   .option('--setup <path>', 'specify a bootstrap file', 'test/hydro.js');
-
-/**
- * Manually set program name
- */
-
-program.name = program._name = 'hydro';
 
 /**
  * Parse the arguments.
@@ -49,13 +55,11 @@ program.parse(process.argv);
  * Glob pattern.
  */
 
-var pattern = program.args[0] || 'test/*.test.js';
+pattern = program.args[0] || 'test/*.test.js';
 
 /**
  * Load the formatter.
  */
-
-var Formatter = null;
 
 try {
   Formatter = load(program.formatter);
@@ -77,10 +81,10 @@ try {
  * Find and run.
  */
 
-var files = glob(pattern, { sync: true });
-
-files.forEach(function(file) {
-  require(path.resolve(file));
+glob(pattern, { sync: true }).forEach(function(file) {
+  var filepath = path.resolve(file);
+  hydro.suite(filepath);
+  require(filepath);
 });
 
 hydro.run(new Formatter, function(result) {

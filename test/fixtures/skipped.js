@@ -1,5 +1,4 @@
 var test = require('../..');
-var assert = require('assert');
 
 test.skip('Sync', function() {
 });

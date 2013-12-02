@@ -1,6 +1,6 @@
 var Test = require('../lib/hydro/test');
 
-test('Async detection', function() {
+test('async detection', function() {
   var async = new Test('test', function(done){});
   var sync = new Test('test', function(){});
 
@@ -8,7 +8,7 @@ test('Async detection', function() {
   sync.async.should.be.false;
 });
 
-test('Failing a test', function() {
+test('failing a test', function() {
   var test = new Test('test', function(){});
   var err = new Error('test');
 
@@ -18,7 +18,7 @@ test('Failing a test', function() {
   test.error.should.eql(err);
 });
 
-test('Capturing execution time', function(done) {
+test('capturing execution time', function(done) {
   var test = new Test('test', function(done) {
     setTimeout(done, 10);
   });
@@ -30,7 +30,7 @@ test('Capturing execution time', function(done) {
   });
 });
 
-test('Running async test', function(done) {
+test('running async test', function(done) {
   var error = new Error('test');
   var test = new Test('test', function(next) {
     next(error);
@@ -43,7 +43,7 @@ test('Running async test', function(done) {
   });
 });
 
-test('Running sync test', function(done) {
+test('running sync test', function(done) {
   var error = new Error('test');
   var test = new Test('test', function(next) {
     throw error;
@@ -56,13 +56,13 @@ test('Running sync test', function(done) {
   });
 });
 
-test('Skipping a test', function() {
+test('skipping a test', function() {
   var test = new Test('test', function(){});
   test.skip();
   test.skipped.should.be.true;
 });
 
-test('Test without `fn`', function() {
+test('test without `fn`', function() {
   var test = new Test('test');
   test.skipped.should.be.true;
 });
