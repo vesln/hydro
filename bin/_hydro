@@ -9,15 +9,7 @@ var path = require('path');
  * External dependencies.
  */
 
-var glob = require('glob');
-var refractory = require('refractory');
 var argv = require('optimist').argv;
-
-/**
- * Formatter loader.
- */
-
-var load = refractory(module, '../test/helpers');
 
 /**
  * Internal dependencies.
@@ -26,24 +18,12 @@ var load = refractory(module, '../test/helpers');
 var hydro = require('..');
 
 /**
- * Glob pattern.
- */
-
-var pattern = argv._[0] || 'test/*.test.js';
-
-/**
- * Formatter.
- */
-
-var Formatter = null;
-
-/**
  * --help.
  */
 
 if (argv.help) {
   console.log();
-  console.log('    Usage: hydro <path-to-tests>');
+  console.log('    Usage: hydro [debug] [files]');
   console.log();
   process.exit(0);
 }
@@ -58,6 +38,12 @@ if (argv.version) {
 }
 
 /**
+ * Glob pattern.
+ */
+
+argv.pattern = argv._[0] || 'test/*.test.js';
+
+/**
  * Try to load the bootstrap file.
  */
 
@@ -66,28 +52,9 @@ try {
 } catch(e) {}
 
 /**
- * Load the formatter.
- */
-
-try {
-  Formatter = load(argv.formatter || 'hydro-simple');
-} catch (err) {
-  console.error('Bad formatter: ' + argv.formatter);
-  console.error(err.stack);
-  process.exit(1);
-}
-
-/**
  * Find and run.
  */
 
-glob(pattern, { sync: true }).forEach(function(file) {
-  var filepath = path.resolve(file);
-  hydro.resetSuite(filepath);
-  require(filepath);
-});
-
-hydro.run(new Formatter, function(result) {
+hydro.run(argv, function(result) {
   process.exit(result.failed.length);
 });
->>>>>>> Suite is now running its tests
