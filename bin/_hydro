@@ -41,7 +41,7 @@ if (argv.version) {
  * Glob pattern.
  */
 
-argv.pattern = argv._[0] || 'test/*.test.js';
+argv.pattern = argv._[0] || 'test/*.js';
 
 /**
  * Try to load the bootstrap file.
