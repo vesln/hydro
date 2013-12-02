@@ -1,20 +1,20 @@
 {
-  "name": "mini",
-  "version": "0.2.0",
+  "name": "hydro",
+  "version": "0.3.0",
   "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
-  "main": "./lib/mini.js",
-  "homepage": "https://github.com/vesln/mini",
+  "main": "./lib/hydro.js",
+  "homepage": "https://github.com/hydrojs/hydro",
   "scripts": {
-    "test": "bin/mini",
+    "test": "bin/hydro",
     "pretest": "jshint ."
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vesln/mini"
+    "url": "https://github.com/hydrojs/hydro"
   },
   "bin": {
-    "mini": "./bin/mini"
+    "hydro": "./bin/hydro"
   },
   "devDependencies": {
     "chai": "~1.8.1",

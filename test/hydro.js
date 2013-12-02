@@ -37,11 +37,11 @@ chai.Assertion.includeStack = true;
  */
 
 global.cli = function() {
-  return nixt({ newlines: false }).cwd(bin).base('./mini ');
+  return nixt({ newlines: false }).cwd(bin).base('./hydro ');
 };
 
 /**
- * Expose `mini`.
+ * Expose `hydro`.
  */
 
 global.test = require('..');

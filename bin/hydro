@@ -13,19 +13,19 @@ var path = require('path');
 
 var glob = require('glob');
 var program = require('commander');
-var load = require('refractory')(module, '../lib/mini/formatters', '{{HOME}}/.mini/formatters');
+var load = require('refractory')(module, '../lib/hydro/formatters', '{{HOME}}/.hydro/formatters');
 
 /**
  * Internal dependencies.
  */
 
-var mini = require('..');
+var hydro = require('..');
 
 program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
   .option('--formatter <name>', 'specify a formatter', 'simple')
-  .option('--setup <path>', 'specify a bootstrap file', 'test/mini.js');
+  .option('--setup <path>', 'specify a bootstrap file', 'test/hydro.js');
 
 /**
  * Parse the arguments.
@@ -71,6 +71,6 @@ files.forEach(function(file) {
   require(path.resolve(file));
 });
 
-mini.run(new Formatter, function(result) {
+hydro.run(new Formatter, function(result) {
   process.exit(result.failed.length);
 });

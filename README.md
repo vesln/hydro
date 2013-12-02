@@ -1,35 +1,22 @@
-[![NPM version](https://badge.fury.io/js/mini.png)](http://badge.fury.io/js/mini)
-[![Build Status](https://secure.travis-ci.org/vesln/mini.png)](http://travis-ci.org/vesln/mini)
-[![Code Climate](https://codeclimate.com/github/vesln/mini.png)](https://codeclimate.com/github/vesln/mini)
+[![NPM
+version](https://badge.fury.io/js/hydro.png)](http://badge.fury.io/js/hydro)
+[![Build Status](https://secure.travis-ci.org/hydrojs/hydro.png)](http://travis-ci.org/hydrojs/hydro)
+[![Code Climate](https://codeclimate.com/github/hydrojs/hydro.png)](https://codeclimate.com/github/hydrojs/hydro)
 
-# mini
+# hydro
 
 Teeny-weeny test runner for Node.js
-
-## Usage
-
-```
-  Usage: mini <path-to-tests> (default test/*.test.js)
-
-  Options:
-
-    -h, --help          output usage information
-    -V, --version       output the version number
-    --formatters        display all formatters
-    --formatter <name>  specify a formatter
-    --setup <path>      specify a bootstrap file
-```
 
 ## Installation
 
 ```bash
-$ npm install mini
+$ npm install hydro
 ```
 
-## Minimalistic example
+## Getting started
 
 ```js
-var test = require('mini');
+var test = require('hydro');
 var assert = require('assert');
 
 // Sync
@@ -45,29 +32,25 @@ test('Great things in the future', function(done) {
 });
 ```
 
-## More complex example
-
-Well, there isn't one.
-
 ## Run the tests
 
-By default, mini will search for test/*.test.js:
+By default, hydro will search for test/*.test.js:
 
 ```bash
-$ mini
+$ hydro
 ```
 
 However, you can provide a custom pattern:
 
 ```bash
-$ mini spec/*.js
+$ hydro spec/*.js
 ```
 
-Mini can load a bootstrap file before requiring the tests. The default
-location is `test/mini.js`, but you can change it to whatever you wish:
+hydro can load a bootstrap file before requiring the tests. The default
+location is `test/hydro.js`, but you can change it to whatever you wish:
 
 ```bash
-$ mini test/*.spec.js --setup test/bootstrap.js
+$ hydro test/*.spec.js --setup test/bootstrap.js
 ```
 
 ### Test coverage
@@ -75,26 +58,23 @@ $ mini test/*.spec.js --setup test/bootstrap.js
 Test coverage with [Istanbul](https://github.com/gotwarlost/istanbul):
 
 ```bash
-$ istanbul cover mini -- --formatter noop
+$ istanbul cover hydro -- --formatter noop
 ```
 
 ### Formatters
 
 #### List - core
 
-![mini](http://f.cl.ly/items/1O1Z2o3H180p353u413k/mini.png)
+![hydro](http://f.cl.ly/items/1O1Z2o3H180p353u413k/hydro.png)
 
 ### Custom formatters
 
 ### Acknowledgements
 
-Mini is heavily influenced by [minitest](https://github.com/seattlerb/minitest)
+hydro is heavily influenced by [minitest](https://github.com/seattlerb/minitest)
 and [Mocha](https://github.com/visionmedia/mocha).
 
 ### Alternative projects
-
-Mini is awesome, however it's really minimalistic and I plan to keep it that way. Sometimes you might need more
-than what it can offer, so here is a list of projects that you might find useful:
 
 - [Mocha](https://github.com/visionmedia/mocha)
 - [Jasmine](https://github.com/mhevery/jasmine-node)

@@ -1,5 +1,5 @@
-var Result = require('../lib/mini/result');
-var Test = require('../lib/mini/test');
+var Result = require('../lib/hydro/result');
+var Test = require('../lib/hydro/test');
 var noop = function(){};
 
 test('#failed', function() {

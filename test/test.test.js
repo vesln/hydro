@@ -1,4 +1,4 @@
-var Test = require('../lib/mini/test');
+var Test = require('../lib/hydro/test');
 
 test('Async detection', function() {
   var async = new Test('test', function(done){});
