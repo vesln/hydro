@@ -14,10 +14,10 @@ var Formatter = hydro.Formatter;
 var Json = Formatter.extend();
 
 /**
- * Setup.
+ * Before all.
  */
 
-Json.prototype.setup = function() {
+Json.prototype.beforeAll = function() {
   this.tests = [];
 };
 

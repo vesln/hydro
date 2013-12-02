@@ -31,7 +31,12 @@
     "super": "~0.2.1",
     "hydro-simple": "~1.0.0",
     "hydro-silent": "~1.0.0",
+<<<<<<< HEAD
     "v8-argv": "~0.1.0",
     "optimist": "~0.6.0"
+=======
+    "optimist": "~0.6.0",
+    "async-cancelable-events": "0.0.6"
+>>>>>>> Initial plugin architecture
   }
 }
