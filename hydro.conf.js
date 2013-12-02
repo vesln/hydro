@@ -15,7 +15,7 @@ var nixt = require('nixt');
  * Path to bin.
  */
 
-var bin = join(__dirname, '..', 'bin');
+var bin = join(__dirname, 'bin');
 
 /**
  * Register `should`.
@@ -44,4 +44,4 @@ global.cli = function() {
  * Expose `hydro`.
  */
 
-global.test = require('..');
+global.test = require('./');

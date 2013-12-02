@@ -48,7 +48,7 @@ argv.pattern = argv._[0] || 'test/*.js';
  */
 
 try {
-  require(path.resolve(argv.setup || 'test/hydro.js'));
+  require(path.resolve(argv.setup || './hydro.conf.js'));
 } catch(e) {}
 
 /**
