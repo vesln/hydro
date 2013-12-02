@@ -2,5 +2,6 @@
   "supernew": true,
   "sub": true,
   "laxbreak": true,
+  "laxcomma": true,
   "expr": true
 }

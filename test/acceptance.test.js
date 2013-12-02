@@ -30,10 +30,10 @@ test('suites', function(done) {
   .expect(function(res) {
     var tests = JSON.parse(res.stdout);
     var expected = [
-      { title: 'a-test-1', suite: 'a' },
-      { title: 'a-test-2', suite: 'a' },
-      { title: 'b-test-1', suite: 'b' },
-      { title: 'b-test-2', suite: 'b' },
+        { title: 'a-test-1', suite: 'a' }
+      , { title: 'a-test-2', suite: 'a' }
+      , { title: 'b-test-1', suite: 'b' }
+      , { title: 'b-test-2', suite: 'b' }
     ];
 
     expected.forEach(function(expect, i) {
