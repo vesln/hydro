@@ -14,7 +14,8 @@
     "url": "https://github.com/hydrojs/hydro"
   },
   "bin": {
-    "hydro": "./bin/hydro"
+    "hydro": "./bin/hydro",
+    "_hydro": "./bin/_hydro"
   },
   "devDependencies": {
     "chai": "~1.8.1",
