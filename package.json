@@ -30,6 +30,7 @@
     "refractory": "0.0.3",
     "callsite": "~1.0.0",
     "super": "~0.2.1",
-    "hydro-simple": "~1.0.0"
+    "hydro-simple": "~1.0.0",
+    "hydro-silent": "~1.0.0"
   }
 }
