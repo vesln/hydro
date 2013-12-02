@@ -5,6 +5,7 @@ test('Passing tests', function(done) {
   .stdout(/3 passed/)
   .stdout(/0 failed/)
   .run(fixtures + '/passing.js')
+  .code(0)
   .end(done);
 });
 
@@ -13,5 +14,6 @@ test('Failing tests', function(done) {
   .stdout(/0 passed/)
   .stdout(/5 failed/)
   .run(fixtures + '/failing.js')
+  .code(5)
   .end(done);
 });
