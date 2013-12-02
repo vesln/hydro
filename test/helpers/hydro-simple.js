@@ -1,9 +1,9 @@
 /**
- * Internal dependencies.
+ * External dependencies.
  */
 
-var color = require('../color');
-var Formatter = require('../formatter');
+var hydro = require('../..');
+var Formatter = hydro.Formatter;
 
 /**
  * Simple formatter.

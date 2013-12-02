@@ -13,7 +13,13 @@ var path = require('path');
 
 var glob = require('glob');
 var program = require('commander');
-var load = require('refractory')(module, '../lib/hydro/formatters', '{{HOME}}/.hydro/formatters');
+var refractory = require('refractory');
+
+/**
+ * Formatter loader.
+ */
+
+var load = refractory(module, '../test/helpers');
 
 /**
  * Internal dependencies.
@@ -24,7 +30,7 @@ var hydro = require('..');
 program
   .usage('<path-to-tests>')
   .version(require('../package.json', 'utf8').version)
-  .option('--formatter <name>', 'specify a formatter', 'simple')
+  .option('--formatter <name>', 'specify a formatter', 'hydro-simple')
   .option('--setup <path>', 'specify a bootstrap file', 'test/hydro.js');
 
 /**
