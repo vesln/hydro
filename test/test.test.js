@@ -55,3 +55,14 @@ test('Running sync test', function(done) {
     done();
   });
 });
+
+test('Skipping a test', function() {
+  var test = new Test('test', function(){});
+  test.skip();
+  test.skipped.should.be.true;
+});
+
+test('Test without `fn`', function() {
+  var test = new Test('test');
+  test.skipped.should.be.true;
+});
