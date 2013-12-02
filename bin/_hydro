@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * Core dependencies.
  */
@@ -12,8 +10,8 @@ var path = require('path');
  */
 
 var glob = require('glob');
-var program = require('commander');
 var refractory = require('refractory');
+var argv = require('optimist').argv;
 
 /**
  * Formatter loader.
@@ -31,7 +29,7 @@ var hydro = require('..');
  * Glob pattern.
  */
 
-var pattern = null;
+var pattern = argv._[0] || 'test/*.test.js';
 
 /**
  * Formatter.
@@ -39,34 +37,24 @@ var pattern = null;
 
 var Formatter = null;
 
-program
-  .usage('<path-to-tests>')
-  .version(require('../package.json', 'utf8').version)
-  .option('--formatter <name>', 'specify a formatter', 'hydro-simple')
-  .option('--setup <path>', 'specify a bootstrap file', 'test/hydro.js');
-
 /**
- * Parse the arguments.
+ * --help.
  */
 
-program.parse(process.argv);
+if (argv.help) {
+  console.log();
+  console.log('    Usage: hydro <path-to-tests>');
+  console.log();
+  process.exit(0);
+}
 
 /**
- * Glob pattern.
+ * --version.
  */
 
-pattern = program.args[0] || 'test/*.test.js';
-
-/**
- * Load the formatter.
- */
-
-try {
-  Formatter = load(program.formatter);
-} catch (err) {
-  console.error('Bad formatter: ' + program.formatter);
-  console.error(err.stack);
-  process.exit(1);
+if (argv.version) {
+  console.log(require('../package.json').version);
+  process.exit(0);
 }
 
 /**
@@ -74,8 +62,20 @@ try {
  */
 
 try {
-  require(path.resolve(program.setup));
+  require(path.resolve(argv.setup || 'test/hydro.js'));
 } catch(e) {}
+
+/**
+ * Load the formatter.
+ */
+
+try {
+  Formatter = load(argv.formatter || 'hydro-simple');
+} catch (err) {
+  console.error('Bad formatter: ' + argv.formatter);
+  console.error(err.stack);
+  process.exit(1);
+}
 
 /**
  * Find and run.
