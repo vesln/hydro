@@ -25,10 +25,10 @@
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
   "dependencies": {
+    "hydro-simple": "~1.0.0",
     "glob": "~3.2.7",
     "refractory": "0.0.3",
     "callsite": "~1.0.0",
-    "hydro-simple": "~1.0.0",
     "v8-argv": "~0.1.0",
     "optimist": "~0.6.0",
     "async-cancelable-events": "0.0.6"
