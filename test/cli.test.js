@@ -7,7 +7,7 @@ test('--version', function(done) {
 
 test('--help', function(done) {
   cli()
-  .stdout(/Usage: hydro <path-to-tests>/)
+  .stdout(/Usage: hydro \[debug\] \[files\]/)
   .run('--help')
   .end(done);
 });
