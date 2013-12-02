@@ -19,16 +19,15 @@
   "devDependencies": {
     "chai": "~1.8.1",
     "jshint": "~2.3.0",
-    "nixt": "0.0.4"
+    "nixt": "0.0.4",
+    "hydro-formatter": "~1.0.0"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
   "dependencies": {
     "glob": "~3.2.7",
-    "ms": "~0.6.1",
     "refractory": "0.0.3",
     "callsite": "~1.0.0",
-    "super": "~0.2.1",
     "hydro-simple": "~1.0.0",
     "v8-argv": "~0.1.0",
     "optimist": "~0.6.0",
