@@ -2,8 +2,7 @@ var fixtures = require('path').join(__dirname, 'fixtures');
 
 test('Passing tests', function(done) {
   cli()
-  .stdout(/3 passed/)
-  .stdout(/0 failed/)
+  .stdout(/3 tests, 0 failures/)
   .run(fixtures + '/passing.js')
   .code(0)
   .end(done);
@@ -11,8 +10,7 @@ test('Passing tests', function(done) {
 
 test('Failing tests', function(done) {
   cli()
-  .stdout(/0 passed/)
-  .stdout(/5 failed/)
+  .stdout(/5 failures/)
   .run(fixtures + '/failing.js')
   .code(5)
   .end(done);

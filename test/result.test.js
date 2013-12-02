@@ -29,3 +29,14 @@ test('#tests', function() {
   result.tests.length.should.eq(2);
   result.tests.should.eql(tests);
 });
+
+test('#time', function() {
+  var a = new Test('foo', noop);
+  var b = new Test('foo', noop);
+  var tests = [a, b];
+
+  a.time = 10;
+  b.time = 11;
+
+  new Result(tests).time.should.eq(21);
+});
