@@ -24,7 +24,6 @@ test('capturing execution time', function(done) {
   });
 
   test.run(function() {
-    test.endTime();
     test.time.should.be.greaterThan(9);
     done();
   });
