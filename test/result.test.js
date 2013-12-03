@@ -40,3 +40,19 @@ test('#time', function() {
 
   new Result(tests).time.should.eq(21);
 });
+
+test('#merge', function() {
+  var passed = new Test('test', noop);
+  passed.time = 10;
+
+  var failed = new Test('test', noop);
+  failed.time = 10;
+  failed.fail();
+
+  var result = new Result([ passed ]).merge(new Result([ failed ]));
+
+  result.time.should.eq(20);
+  result.tests.should.eql([ passed, failed ]);
+  result.failed.should.eql([ failed ]);
+  result.passed.should.eql([ passed ]);
+});
