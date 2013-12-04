@@ -12,6 +12,7 @@ var path = require('path');
  */
 
 var argv = require('optimist').argv;
+var glob = require('glob');
 
 /**
  * Internal dependencies.
@@ -40,12 +41,6 @@ if (argv.version) {
 }
 
 /**
- * Glob pattern.
- */
-
-argv.pattern = argv._[0] || 'test/*.js';
-
-/**
  * Formatter
  */
 
@@ -59,6 +54,23 @@ try {
   var setup = require(path.resolve(argv.setup || './hydro.conf.js'));
   if ('function' === typeof setup) setup(hydro);
 } catch(e) {}
+
+/**
+ * Test files.
+ */
+
+argv.tests = [];
+
+if (argv._.length === 0) {
+  argv._.push('test/*.js');
+}
+
+argv._.forEach(function(pattern) {
+  glob(pattern, { sync: true }).forEach(function(file) {
+    if (fs.statSync(file).isDirectory()) return;
+    argv.tests.push(path.resolve(file));
+  });
+});
 
 /**
  * Find and run.
