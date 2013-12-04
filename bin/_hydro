@@ -17,7 +17,7 @@ var argv = require('optimist').argv;
  * Internal dependencies.
  */
 
-var hydro = require('..');
+var hydro = require('..').dispatcher;
 
 /**
  * --help.
@@ -46,6 +46,12 @@ if (argv.version) {
 argv.pattern = argv._[0] || 'test/*.js';
 
 /**
+ * Formatter
+ */
+
+argv.formatter = argv.formatter || 'hydro-simple';
+
+/**
  * Try to load the bootstrap file.
  */
 
@@ -58,6 +64,10 @@ try {
  * Find and run.
  */
 
-hydro.run(argv, function(result) {
-  process.exit(result.failed.length);
+hydro.configure(argv, function() {
+  hydro.loadFormatter();
+  hydro.loadTests();
+  hydro.run(function(result) {
+    process.exit(result.failed.length);
+  });
 });
