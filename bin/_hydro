@@ -50,10 +50,12 @@ argv.formatter = argv.formatter || 'hydro-simple';
  * Try to load the bootstrap file.
  */
 
-try {
-  var setup = require(path.resolve(argv.setup || './hydro.conf.js'));
+var bootstrap = path.resolve(argv.setup || 'hydro.conf.js');
+
+if (fs.existsSync(bootstrap)) {
+  var setup = require(bootstrap);
   if ('function' === typeof setup) setup(hydro);
-} catch(e) {}
+}
 
 /**
  * Test files.
