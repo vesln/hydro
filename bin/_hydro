@@ -41,6 +41,12 @@ if (argv.version) {
 }
 
 /**
+ * Set `NODE_ENV` to test if none
+ */
+
+process.NODE_ENV = process.NODE_ENV || 'test';
+
+/**
  * Formatter
  */
 
