@@ -1,5 +1,11 @@
 var Test = require('../lib/hydro/test');
 
+var events = {
+  emit: function(evt, param, fn) {
+    fn();
+  }
+};
+
 test('async detection', function() {
   var async = new Test('test', function(done){});
   var sync = new Test('test', function(){});
@@ -23,7 +29,7 @@ test('capturing execution time', function(done) {
     setTimeout(done, 10);
   });
 
-  test.run(function() {
+  test.run(events, function() {
     test.time.should.be.greaterThan(9);
     done();
   });
@@ -35,8 +41,7 @@ test('running async test', function(done) {
     next(error);
   });
 
-  test.run(function(err) {
-    err.should.eql(error);
+  test.run(events, function() {
     test.failed.should.be.true;
     done();
   });
@@ -48,8 +53,7 @@ test('running sync test', function(done) {
     throw error;
   });
 
-  test.run(function(err) {
-    err.should.eql(error);
+  test.run(events, function() {
     test.failed.should.be.true;
     done();
   });
