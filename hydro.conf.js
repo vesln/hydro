@@ -40,6 +40,13 @@ global.cli = function() {
   return nixt({ newlines: false }).cwd(bin).base('./hydro ');
 };
 
+/**
+ * Setup `hydro`.
+ *
+ * @param {Hydro} hydro
+ * @api public
+ */
+
 module.exports = function(hydro) {
   global.test = function() {
     hydro.addTest.apply(hydro, arguments);
