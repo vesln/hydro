@@ -1,6 +1,6 @@
-test
-examples
-coverage
+/test/
+/examples/
+/coverage/
 *.sock
 .jshintignore
 .jshintrc
