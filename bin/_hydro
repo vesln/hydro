@@ -20,9 +20,8 @@ var glob = require('glob');
 
 var hydro = require('..')();
 
-/**
- * --help.
- */
+
+// --help
 
 if (argv.help) {
   console.log();
@@ -31,9 +30,7 @@ if (argv.help) {
   process.exit(0);
 }
 
-/**
- * --version.
- */
+// -version
 
 if (argv.version) {
   console.log(require('../package.json').version);

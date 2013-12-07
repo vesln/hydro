@@ -1,5 +1,5 @@
+var Hydro = require('..');
 var fixtures = require('path').join(__dirname, 'fixtures');
-var Runner = require('../lib/hydro/runner');
 
 test('passing tests', function(done) {
   run('passing.js', function(res) {
@@ -23,23 +23,15 @@ test('skipped tests', function(done) {
 });
 
 function run(test, fn) {
-  var opts = { tests: [fixtures + '/' + test] };
-  var runner = new Runner;
+  var options = { tests: [fixtures + '/' + test] };
+  var hydro = new Hydro;
 
   global.t = function() {
-    return runner.test.apply(runner, arguments);
+    return hydro.addTest.apply(hydro, arguments);
   };
 
-  global.s = function() {
-    return runner.test.apply(runner, arguments);
-  };
-
-  runner.configure(opts, function() {
-    runner.loadTests();
-    runner.run(function() {
-      global.t = null;
-      global.s = null;
-      fn.apply(null, arguments);
-    });
+  hydro.run(options, function(res) {
+    global.t = null;
+    fn(res);
   });
 }
