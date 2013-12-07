@@ -18,7 +18,7 @@ var glob = require('glob');
  * Internal dependencies.
  */
 
-var hydro = require('..').dispatcher;
+var hydro = require('..').runner;
 
 /**
  * --help.

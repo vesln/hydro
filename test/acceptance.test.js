@@ -1,5 +1,5 @@
 var fixtures = require('path').join(__dirname, 'fixtures');
-var Dispatcher = require('../lib/hydro/dispatcher');
+var Runner = require('../lib/hydro/runner');
 
 test('passing tests', function(done) {
   run('passing.js', function(res) {
@@ -24,19 +24,19 @@ test('skipped tests', function(done) {
 
 function run(test, fn) {
   var opts = { tests: [fixtures + '/' + test] };
-  var dispatcher = new Dispatcher;
+  var runner = new Runner;
 
   global.t = function() {
-    return dispatcher.test.apply(dispatcher, arguments);
+    return runner.test.apply(runner, arguments);
   };
 
   global.s = function() {
-    return dispatcher.test.apply(dispatcher, arguments);
+    return runner.test.apply(runner, arguments);
   };
 
-  dispatcher.configure(opts, function() {
-    dispatcher.loadTests();
-    dispatcher.run(function() {
+  runner.configure(opts, function() {
+    runner.loadTests();
+    runner.run(function() {
       global.t = null;
       global.s = null;
       fn.apply(null, arguments);
