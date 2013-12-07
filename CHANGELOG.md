@@ -1,4 +1,17 @@
 
+0.6.0 / 2013-12-07
+==================
+
+  * Add support for nested suites
+  * Initial plugin support
+  * Enable creation of DSL methods
+  * Always require a test suite
+  * Run async tests with domains
+  * Move the callsite functionality to a plugin
+  * Set `NODE_ENV` to test if none
+  * Handle errors in the bootstrap file
+  * Initial tag support
+
 0.5.1 / 2013-12-03
 ==================
 
