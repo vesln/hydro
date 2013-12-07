@@ -1,4 +1,13 @@
 
+0.6.1 / 2013-12-07
+==================
+
+  * Introduce conditional test skipping
+  * Tests run in their own context
+  * Make the async test timeout configurable
+  * tags -> meta
+  * Add pre/post require test hooks
+
 0.6.0 / 2013-12-07
 ==================
 
