@@ -11,7 +11,7 @@ var path = require('path');
  * External dependencies.
  */
 
-var argv = require('optimist').argv;
+var options = require('optimist').argv;
 var glob = require('glob');
 
 /**
@@ -23,7 +23,7 @@ var hydro = require('..')();
 
 // --help
 
-if (argv.help) {
+if (options.help) {
   console.log();
   console.log('    Usage: hydro [debug] [files]');
   console.log();
@@ -32,7 +32,7 @@ if (argv.help) {
 
 // -version
 
-if (argv.version) {
+if (options.version) {
   console.log(require('../package.json').version);
   process.exit(0);
 }
@@ -47,7 +47,7 @@ process.NODE_ENV = process.NODE_ENV || 'test';
  * Try to load the bootstrap file.
  */
 
-var bootstrap = path.resolve(argv.setup || 'hydro.conf.js');
+var bootstrap = path.resolve(options.setup || 'hydro.conf.js');
 
 if (fs.existsSync(bootstrap)) {
   var setup = require(bootstrap);
@@ -58,16 +58,18 @@ if (fs.existsSync(bootstrap)) {
  * Options
  */
 
-argv.formatter = argv.formatter || 'hydro-simple';
-argv.tests = [];
-if (argv._.length === 0) argv._.push('test/*.js');
-argv._.forEach(function(pattern) {
+options.formatter = options.formatter || 'hydro-simple';
+options.tests = [];
+
+if (options._.length === 0) options._.push('test/*.js');
+
+options._.forEach(function(pattern) {
   glob(pattern, { sync: true }).forEach(function(file) {
     if (fs.statSync(file).isDirectory()) return;
-    argv.tests.push(path.resolve(file));
+    options.tests.push(path.resolve(file));
   });
 });
 
-hydro.run(argv, function(result) {
+hydro.run(options, function(result) {
   process.exit(result.failed.length);
 });
