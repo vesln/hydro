@@ -20,11 +20,11 @@ DoubleRunner.prototype.run = function(fn) {
   this.ran = fn;
 };
 
-DoubleRunner.prototype.test = function() {
+DoubleRunner.prototype.addTest = function() {
   this.tests.push([].slice.call(arguments));
 };
 
-DoubleRunner.prototype.suite = function() {
+DoubleRunner.prototype.addSuite = function() {
   this.suites.push([].slice.call(arguments));
 };
 
