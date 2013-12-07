@@ -18,7 +18,7 @@ var glob = require('glob');
  * Internal dependencies.
  */
 
-var hydro = require('..').runner;
+var hydro = require('..')();
 
 /**
  * --help.
@@ -47,12 +47,6 @@ if (argv.version) {
 process.NODE_ENV = process.NODE_ENV || 'test';
 
 /**
- * Formatter
- */
-
-argv.formatter = argv.formatter || 'hydro-simple';
-
-/**
  * Try to load the bootstrap file.
  */
 
@@ -64,15 +58,12 @@ if (fs.existsSync(bootstrap)) {
 }
 
 /**
- * Test files.
+ * Options
  */
 
+argv.formatter = argv.formatter || 'hydro-simple';
 argv.tests = [];
-
-if (argv._.length === 0) {
-  argv._.push('test/*.js');
-}
-
+if (argv._.length === 0) argv._.push('test/*.js');
 argv._.forEach(function(pattern) {
   glob(pattern, { sync: true }).forEach(function(file) {
     if (fs.statSync(file).isDirectory()) return;
@@ -80,14 +71,6 @@ argv._.forEach(function(pattern) {
   });
 });
 
-/**
- * Find and run.
- */
-
-hydro.configure(argv, function() {
-  hydro.loadFormatter();
-  hydro.loadTests();
-  hydro.run(function(result) {
-    process.exit(result.failed.length);
-  });
+hydro.run(argv, function(result) {
+  process.exit(result.failed.length);
 });
