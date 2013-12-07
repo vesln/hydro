@@ -2,7 +2,7 @@ s('Faling tests', function() {
   t('Async throw', function(done) {
     setTimeout(function() {
       throw new Error('test');
-    }, 10);
+    }, 3);
   });
 
   t('Sync', function() {
@@ -18,7 +18,7 @@ s('Faling tests', function() {
   t('Timeout', function(done) {
     setTimeout(function() {
       done(new Error('Timeout'));
-    }, 40);
+    }, 3);
   });
 
   t('Throws', function(done) {
