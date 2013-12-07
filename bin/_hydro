@@ -70,6 +70,12 @@ options._.forEach(function(pattern) {
   });
 });
 
-hydro.run(options, function(root) {
-  process.exit(root.result.failed.length);
+var failures = 0;
+
+hydro.on('post:test', function(test) {
+  failures += test.failed ? 1 : 0;
+});
+
+hydro.run(options, function() {
+  process.exit(failures);
 });
