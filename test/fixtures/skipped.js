@@ -1,5 +1,6 @@
 s('Skipped tests', function() {
-  t('Sync', function() {}).skip();
-  t('second').skip();
-  t('empty');
+  t('skipped (explicit)', function() {}).skip();
+  t('skipped (explicit)').skip();
+  t('skipped (empty)');
+  t('not skipped', function(){}).skip(false);
 });
