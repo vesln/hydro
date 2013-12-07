@@ -4,7 +4,7 @@ suite('DSL methods', function() {
   test('Attaching to the default target', function() {
     var hydro = new Hydro;
     hydro.addMethod('testFoo', 'bar');
-    hydro.run({}, function() {
+    hydro.run(function() {
       global.testFoo.should.eq('bar');
       delete global.testFoo;
     });
@@ -16,7 +16,7 @@ suite('DSL methods', function() {
 
     hydro.attach(obj);
     hydro.addMethod('foo', 'bar');
-    hydro.run({}, function() {
+    hydro.run(function() {
       obj.foo.should.eq('bar');
     });
   });

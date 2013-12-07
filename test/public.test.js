@@ -29,7 +29,7 @@ suite('Public interface', function() {
     var hydro = new Hydro(runner);
     var fn = function(){};
 
-    hydro.run({}, fn);
+    hydro.run(fn);
 
     runner.ran.should.eql(fn);
     runner.events.should.eql(hydro.events);

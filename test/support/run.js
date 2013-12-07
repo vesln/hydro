@@ -4,7 +4,7 @@ var fixtures = require('path').join(__dirname, '..', 'fixtures');
 module.exports = function(test, fn) {
   var options = { tests: [fixtures + '/' + test] };
   var hydro = new Hydro;
-  var result = { failed: 0, passed: 0 };
+  var result = { failed: 0, passed: 0, skipped: 0 };
 
   global.t = function() {
     return hydro.addTest.apply(hydro, arguments);

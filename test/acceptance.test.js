@@ -17,8 +17,7 @@ suite('acceptance', function() {
 
   test('skipped tests', function(done) {
     run('skipped.js', function(result) {
-      result.failed.should.eq(0);
-      result.passed.should.eq(0);
+      result.skipped.should.eq(3);
       done();
     });
   });
