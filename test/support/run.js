@@ -4,7 +4,7 @@ var fixtures = require('path').join(__dirname, '..', 'fixtures');
 module.exports = function(test, fn) {
   var options = { tests: [fixtures + '/' + test] };
   var hydro = new Hydro;
-  var result = { failed: 0, passed: 0, skipped: 0 };
+  var result = { failed: 0, passed: 0, skipped: 0, tests: [] };
 
   global.t = function() {
     return hydro.addTest.apply(hydro, arguments);
@@ -15,6 +15,7 @@ module.exports = function(test, fn) {
   };
 
   hydro.on('post:test', function(test) {
+    result.tests.push(test);
     if (test.skipped) return result.skipped++;
     if (test.failed) return result.failed++;
     result.passed++;
