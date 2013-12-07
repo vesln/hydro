@@ -33,3 +33,12 @@ test('running the tests', function() {
   runner.ran.should.eql(fn);
   runner.events.should.eql(hydro.events);
 });
+
+test('running the tests without a done callback', function() {
+  var runner = new DoubleRunner;
+  var hydro = new Hydro(runner);
+
+  should.not.throw(function() {
+    hydro.run();
+  });
+});
