@@ -1,15 +1,11 @@
-var assert = require('assert');
+s('Passing tests', function() {
+  t('Sync', function() {});
 
-t('Sync', function() {
-  assert(true);
-});
-
-t('Async', function(done) {
-  process.nextTick(function() {
-    done();
+  t('Async', function(done) {
+    process.nextTick(function() {
+      done();
+    });
   });
-});
 
-t('Another sync', function() {
-  assert(true);
+  t('Another sync', function() {});
 });
