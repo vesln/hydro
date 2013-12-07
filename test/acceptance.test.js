@@ -1,45 +1,45 @@
 var fixtures = require('path').join(__dirname, 'fixtures');
+var Dispatcher = require('../lib/hydro/dispatcher');
 
 test('passing tests', function(done) {
-  cli()
-  .stdout(/3 tests, 0 failures/)
-  .run(fixtures + '/passing.js')
-  .code(0)
-  .end(done);
+  run('passing.js', function(res) {
+    res.passed.length.should.eq(3);
+    done();
+  });
 });
 
 test('failing tests', function(done) {
-  cli()
-  .stdout(/5 failures/)
-  .run(fixtures + '/failing.js')
-  .code(5)
-  .end(done);
+  run('failing.js', function(res) {
+    res.failed.length.should.eq(5);
+    done();
+  });
 });
 
 test('skipped tests', function(done) {
-  cli()
-  .stdout(/3 skipped/)
-  .run(fixtures + '/skipped.js')
-  .code(0)
-  .end(done);
+  run('skipped.js', function(res) {
+    res.skipped.length.should.eq(3);
+    done();
+  });
 });
 
-test('suites', function(done) {
-  cli()
-  .run(fixtures + '/suite.js --formatter test-json')
-  .expect(function(res) {
-    var tests = JSON.parse(res.stdout);
-    var expected = [
-        { title: 'a-test-1', suite: 'a' }
-      , { title: 'a-test-2', suite: 'a' }
-      , { title: 'b-test-1', suite: 'b' }
-      , { title: 'b-test-2', suite: 'b' }
-    ];
+function run(test, fn) {
+  var opts = { tests: [fixtures + '/' + test] };
+  var dispatcher = new Dispatcher;
 
-    expected.forEach(function(expect, i) {
-      tests[i].title.should.eq(expect.title);
-      tests[i].suite.should.eq(expect.suite);
+  global.t = function() {
+    return dispatcher.test.apply(dispatcher, arguments);
+  };
+
+  global.s = function() {
+    return dispatcher.test.apply(dispatcher, arguments);
+  };
+
+  dispatcher.configure(opts, function() {
+    dispatcher.loadTests();
+    dispatcher.run(function() {
+      global.t = null;
+      global.s = null;
+      fn.apply(null, arguments);
     });
-  })
-  .end(done);
-});
+  });
+}

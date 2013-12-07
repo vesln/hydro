@@ -1,7 +1,5 @@
-var test = require('../..');
+t('Sync', function() {}).skip();
 
-test('Sync', function() {}).skip();
+t('second').skip();
 
-test('second').skip();
-
-test('empty');
+t('empty');

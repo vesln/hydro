@@ -27,11 +27,10 @@
   "license": "MIT",
   "dependencies": {
     "hydro-simple": "~1.0.0",
-    "glob": "~3.2.7",
-    "refractory": "0.0.3",
+    "super": "~0.2.1",
+    "evts": "0.0.1",
     "v8-argv": "~0.1.0",
-    "optimist": "~0.6.0",
-    "async-cancelable-events": "0.0.6",
-    "super": "~0.2.1"
+    "glob": "~3.2.7",
+    "optimist": "~0.6.0"
   }
 }

@@ -1,28 +1,27 @@
-var test = require('../..');
 var assert = require('assert');
 
-test('Async throw', function(done) {
+t('Async throw', function(done) {
   setTimeout(function() {
     throw new Error('Foo');
   }, 40);
 });
 
-test('Sync', function() {
+t('Sync', function() {
   assert(false);
 });
 
-test('Async', function(done) {
+t('Async', function(done) {
   process.nextTick(function() {
-    done(new Error('Invalid'));
+    done(new Error('Next tick'));
   });
 });
 
-test('Timeout', function(done) {
+t('Timeout', function(done) {
   setTimeout(function() {
-    done(new Error('Invalid'));
+    done(new Error('Timeout'));
   }, 40);
 });
 
-test('Throws', function(done) {
+t('Throws', function(done) {
   throw new Error('bad');
 });
