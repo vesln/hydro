@@ -27,14 +27,11 @@ suite('Public interface', function() {
   test('Running the tests', function() {
     var runner = new DoubleRunner;
     var hydro = new Hydro(runner);
-    var options = { foo: 'bar' };
     var fn = function(){};
 
-    hydro.run(options, fn);
+    hydro.run({}, fn);
 
-    runner.formatterLoaded.should.be.true;
-    runner.testsLoaded.should.be.true;
-    runner.options.should.eql(options);
     runner.ran.should.eql(fn);
+    runner.events.should.eql(hydro.events);
   });
 });

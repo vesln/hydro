@@ -8,15 +8,8 @@ DoubleRunner.prototype.configure = function(options, fn) {
   fn();
 };
 
-DoubleRunner.prototype.loadFormatter = function() {
-  this.formatterLoaded = true;
-};
-
-DoubleRunner.prototype.loadTests = function() {
-  this.testsLoaded = true;
-};
-
-DoubleRunner.prototype.run = function(fn) {
+DoubleRunner.prototype.run = function(events, fn) {
+  this.events = events;
   this.ran = fn;
 };
 
