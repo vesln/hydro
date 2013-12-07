@@ -48,11 +48,8 @@ global.cli = function() {
  */
 
 module.exports = function(hydro) {
+  hydro.addSuite('Hydro');
   hydro.addMethod('test', function() {
     return hydro.addTest.apply(hydro, arguments);
-  });
-
-  hydro.addMethod('suite', function() {
-    return hydro.addSuite.apply(hydro, arguments);
   });
 };
