@@ -11,31 +11,28 @@ var path = require('path');
  * External dependencies.
  */
 
-var argv = require('optimist').argv;
+var options = require('optimist').argv;
 var glob = require('glob');
 
 /**
  * Internal dependencies.
  */
 
-var hydro = require('..').dispatcher;
+var hydro = require('..')();
 
-/**
- * --help.
- */
 
-if (argv.help) {
+// --help
+
+if (options.help) {
   console.log();
   console.log('    Usage: hydro [debug] [files]');
   console.log();
   process.exit(0);
 }
 
-/**
- * --version.
- */
+// -version
 
-if (argv.version) {
+if (options.version) {
   console.log(require('../package.json').version);
   process.exit(0);
 }
@@ -47,16 +44,10 @@ if (argv.version) {
 process.NODE_ENV = process.NODE_ENV || 'test';
 
 /**
- * Formatter
- */
-
-argv.formatter = argv.formatter || 'hydro-simple';
-
-/**
  * Try to load the bootstrap file.
  */
 
-var bootstrap = path.resolve(argv.setup || 'hydro.conf.js');
+var bootstrap = path.resolve(options.setup || 'hydro.conf.js');
 
 if (fs.existsSync(bootstrap)) {
   var setup = require(bootstrap);
@@ -64,30 +55,21 @@ if (fs.existsSync(bootstrap)) {
 }
 
 /**
- * Test files.
+ * Options
  */
 
-argv.tests = [];
+options.formatter = options.formatter || 'hydro-simple';
+options.tests = [];
 
-if (argv._.length === 0) {
-  argv._.push('test/*.js');
-}
+if (options._.length === 0) options._.push('test/*.js');
 
-argv._.forEach(function(pattern) {
+options._.forEach(function(pattern) {
   glob(pattern, { sync: true }).forEach(function(file) {
     if (fs.statSync(file).isDirectory()) return;
-    argv.tests.push(path.resolve(file));
+    options.tests.push(path.resolve(file));
   });
 });
 
-/**
- * Find and run.
- */
-
-hydro.configure(argv, function() {
-  hydro.loadFormatter();
-  hydro.loadTests();
-  hydro.run(function(result) {
-    process.exit(result.failed.length);
-  });
+hydro.run(options, function(result) {
+  process.exit(result.failed.length);
 });

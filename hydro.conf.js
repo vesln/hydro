@@ -41,7 +41,18 @@ global.cli = function() {
 };
 
 /**
- * Expose `hydro`.
+ * Setup `hydro`.
+ *
+ * @param {Hydro} hydro
+ * @api public
  */
 
-global.test = require('./');
+module.exports = function(hydro) {
+  hydro.addMethod('test', function() {
+    return hydro.addTest.apply(hydro, arguments);
+  });
+
+  hydro.addMethod('suite', function() {
+    return hydro.addSuite.apply(hydro, arguments);
+  });
+};
