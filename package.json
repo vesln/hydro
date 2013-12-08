@@ -26,12 +26,12 @@
     "hydro-silent": "~1.0.1",
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
+    "hydro-simple": "~1.0.0",
     "component": "~0.18.0"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
   "dependencies": {
-    "hydro-simple": "~1.0.0",
     "super": "~0.2.1",
     "evts": "0.0.1",
     "v8-argv": "~0.1.0",
