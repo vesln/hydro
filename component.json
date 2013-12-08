@@ -1,0 +1,20 @@
+{
+  "name": "hydro",
+  "repo": "vesln/hydro",
+  "description": "",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "lib/hydro.js",
+  "dependencies": {
+    "vesln/evts": "0.0.1"
+  },
+  "scripts": [
+    "lib/hydro.js",
+    "lib/hydro/test/async.js",
+    "lib/hydro/test/base.js",
+    "lib/hydro/test/index.js",
+    "lib/hydro/test/sync.js",
+    "lib/hydro/runner.js",
+    "lib/hydro/suite.js"
+  ]
+}

@@ -7,6 +7,7 @@
   "homepage": "https://github.com/hydrojs/hydro",
   "scripts": {
     "test": "bin/hydro",
+    "browser": "make browser",
     "coverage": "istanbul cover bin/_hydro -- --formatter hydro-silent",
     "coveralls": "istanbul cover bin/_hydro --report lcovonly -- --formatter hydro-silent && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
@@ -24,7 +25,8 @@
     "hydro-formatter": "~2.0.0",
     "hydro-silent": "~1.0.1",
     "coveralls": "~2.3.0",
-    "istanbul": "~0.1.46"
+    "istanbul": "~0.1.46",
+    "component": "~0.18.0"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
