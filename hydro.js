@@ -265,6 +265,35 @@ EventEmitter.prototype.emit = function(evt, /* arg1, arg2 */ fn) {
 module.exports = EventEmitter;
 
 });
+require.register("vesln-tryc/lib/browser.js", function(exports, require, module){
+/**
+ * Exec `fn` and call `end` with errors if any.
+ * When the execution is done, put back the old
+ * `onerror` handler.
+ *
+ * @param {Function} fn
+ * @param {Function} end
+ * @api public
+ */
+
+module.exports = function(fn, end) {
+  var prev = window.onerror;
+
+  function handler(err) {
+    window.onerror = prev;
+    end(err);
+  }
+
+  window.onerror = handler;
+
+  try {
+    fn(handler)
+  } catch (err) {
+    handler(err);
+  }
+};
+
+});
 require.register("vesln-super/lib/super.js", function(exports, require, module){
 /**
  * slice
@@ -555,10 +584,10 @@ module.exports = Hydro;
 });
 require.register("hydro/lib/hydro/test/async.js", function(exports, require, module){
 /**
- * Core dependencies.
+ * External dependencies.
  */
 
-var domain = require('domain');
+var tryc = require('tryc');
 
 /**
  * Internal dependencies.
@@ -591,7 +620,6 @@ AsyncTest.prototype.timeout = 1000 * 2;
 AsyncTest.prototype.exec = function(events, done) {
   var timeout = null;
   var ended = false;
-  var operation = domain.create();
   var fn = this.fn;
   var context = this.context;
 
@@ -602,15 +630,13 @@ AsyncTest.prototype.exec = function(events, done) {
     done(err);
   }
 
-  operation.on('error', end);
-
   timeout = setTimeout(function() {
     end(new Error('Test timed out'));
   }, this.timeout);
 
-  operation.run(function() {
-    fn.call(context, end);
-  });
+  tryc(function(done) {
+    fn.call(context, done);
+  }, end)
 };
 
 /**
@@ -785,12 +811,6 @@ module.exports = SyncTest;
 });
 require.register("hydro/lib/hydro/runner.js", function(exports, require, module){
 /**
- * Core dependencies.
- */
-
-var path = require('path');
-
-/**
  * Internal dependencies.
  */
 
@@ -954,10 +974,16 @@ module.exports = Suite;
 
 
 
+
+
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/lib/evts.js");
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/index.js");
 require.alias("vesln-evts/lib/evts.js", "evts/index.js");
 require.alias("vesln-evts/lib/evts.js", "vesln-evts/index.js");
+require.alias("vesln-tryc/lib/browser.js", "hydro/deps/tryc/lib/browser.js");
+require.alias("vesln-tryc/lib/browser.js", "hydro/deps/tryc/index.js");
+require.alias("vesln-tryc/lib/browser.js", "tryc/index.js");
+require.alias("vesln-tryc/lib/browser.js", "vesln-tryc/index.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/lib/super.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/index.js");
 require.alias("vesln-super/lib/super.js", "super/index.js");

@@ -7,6 +7,7 @@
   "main": "lib/hydro.js",
   "dependencies": {
     "vesln/evts": "0.0.1",
+    "vesln/tryc": "0.0.1",
     "vesln/super": "0.2.2"
   },
   "scripts": [
