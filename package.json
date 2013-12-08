@@ -21,7 +21,7 @@
   "devDependencies": {
     "chai": "~1.8.1",
     "nixt": "0.0.4",
-    "hydro-formatter": "~1.0.0",
+    "hydro-formatter": "~2.0.0",
     "hydro-silent": "~1.0.1",
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46"
