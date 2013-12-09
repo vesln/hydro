@@ -1,15 +1,15 @@
-var fixtures = require('path').join(__dirname, '..', 'fixtures');
+var fixtures = require('path').join(__dirname, 'fixtures');
 
 module.exports = function(test, fn) {
   var options = { tests: [fixtures + '/' + test] };
   var hydro = new Hydro;
   var result = { failed: 0, passed: 0, skipped: 0, tests: [] };
 
-  global.t = function() {
+  global.it = function() {
     return hydro.addTest.apply(hydro, arguments);
   };
 
-  global.s = function() {
+  global.describe = function() {
     return hydro.addSuite.apply(hydro, arguments);
   };
 
@@ -21,8 +21,8 @@ module.exports = function(test, fn) {
   });
 
   hydro.run(options, function() {
-    global.t = null;
-    global.s = null;
+    global.it = null;
+    global.describe = null;
     fn(result);
   });
 };

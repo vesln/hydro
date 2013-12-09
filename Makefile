@@ -1,19 +1,19 @@
+TESTS = test/*.js test/integration/*.js
+
 all: browser
 
 test:
-	@bin/hydro test/*.test.js test/*/*.test.js
+	@bin/hydro $(TESTS)
 
 coverage:
 	@./node_modules/.bin/istanbul cover bin/_hydro -- \
 		--formatter hydro-silent \
-		test/*.test.js \
-		test/*/*.test.js
+		$(TESTS) \
 
 coveralls:
 	@./node_modules/.bin/istanbul cover bin/_hydro --report lcovonly -- \
 		--formatter hydro-silent \
-		test/*.test.js \
-		test/*/*.test.js \
+		$(TESTS) \
 		&& cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 browser: node_modules lib/* components

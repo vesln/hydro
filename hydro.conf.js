@@ -11,12 +11,6 @@ var chai = require('chai');
 var Hydro = require('./');
 
 /**
- * Register `should`.
- */
-
-global.should = chai.should();
-
-/**
  * Include stack traces.
  */
 
@@ -30,9 +24,15 @@ chai.Assertion.includeStack = true;
  */
 
 module.exports = function(hydro) {
-  hydro.addSuite('Hydro');
   hydro.addMethod('Hydro', Hydro);
-  hydro.addMethod('test', function() {
+
+  hydro.addMethod('t', function() {
     return hydro.addTest.apply(hydro, arguments);
   });
+
+  hydro.addMethod('s', function() {
+    return hydro.addSuite.apply(hydro, arguments);
+  });
+
+  hydro.addMethod('should', chai.should());
 };
