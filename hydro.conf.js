@@ -24,15 +24,19 @@ chai.Assertion.includeStack = true;
  */
 
 module.exports = function(hydro) {
-  hydro.addMethod('Hydro', Hydro);
+  hydro.set({
+    formatter: 'hydro-simple',
+    tests: [
+      'test/*.js',
+      'test/integration/',
+    ]
+  });
 
+  hydro.addSuite('Hydro');
+
+  hydro.addMethod('should', chai.should());
+  hydro.addMethod('Hydro', Hydro);
   hydro.addMethod('t', function() {
     return hydro.addTest.apply(hydro, arguments);
   });
-
-  hydro.addMethod('s', function() {
-    return hydro.addSuite.apply(hydro, arguments);
-  });
-
-  hydro.addMethod('should', chai.should());
 };

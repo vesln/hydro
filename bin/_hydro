@@ -12,37 +12,19 @@ var resolve = require('path').resolve;
  */
 
 var optimist = require('optimist');
-var glob = require('glob');
+var options = optimist.argv;
 
 /**
  * Internal dependencies.
  */
 
 var hydro = require('..')();
-
-/**
- * Options.
- */
-
-var options = (function(argv) {
-  argv.tests = [];
-  argv.formatter = argv.formatter || 'hydro-simple';
-  if (argv._.length === 0) argv._.push('test/*.js');
-  return argv;
-})(optimist.argv);
-
-/**
- * Conf file.
- */
-
 var conf = resolve(options.setup || 'hydro.conf.js');
 
 // --help
 
 if (options.help) {
-  console.log();
-  console.log('    Usage: hydro [debug] [files]');
-  console.log();
+  console.log('Usage: hydro [debug] [files]');
   process.exit(0);
 }
 
@@ -60,6 +42,13 @@ if (options.version) {
 process.NODE_ENV = process.NODE_ENV || 'test';
 
 /**
+ * Load all tests.
+ */
+
+if (options._.length) options.tests = options._;
+delete options._;
+
+/**
  * Try to load the bootstrap file.
  */
 
@@ -69,15 +58,10 @@ if (fs.existsSync(conf)) {
 }
 
 /**
- * Load all tests.
+ * Override the default options.
  */
 
-options._.forEach(function(pattern) {
-  glob(pattern, { sync: true }).forEach(function(file) {
-    if (fs.statSync(file).isDirectory()) return;
-    options.tests.push(resolve(file));
-  });
-});
+hydro.set(options);
 
 /**
  * Failed tests counter.
@@ -93,6 +77,6 @@ hydro.on('post:test', function(test) {
  * Seek and destroy.
  */
 
-hydro.run(options, function() {
+hydro.run(function() {
   process.exit(failures);
 });

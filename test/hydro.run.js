@@ -1,23 +1,21 @@
 var DoubleRunner = require('./support/double-runner');
 
-s('Hydro#run', function() {
-  t('Runner contract', function() {
-    var runner = new DoubleRunner;
-    var hydro = new Hydro(runner);
-    var fn = function(){};
+t('Runner contract', function() {
+  var runner = new DoubleRunner;
+  var hydro = new Hydro(runner);
+  var fn = function(){};
 
-    hydro.run(fn);
+  hydro.run(fn);
 
-    runner.ran.should.eql(fn);
-    runner.events.should.eql(hydro.events);
-  });
+  runner.ran.should.eql(fn);
+  runner.events.should.eql(hydro.events);
+});
 
-  t('no params', function() {
-    var runner = new DoubleRunner;
-    var hydro = new Hydro(runner);
+t('no params', function() {
+  var runner = new DoubleRunner;
+  var hydro = new Hydro(runner);
 
-    should.not.throw(function() {
-      hydro.run();
-    });
+  should.not.throw(function() {
+    hydro.run();
   });
 });
