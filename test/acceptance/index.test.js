@@ -1,4 +1,4 @@
-var run = require('./support/run');
+var run = require('../support/run');
 
 test('passing tests', function(done) {
   run('passing.js', function(result) {

@@ -1,4 +1,3 @@
-var Hydro = require('../..');
 var fixtures = require('path').join(__dirname, '..', 'fixtures');
 
 module.exports = function(test, fn) {
@@ -23,6 +22,7 @@ module.exports = function(test, fn) {
 
   hydro.run(options, function() {
     global.t = null;
+    global.s = null;
     fn(result);
   });
 };
