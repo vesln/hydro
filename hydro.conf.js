@@ -27,6 +27,7 @@ module.exports = function(hydro) {
   hydro.set({
     formatter: 'hydro-simple',
     suite: 'Hydro',
+    attach: global,
     tests: [
       'test/*.js',
       'test/integration/',
