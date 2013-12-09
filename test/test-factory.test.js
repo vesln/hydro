@@ -1,7 +1,7 @@
-var create = require('../lib/hydro/test').create;
+var create = Hydro.Test.create;
 var fn = function(){};
 
-test('test creation without meta', function() {
+t('test creation without meta', function() {
   var a = create(null, ['foo']);
   var b = create(null, ['foo', fn]);
 
@@ -12,14 +12,14 @@ test('test creation without meta', function() {
   b.fn.should.eq(fn);
 });
 
-test('test creation with meta and without body', function() {
+t('test creation with meta and without body', function() {
   var test = create(null, ['foo', 'bar', 'baz']);
 
   test.title.should.eq('foo');
   test.meta.should.eql(['bar', 'baz']);
 });
 
-test('test creation with meta and with body', function() {
+t('test creation with meta and with body', function() {
   var test = create(null, ['foo', 'bar', 'baz', fn]);
 
   test.title.should.eq('foo');

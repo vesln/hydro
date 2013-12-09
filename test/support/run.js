@@ -1,16 +1,30 @@
-var Hydro = require('../..');
-var fixtures = require('path').join(__dirname, '..', 'fixtures');
+/**
+ * Fixtures path.
+ */
+
+var fixtures = require('path').join(__dirname, 'fixtures');
+
+/**
+ * Build a new `Hydro` instance, execute fixture/`test` and
+ * capture the results.
+ *
+ * @param {String} test
+ * @param {Function} done
+ * @api public
+ */
 
 module.exports = function(test, fn) {
-  var options = { tests: [fixtures + '/' + test] };
-  var hydro = new Hydro;
+  var options = { tests: [fixtures + '/' + test], formatter: null };
+  var hydro = Hydro();
   var result = { failed: 0, passed: 0, skipped: 0, tests: [] };
 
-  global.t = function() {
+  hydro.set(options);
+
+  global.it = function() {
     return hydro.addTest.apply(hydro, arguments);
   };
 
-  global.s = function() {
+  global.describe = function() {
     return hydro.addSuite.apply(hydro, arguments);
   };
 
@@ -21,8 +35,9 @@ module.exports = function(test, fn) {
     result.passed++;
   });
 
-  hydro.run(options, function() {
-    global.t = null;
+  hydro.run(function() {
+    global.it = null;
+    global.describe = null;
     fn(result);
   });
 };

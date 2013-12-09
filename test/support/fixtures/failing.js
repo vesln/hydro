@@ -1,27 +1,27 @@
-s('Faling tests', function() {
-  t('Async throw', function(done) {
+describe('Faling tests', function() {
+  it('Async throw', function(done) {
     setTimeout(function() {
       throw new Error('test');
     }, 3);
   });
 
-  t('Sync', function() {
+  it('Sync', function() {
     throw new Error('test');
   });
 
-  t('Async', function(done) {
+  it('Async', function(done) {
     process.nextTick(function() {
       done(new Error('test'));
     });
   });
 
-  t('Timeout', function(done) {
+  it('Timeout', function(done) {
     setTimeout(function() {
       done(new Error('Timeout'));
     }, 3);
   });
 
-  t('Throws', function(done) {
+  it('Throws', function(done) {
     throw new Error('bad');
   });
 });

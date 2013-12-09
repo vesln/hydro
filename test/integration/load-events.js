@@ -1,11 +1,11 @@
-var Hydro = require('..');
-var fixtures = require('path').join(__dirname, 'fixtures');
+var fixtures = require('path').join(__dirname, '..', 'support', 'fixtures');
 
-test('emits post and pre events when loading tests', function() {
+t('post and pre events when loading tests', function() {
   var hydro = new Hydro;
   var file = null;
   var exportz = null;
   var test = fixtures + '/exports.js';
+  hydro.set({ tests: [test] });
 
   hydro.on('pre:file', function(f) {
     file = f;
@@ -15,7 +15,7 @@ test('emits post and pre events when loading tests', function() {
     exportz = content;
   });
 
-  hydro.run({ tests: [test] }, function() {
+  hydro.run(function() {
     file.should.eq(test);
     exportz.should.eql({
       foo: 'bar'

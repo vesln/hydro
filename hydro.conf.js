@@ -1,44 +1,20 @@
 /**
- * Core dependencies.
- */
-
-var join = require('path').join;
-
-/**
  * External dependencies.
  */
 
 var chai = require('chai');
-var nixt = require('nixt');
 
 /**
- * Path to bin.
+ * Internal dependencies.
  */
 
-var bin = join(__dirname, 'bin');
-
-/**
- * Register `should`.
- */
-
-global.should = chai.should();
+var Hydro = require('./');
 
 /**
  * Include stack traces.
  */
 
 chai.Assertion.includeStack = true;
-
-/**
- * Nixt template.
- *
- * @returns {Runner}
- * @api public
- */
-
-global.cli = function() {
-  return nixt({ newlines: false }).cwd(bin).base('./hydro ');
-};
 
 /**
  * Setup `hydro`.
@@ -48,8 +24,19 @@ global.cli = function() {
  */
 
 module.exports = function(hydro) {
-  hydro.addSuite('Hydro');
-  hydro.addMethod('test', function() {
+  hydro.set({
+    formatter: 'hydro-simple',
+    suite: 'Hydro',
+    attach: global,
+    tests: [
+      'test/*.js',
+      'test/integration/',
+    ]
+  });
+
+  hydro.addMethod('should', chai.should());
+  hydro.addMethod('Hydro', Hydro);
+  hydro.addMethod('t', function() {
     return hydro.addTest.apply(hydro, arguments);
   });
 };
