@@ -1,5 +1,3 @@
-var Hydro = require('..');
-
 test('plugins', function(done) {
   var hydro = new Hydro;
   hydro.use(plugin);

@@ -12,6 +12,12 @@ var chai = require('chai');
 var nixt = require('nixt');
 
 /**
+ * Internal dependencies.
+ */
+
+var Hydro = require('./');
+
+/**
  * Path to bin.
  */
 
@@ -49,6 +55,7 @@ global.cli = function() {
 
 module.exports = function(hydro) {
   hydro.addSuite('Hydro');
+  hydro.addMethod('Hydro', Hydro);
   hydro.addMethod('test', function() {
     return hydro.addTest.apply(hydro, arguments);
   });

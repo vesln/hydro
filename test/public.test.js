@@ -1,4 +1,3 @@
-var Hydro = require('..');
 var DoubleRunner = require('./support/double-runner');
 
 test('add test proxy', function() {

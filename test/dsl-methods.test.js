@@ -1,5 +1,3 @@
-var Hydro = require('..');
-
 test('attaching to the default target', function() {
   var hydro = new Hydro;
   hydro.addMethod('testFoo', 'bar');
@@ -11,7 +9,7 @@ test('attaching to the default target', function() {
 
 test('attaching to supplied object', function() {
   var hydro = new Hydro;
-  var obj = Object.create(null);
+  var obj = {};
 
   hydro.attach(obj);
   hydro.addMethod('foo', 'bar');

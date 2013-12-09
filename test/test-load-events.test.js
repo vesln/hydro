@@ -1,4 +1,3 @@
-var Hydro = require('..');
 var fixtures = require('path').join(__dirname, 'fixtures');
 
 test('emits post and pre events when loading tests', function() {
