@@ -21,10 +21,27 @@ var options = optimist.argv;
 var hydro = require('..')();
 var conf = resolve(options.setup || 'hydro.conf.js');
 
+/**
+ * CLI flags.
+ */
+
+var flags = [
+  '--formatter    specify formatter to use',
+  '--suite        set top-level test suite',
+  '--help         show help information',
+  '--version      show hydro version',
+];
+
 // --help
 
 if (options.help) {
-  console.log('Usage: hydro [debug] [files]');
+  console.log();
+  console.log('Usage: hydro [debug] [options] path/to/test(s)');
+  console.log();
+  flags.forEach(function(flag) {
+    console.log('  ' + flag);
+  });
+  console.log();
   process.exit(0);
 }
 

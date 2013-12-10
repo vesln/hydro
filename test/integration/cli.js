@@ -11,7 +11,7 @@ t('--version', function(done) {
 
 t('--help', function(done) {
   cli()
-  .stdout(/Usage: hydro \[debug\] \[files\]/)
+  .stdout(/Usage: hydro \[debug\] \[options\]/)
   .run('--help')
   .end(done);
 });
