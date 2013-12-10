@@ -1,4 +1,4 @@
-t('plugin invocation', function(done) {
+t('plugins as functions', function(done) {
   var hydro = new Hydro;
   hydro.set('plugins', [plugin]);
   hydro.run();
@@ -7,3 +7,14 @@ t('plugin invocation', function(done) {
     done();
   }
 });
+
+t('plugins as modules', function(done) {
+  var hydro = new Hydro;
+  var path = __dirname + '/support/fixtures/plugin';
+  var plugin = require(path);
+  hydro.set('plugins', [path]);
+  hydro.run();
+  assert(plugin.called);
+  plugin.called = false;
+  done();
+}).skip(typeof __dirname === 'undefined');
