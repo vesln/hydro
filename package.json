@@ -6,9 +6,8 @@
   "main": "./lib/hydro.js",
   "homepage": "https://github.com/hydrojs/hydro",
   "scripts": {
-    "test": "make test",
-    "browser": "make browser",
-    "coverage": "make coverage"
+    "test": "bin/hydro",
+    "coverage": "istanbul cover bin/_hydro -- --formatter hydro-silent"
   },
   "repository": {
     "type": "git",
