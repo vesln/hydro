@@ -30,6 +30,7 @@ var flags = [
   '--suite        set top-level test suite',
   '--help         show help information',
   '--version      show hydro version',
+  '--no-colors    disable colors',
 ];
 
 // --help
@@ -37,6 +38,8 @@ var flags = [
 if (options.help) {
   console.log();
   console.log('Usage: hydro [debug] [options] path/to/test(s)');
+  console.log();
+  console.log('Core flags:');
   console.log();
   flags.forEach(function(flag) {
     console.log('  ' + flag);
