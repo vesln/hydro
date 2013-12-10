@@ -10,16 +10,17 @@
       runner.set({
         attach: window,
         suite: 'Hydro',
+        proxies: {
+          t: 'addTest'
+        },
+        globals: {
+          assert: require('simple-assert')
+        },
         tests: [
           '../../hydro.attach.js',
           '../../hydro.plugins.js',
           '../../test-factory.js',
         ]
-      });
-
-      runner.addMethod('assert', require('simple-assert'));
-      runner.addMethod('t', function() {
-        runner.addTest.apply(runner, arguments);
       });
 
       runner.on('post:test', function(test) {

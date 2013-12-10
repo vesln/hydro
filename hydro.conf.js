@@ -25,12 +25,13 @@ module.exports = function(hydro) {
     proxies: {
       t: 'addTest'
     },
+    globals: {
+      assert: assert,
+      Hydro: Hydro
+    },
     tests: [
       'test/*.js',
       'test/integration/',
     ]
   });
-
-  hydro.addMethod('assert', assert);
-  hydro.addMethod('Hydro', Hydro);
 };
