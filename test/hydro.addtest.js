@@ -6,7 +6,7 @@ t('Runner delegation', function() {
 
   hydro.addTest('foo', 'bar');
 
-  runner.tests.should.have.lengthOf(1);
-  runner.tests[0][0].should.eq('foo');
-  runner.tests[0][1].should.eq('bar');
+  assert(runner.tests.length === 1);
+  assert(runner.tests[0][0] === 'foo');
+  assert(runner.tests[0][1] === 'bar');
 });

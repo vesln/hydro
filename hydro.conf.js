@@ -2,19 +2,13 @@
  * External dependencies.
  */
 
-var chai = require('chai');
+var assert = require('simple-assert');
 
 /**
  * Internal dependencies.
  */
 
 var Hydro = require('./');
-
-/**
- * Include stack traces.
- */
-
-chai.Assertion.includeStack = true;
 
 /**
  * Setup `hydro`.
@@ -34,7 +28,7 @@ module.exports = function(hydro) {
     ]
   });
 
-  hydro.addMethod('should', chai.should());
+  hydro.addMethod('assert', assert);
   hydro.addMethod('Hydro', Hydro);
   hydro.addMethod('t', function() {
     return hydro.addTest.apply(hydro, arguments);

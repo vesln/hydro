@@ -23,4 +23,4 @@ browser: node_modules lib/* components
 components: node_modules component.json
 	@./node_modules/.bin/component-install --dev
 
-.PHONY: all test coverage
+.PHONY: all test coverage browser

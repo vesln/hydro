@@ -16,9 +16,7 @@ t('post and pre events when loading tests', function() {
   });
 
   hydro.run(function() {
-    file.should.eq(test);
-    exportz.should.eql({
-      foo: 'bar'
-    });
+    assert(file === test);
+    assert(exprtz.foo === 'bar');
   });
 });

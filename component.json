@@ -8,7 +8,11 @@
   "dependencies": {
     "vesln/evts": "0.0.1",
     "vesln/tryc": "0.0.1",
+    "vesln/fload": "0.0.1",
     "vesln/super": "0.2.2"
+  },
+  "development": {
+    "chaijs/simple-assert": "1.0.0"
   },
   "scripts": [
     "lib/hydro.js",

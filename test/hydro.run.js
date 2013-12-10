@@ -7,15 +7,10 @@ t('Runner contract', function() {
 
   hydro.run(fn);
 
-  runner.ran.should.eql(fn);
-  runner.events.should.eql(hydro.events);
+  assert(runner.ran === fn);
+  assert(runner.events === hydro.events);
 });
 
 t('no params', function() {
-  var runner = new DoubleRunner;
-  var hydro = new Hydro(runner);
-
-  should.not.throw(function() {
-    hydro.run();
-  });
+  Hydro(new DoubleRunner).run();
 });

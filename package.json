@@ -19,14 +19,14 @@
     "_hydro": "./bin/_hydro"
   },
   "devDependencies": {
-    "chai": "~1.8.1",
     "nixt": "0.0.4",
     "hydro-formatter": "~2.0.0",
     "hydro-silent": "~1.0.1",
+    "hydro-simple": "~1.0.0",
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
-    "hydro-simple": "~1.0.0",
-    "component": "~0.18.0"
+    "component": "~0.18.0",
+    "simple-assert": "~1.0.0"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",

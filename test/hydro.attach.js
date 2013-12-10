@@ -5,6 +5,6 @@ t('specify attach target', function() {
 
   hydro.addMethod('foo', 'bar');
   hydro.run(function() {
-    obj.foo.should.eq('bar');
+    assert(obj.foo === 'bar');
   });
 });

@@ -3,7 +3,7 @@ t('plugin invocation', function(done) {
   hydro.set('plugins', [plugin]);
   hydro.run();
   function plugin(_hydro) {
-    _hydro.should.eq(hydro);
+    assert(_hydro === hydro)
     done();
   }
 });

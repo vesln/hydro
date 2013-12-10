@@ -5,24 +5,26 @@ t('test creation without meta', function() {
   var a = create(null, ['foo']);
   var b = create(null, ['foo', fn]);
 
-  a.title.should.eq('foo');
-  b.title.should.eq('foo');
+  assert(a.title === 'foo');
+  assert(b.title === 'foo');
 
-  should.not.exist(a.fn);
-  b.fn.should.eq(fn);
+  assert(a.fn === null);
+  assert(b.fn === fn);
 });
 
 t('test creation with meta and without body', function() {
   var test = create(null, ['foo', 'bar', 'baz']);
 
-  test.title.should.eq('foo');
-  test.meta.should.eql(['bar', 'baz']);
+  assert(test.title === 'foo');
+  assert(test.meta[0] === 'bar');
+  assert(test.meta[1] === 'baz');
 });
 
 t('test creation with meta and with body', function() {
   var test = create(null, ['foo', 'bar', 'baz', fn]);
 
-  test.title.should.eq('foo');
-  test.fn.should.eql(fn);
-  test.meta.should.eql(['bar', 'baz']);
+  assert(test.title === 'foo');
+  assert(test.fn === fn);
+  assert(test.meta[0] === 'bar');
+  assert(test.meta[1] === 'baz');
 });

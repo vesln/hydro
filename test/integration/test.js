@@ -2,40 +2,40 @@ var run = require('../support/run');
 
 t('passing tests', function(done) {
   run('passing.js', function(result) {
-    result.passed.should.eq(3);
+    assert(result.passed === 3);
     done();
   });
 });
 
 t('failing tests', function(done) {
   run('failing.js', function(result) {
-    result.failed.should.eq(5);
+    assert(result.failed === 5);
     done();
   });
 });
 
 t('skipped tests', function(done) {
   run('skipped.js', function(result) {
-    result.skipped.should.eq(3);
+    assert(result.skipped === 3);
     done();
   });
 });
 
 t('nested suites', function(done) {
   run('nested.js', function(result) {
-    result.tests[0].title.should.eq('test 0');
-    result.tests[0].suite.title.should.eq('root');
+    assert(result.tests[0].title === 'test 0');
+    assert(result.tests[0].suite.title === 'root');
 
-    result.tests[1].title.should.eq('test 1');
-    result.tests[1].suite.title.should.eq('suite 1');
-    result.tests[1].suite.parent.title.should.eq('root');
+    assert(result.tests[1].title === 'test 1');
+    assert(result.tests[1].suite.title === 'suite 1');
+    assert(result.tests[1].suite.parent.title === 'root');
 
-    result.tests[2].title.should.eq('test 1.1');
-    result.tests[2].suite.title.should.eq('suite 1');
+    assert(result.tests[2].title === 'test 1.1');
+    assert(result.tests[2].suite.title === 'suite 1');
 
-    result.tests[3].title.should.eq('test 2');
-    result.tests[3].suite.title.should.eq('suite 2');
-    result.tests[3].suite.parent.title.should.eq('suite 1');
+    assert(result.tests[3].title === 'test 2');
+    assert(result.tests[3].suite.title === 'suite 2');
+    assert(result.tests[3].suite.parent.title === 'suite 1');
 
     done();
   });

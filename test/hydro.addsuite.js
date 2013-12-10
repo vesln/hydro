@@ -6,7 +6,7 @@ t('Runner delegation', function() {
 
   hydro.addSuite('foo', 'bar');
 
-  runner.suites.should.have.lengthOf(1);
-  runner.suites[0][0].should.eq('foo');
-  runner.suites[0][1].should.eq('bar');
+  assert(runner.suites.length === 1);
+  assert(runner.suites[0][0] === 'foo');
+  assert(runner.suites[0][1] === 'bar');
 });

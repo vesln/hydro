@@ -294,6 +294,48 @@ module.exports = function(fn, end) {
 };
 
 });
+require.register("vesln-fload/lib/browser.js", function(exports, require, module){
+/**
+ * Load JavaScript `files`.
+ *
+ * @param {Array} files
+ * @param {Object} callbacks - `pre`, `post`, `done`
+ * @api public
+ */
+
+function load(files, callbacks) {
+  var target = document.getElementsByTagName('script')[0];
+  files = files.slice(0);
+
+  (function next() {
+    var file = files.shift();
+    if (!file) return callbacks.done();
+
+    callbacks.pre(file, function() {
+      var script = document.createElement('script');
+      script.src = file;
+
+      script.onload =
+      script.onreadystatechange = function(e) {
+        if (e.type === 'load' || (/loaded|complete/.test(secript.readyState))) {
+          script.onload = null;
+          script.onreadystatechange = null;
+          callbacks.post(file, null, next);
+        }
+      };
+
+      target.parentNode.insertBefore(script, target);
+    });
+  })();
+}
+
+/**
+ * Primary export.
+ */
+
+module.exports = load;
+
+});
 require.register("vesln-super/lib/super.js", function(exports, require, module){
 /**
  * slice
@@ -418,17 +460,22 @@ require.register("hydro/lib/hydro.js", function(exports, require, module){
  */
 
 var EventEmitter = require('evts');
+var loader = require('fload');
+var merge = require('super').merge;
 
 /**
  * Internal dependencies.
  */
 
 var Runner = require('./hydro/runner');
+var Suite = require('./hydro/suite');
+var Test = require('./hydro/test');
 
 /**
  * Hydro - the main class that external parties
  * interact with.
  *
+ * @param {Function} file loader (optional)
  * @param {Runner} runner (optional)
  * @constructor
  */
@@ -436,33 +483,37 @@ var Runner = require('./hydro/runner');
 function Hydro(runner) {
   if (!(this instanceof Hydro)) return new Hydro(runner);
   this.runner = runner || new Runner;
+  this.loader = loader;
   this.events = new EventEmitter;
   this.global = null;
   this.plugins = [];
-  this.methods = Object.create(null);
+  this.methods = {};
   this.target = global;
+  this.options = {};
 }
 
 /**
- * Register a new plugin.
+ * Set option `key` to `val`.
  *
- * @param {Function} plugin
+ * @param {Object|String} key
+ * @param {Mixed} val
  * @api public
  */
 
-Hydro.prototype.use = function(plugin) {
-  this.plugins.push(plugin);
+Hydro.prototype.set = function(key, val) {
+  if (Object(key) !== key) return this.options[key] = val;
+  this.options = merge([this.options, key]);
 };
 
 /**
- * Set the object where the DSL methods will be attached.
+ * Return option `key`.
  *
- * @param {Object}
+ * @returns {Mixed}
  * @api public
  */
 
-Hydro.prototype.attach = function(obj) {
-  this.target = obj;
+Hydro.prototype.get = function(key) {
+  return this.options[key];
 };
 
 /**
@@ -512,74 +563,75 @@ Hydro.prototype.on = function(evt, fn) {
 /**
  * Execute the tests.
  *
- * @param {Object} options
  * @param {Function} fn
  * @api public
  */
 
-Hydro.prototype.run = function(options, fn) {
+Hydro.prototype.run = function(fn) {
   var self = this;
-  var runner = this.runner;
   var events = this.events;
-  var plugins = this.plugins;
   var args = arguments.length;
+  var formatter = null;
+  var patterns = null;
+  var suite = null;
+  var plugins = this.get('plugins') || [];
+  var target = this.get('attach');
 
-  if (args === 0) {
-    options = {};
-    fn = function() {};
-  } else if (arguments.length === 1) {
-    fn = options;
-    options = {};
+  for (var i = 0, len = plugins.length; i < len; i++) {
+    plugins[i](this);
   }
-
-  plugins.forEach(function(plugin) {
-    plugin(this);
-  }, this);
 
   for (var method in this.methods) {
-    this.target[method] = this.methods[method];
+    if (!this.methods.hasOwnProperty(method)) continue;
+    target[method] = this.methods[method];
   }
 
-  events.emit('options', options, function() {
-    if (options.formatter) {
-      var formatter = new (require(options.formatter));
-      formatter.use(self);
-    }
+  if (formatter = this.get('formatter')) {
+    (new (require(formatter))).use(this);
+  }
 
-    loadFiles(options.tests, events, function() {
-      runner.run(events, fn);
-    });
+  if (suite = this.get('suite')) {
+    this.addSuite(suite);
+  }
+
+  patterns = this.get('tests');
+
+  this.loader(patterns, {
+    pre: function(file, done) {
+      events.emit('pre:file', file, done);
+    },
+    post: function(file, contents, done) {
+      events.emit('post:file', file, done);
+    },
+    done: function() {
+      self.runner.run(events, fn);
+    }
   });
 };
-
-/**
- * Load `files` and emit pre and post events.
- *
- * @param {Object} files
- * @param {Object} events
- * @param {Function} done
- * @api private
- */
-
-function loadFiles(files, events, fn) {
-  var file = null;
-  files = (files || []).slice(0);
-
-  (function next() {
-    file = files.shift();
-    if (!file) return fn();
-    events.emit('pre:file', file, function() {
-      var exprts = require(file);
-      events.emit('post:file', file, exprts, next);
-    });
-  })();
-}
 
 /**
  * Primary export.
  */
 
 module.exports = Hydro;
+
+/**
+ * Export `Runner`.
+ */
+
+module.exports.Runner = Runner;
+
+/**
+ * Export `Suite`.
+ */
+
+module.exports.Suite = Suite;
+
+/**
+ * Export `Test`.
+ */
+
+module.exports.Test = Test;
 
 });
 require.register("hydro/lib/hydro/test/async.js", function(exports, require, module){
@@ -758,14 +810,23 @@ var AsyncTest = require('./async');
 exports.create = function(suite, params) {
   var title = params.shift();
   var fn = null;
-
-  if (typeof params[params.length - 1] === 'function') {
-    fn = params.pop();
-  }
-
-  var klass = (fn && fn.length) ? AsyncTest : SyncTest;
+  var klass = null;
+  if (typeof params[params.length - 1] === 'function') fn = params.pop();
+  klass = (fn && fn.length) ? AsyncTest : SyncTest;
   return new klass(title, fn, params, suite);
 };
+
+/**
+ * Export `AsyncTest`.
+ */
+
+exports.SyncTest = SyncTest;
+
+/**
+ * Export `SyncTest`.
+ */
+
+exports.AsyncTest = AsyncTest;
 
 });
 require.register("hydro/lib/hydro/test/sync.js", function(exports, require, module){
@@ -914,8 +975,9 @@ require.register("hydro/lib/hydro/suite.js", function(exports, require, module){
  * @constructor
  */
 
-function Suite(title) {
+function Suite(title, parent) {
   this.title = title;
+  this.parent = parent;
   this.tests = [];
   this.suites = [];
 }
@@ -976,6 +1038,8 @@ module.exports = Suite;
 
 
 
+
+
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/lib/evts.js");
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/index.js");
 require.alias("vesln-evts/lib/evts.js", "evts/index.js");
@@ -984,6 +1048,10 @@ require.alias("vesln-tryc/lib/browser.js", "hydro/deps/tryc/lib/browser.js");
 require.alias("vesln-tryc/lib/browser.js", "hydro/deps/tryc/index.js");
 require.alias("vesln-tryc/lib/browser.js", "tryc/index.js");
 require.alias("vesln-tryc/lib/browser.js", "vesln-tryc/index.js");
+require.alias("vesln-fload/lib/browser.js", "hydro/deps/fload/lib/browser.js");
+require.alias("vesln-fload/lib/browser.js", "hydro/deps/fload/index.js");
+require.alias("vesln-fload/lib/browser.js", "fload/index.js");
+require.alias("vesln-fload/lib/browser.js", "vesln-fload/index.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/lib/super.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/index.js");
 require.alias("vesln-super/lib/super.js", "super/index.js");
