@@ -485,9 +485,12 @@ function Hydro(runner) {
   this.runner = runner || new Runner;
   this.loader = loader;
   this.events = new EventEmitter;
-  this.plugins = [];
-  this.methods = {};
-  this.options = {};
+  this.options = {
+    plugins: [],
+    aliases: {},
+    globals: {},
+    tests: []
+  };
 }
 
 /**
@@ -499,13 +502,31 @@ function Hydro(runner) {
  */
 
 Hydro.prototype.set = function(key, val) {
-  if (Object(key) !== key) {
-    this.options[key] = val;
-  } else {
+  if (Object(key) === key) {
     this.options = merge([this.options, key]);
+  } else if (arguments.length === 3) {
+    if (typeof this.options[key] === 'undefined') {
+      this.options[key] = {};
+    }
+    this.options[key][val] = arguments[2];
+  } else {
+    this.options[key] = val;
   }
+};
 
-  return this;
+/**
+ * Push a value to `key`.
+ *
+ * @param {String} key
+ * @param {Mixed} val
+ * @api public
+ */
+
+Hydro.prototype.push = function(key, val) {
+  if (typeof this.options[key] === 'undefined') {
+    this.options[key] = [];
+  }
+  this.options[key].push(val);
 };
 
 /**
@@ -517,18 +538,6 @@ Hydro.prototype.set = function(key, val) {
 
 Hydro.prototype.get = function(key) {
   return this.options[key];
-};
-
-/**
- * Add a DSL method.
- *
- * @param {String} name
- * @param {Function} fn
- * @api public
- */
-
-Hydro.prototype.addMethod = function(name, fn) {
-  this.methods[name] = fn;
 };
 
 /**
@@ -571,34 +580,23 @@ Hydro.prototype.on = function(evt, fn) {
  */
 
 Hydro.prototype.run = function(fn) {
-  var self = this;
   var events = this.events;
-  var args = arguments.length;
-  var formatter = null;
   var patterns = null;
   var suite = null;
-  var plugins = this.get('plugins') || [];
-  var target = this.get('attach');
+  var self = this;
+
   fn = fn || function(){};
 
-  for (var i = 0, len = plugins.length; i < len; i++) {
-    plugins[i](this);
-  }
-
-  for (var method in this.methods) {
-    if (!this.methods.hasOwnProperty(method)) continue;
-    target[method] = this.methods[method];
-  }
-
-  if (formatter = this.get('formatter')) {
-    (new (require(formatter))).use(this);
-  }
+  this.loadPlugins();
+  this.attachGlobals();
+  this.attachProxies();
+  this.loadFormatter();
 
   if (suite = this.get('suite')) {
     this.addSuite(suite);
   }
 
-  patterns = this.get('tests') || [];
+  patterns = this.get('tests');
 
   this.loader(patterns, {
     pre: function(file, done) {
@@ -611,6 +609,79 @@ Hydro.prototype.run = function(fn) {
       self.runner.run(events, fn);
     }
   });
+};
+
+/**
+ * Load all plugins.
+ *
+ * @api private
+ */
+
+Hydro.prototype.loadPlugins = function() {
+  var plugins = this.get('plugins');
+
+  for (var i = 0, len = plugins.length; i < len; i++) {
+    plugins[i](this);
+  }
+};
+
+/**
+ * Attach global methods and properties.
+ *
+ * @api private
+ */
+
+Hydro.prototype.attachGlobals = function() {
+  var target = this.get('attach');
+  var globals = this.get('globals');
+
+  for (var prop in globals) {
+    if (!globals.hasOwnProperty(prop)) continue;
+    target[prop] = globals[prop];
+  }
+};
+
+/**
+ * Attach the specified proxies.
+ *
+ * @api private
+ */
+
+Hydro.prototype.attachProxies = function() {
+  var proxies = this.get('proxies');
+  var target = this.get('attach');
+  var self = this;
+
+  for (var proxy in proxies) {
+    if (!proxies.hasOwnProperty(proxy)) continue;
+    target[proxy] = function() {
+      return self[proxies[proxy]].apply(self, arguments);
+    };
+  }
+};
+
+/**
+ * Load the specified formatter if any.
+ *
+ * @api private
+ */
+
+Hydro.prototype.loadFormatter = function() {
+  var name = this.get('formatter');
+  var tos = Object.prototype.toString;
+  var formatter = null;
+
+  if (!name) {
+    return;
+  } else if (tos.call(name) === '[object String]') {
+    formatter = new (require(name));
+  } else if (typeof name === 'function') {
+    formatter = new name;
+  } else {
+    formatter = name;
+  }
+
+  formatter.use(this);
 };
 
 /**

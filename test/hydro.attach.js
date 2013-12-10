@@ -1,4 +1,4 @@
-t('specify attach target', function() {
+t('specifying attach target', function(done) {
   var hydro = new Hydro;
   var obj = {};
 
@@ -7,5 +7,6 @@ t('specify attach target', function() {
 
   hydro.run(function() {
     assert(obj.foo === 'bar');
+    done();
   });
 });
