@@ -2,8 +2,39 @@
   <head>
     <title>Hydro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script src="../../../hydro.js"></script>
+    <script src="../../../build/build.js"></script>
+    <script>
+      window.Hydro = require('hydro');
+      var runner = Hydro();
+
+      runner.set({
+        attach: window,
+        suite: 'Hydro',
+        tests: [
+          '../../hydro.attach.js',
+          '../../hydro.plugins.js',
+          '../../test-factory.js',
+        ]
+      });
+
+      runner.addMethod('assert', require('simple-assert'));
+      runner.addMethod('t', function() {
+        runner.addTest.apply(runner, arguments);
+      });
+
+      runner.on('post:test', function(test) {
+        if (!test.failed) {
+          console.log('Test: %s ... OK', test.title);
+        } else {
+          console.error('Test: %s ... NOT OK', test.title);
+          console.error(test.error.stack);
+        }
+      });
+
+      runner.run();
+    </script>
   </head>
+
   <body>
   </body>
 </html>

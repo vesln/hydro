@@ -485,10 +485,8 @@ function Hydro(runner) {
   this.runner = runner || new Runner;
   this.loader = loader;
   this.events = new EventEmitter;
-  this.global = null;
   this.plugins = [];
   this.methods = {};
-  this.target = global;
   this.options = {};
 }
 
@@ -501,8 +499,13 @@ function Hydro(runner) {
  */
 
 Hydro.prototype.set = function(key, val) {
-  if (Object(key) !== key) return this.options[key] = val;
-  this.options = merge([this.options, key]);
+  if (Object(key) !== key) {
+    this.options[key] = val;
+  } else {
+    this.options = merge([this.options, key]);
+  }
+
+  return this;
 };
 
 /**
@@ -576,6 +579,7 @@ Hydro.prototype.run = function(fn) {
   var suite = null;
   var plugins = this.get('plugins') || [];
   var target = this.get('attach');
+  fn = fn || function(){};
 
   for (var i = 0, len = plugins.length; i < len; i++) {
     plugins[i](this);
@@ -594,7 +598,7 @@ Hydro.prototype.run = function(fn) {
     this.addSuite(suite);
   }
 
-  patterns = this.get('tests');
+  patterns = this.get('tests') || [];
 
   this.loader(patterns, {
     pre: function(file, done) {
