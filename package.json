@@ -1,6 +1,6 @@
 {
   "name": "hydro",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/hydro.js",
@@ -19,9 +19,9 @@
   },
   "devDependencies": {
     "nixt": "0.0.4",
-    "hydro-formatter": "~2.0.0",
-    "hydro-silent": "~1.0.1",
-    "hydro-simple": "~1.0.0",
+    "hydro-formatter": "*",
+    "hydro-silent": "*",
+    "hydro-simple": "*",
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
     "component": "~0.18.0",

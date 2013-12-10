@@ -1,4 +1,19 @@
 
+0.7.0 / 2013-12-10
+==================
+
+  * Support plugins as modules
+  * Add no-colors CLI option
+  * The specified formatter can be a string, function or an object
+  * Introduce `Hydro#push`
+  * Improve the help command
+  * Introduce globals
+  * Introduce proxies
+  * Initial browser support
+  * Remove `attach`, specify with option
+  * Remove `use`, add plugins with option
+  * Add option for default suite
+
 0.6.1 / 2013-12-07
 ==================
 
