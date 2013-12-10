@@ -22,38 +22,10 @@ var hydro = require('..')();
 var conf = resolve(options.setup || 'hydro.conf.js');
 
 /**
- * CLI flags.
+ * Commands.
  */
 
-var flags = [
-  '--formatter    specify formatter to use',
-  '--suite        set top-level test suite',
-  '--help         show help information',
-  '--version      show hydro version',
-  '--no-colors    disable colors',
-];
-
-// --help
-
-if (options.help) {
-  console.log();
-  console.log('Usage: hydro [debug] [options] path/to/test(s)');
-  console.log();
-  console.log('Core flags:');
-  console.log();
-  flags.forEach(function(flag) {
-    console.log('  ' + flag);
-  });
-  console.log();
-  process.exit(0);
-}
-
-// -version
-
-if (options.version) {
-  console.log(require('../package.json').version);
-  process.exit(0);
-}
+var commands = ['help', 'version'];
 
 /**
  * Set `NODE_ENV` to test if none
@@ -82,6 +54,17 @@ if (fs.existsSync(conf)) {
  */
 
 hydro.set(options);
+
+/**
+ * Check if any of the main commands is being
+ * requested.
+ */
+
+commands.forEach(function(command) {
+  if (!options[command]) return;
+  require('./commands/' + command)(hydro);
+  process.exit(0);
+});
 
 /**
  * Failed tests counter.
