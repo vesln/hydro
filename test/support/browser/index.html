@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../../../build/build.js"></script>
     <script>
-      window.Hydro = require('hydro');
+      var Hydro = require('hydro');
       var runner = Hydro();
 
       runner.set({
@@ -14,6 +14,7 @@
           t: 'addTest'
         },
         globals: {
+          Hydro: Hydro,
           assert: require('simple-assert')
         },
         tests: [
