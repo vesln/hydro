@@ -22,7 +22,7 @@ module.exports = function(hydro) {
     formatter: 'hydro-simple',
     suite: 'Hydro',
     attach: global,
-    aliases: {
+    proxies: {
       t: 'addTest'
     },
     tests: [
@@ -33,7 +33,4 @@ module.exports = function(hydro) {
 
   hydro.addMethod('assert', assert);
   hydro.addMethod('Hydro', Hydro);
-  hydro.addMethod('t', function() {
-    return hydro.addTest.apply(hydro, arguments);
-  });
 };
