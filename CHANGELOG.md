@@ -1,4 +1,12 @@
 
+0.7.2 / 2013-12-11
+==================
+
+  * Add configurable timeout for async tests
+  * Give the tests sync/async indicators
+  * Don't suppress errors even if the test has ended
+  * Include plugin flags in --help
+
 0.7.1 / 2013-12-10
 ==================
 

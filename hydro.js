@@ -471,6 +471,13 @@ var Runner = require('./hydro/runner');
 var Suite = require('./hydro/suite');
 var Test = require('./hydro/test');
 
+
+/**
+ * toString.
+ */
+
+var tostr = Object.prototype.toString;
+
 /**
  * Hydro - the main class that external parties
  * interact with.
@@ -485,7 +492,9 @@ function Hydro(runner) {
   this.runner = runner || new Runner;
   this.loader = loader;
   this.events = new EventEmitter;
+  this.plugins = [];
   this.options = {
+    cli: [],
     plugins: [],
     aliases: {},
     globals: {},
@@ -547,7 +556,10 @@ Hydro.prototype.get = function(key) {
  */
 
 Hydro.prototype.addTest = function() {
-  return this.runner.addTest.apply(this.runner, arguments);
+  var test = this.runner.addTest.apply(this.runner, arguments);
+  var timeout = this.get('timeout');
+  if (timeout) test.timeout(timeout);
+  return test;
 };
 
 /**
@@ -619,9 +631,17 @@ Hydro.prototype.run = function(fn) {
 
 Hydro.prototype.loadPlugins = function() {
   var plugins = this.get('plugins');
+  var plugin = null;
 
   for (var i = 0, len = plugins.length; i < len; i++) {
-    plugins[i](this);
+    plugin = plugins[i];
+
+    if (tostr.call(plugin) === '[object String]') {
+      plugin = require(plugin);
+    }
+
+    plugin(this);
+    this.plugins.push(plugin);
   }
 };
 
@@ -654,9 +674,11 @@ Hydro.prototype.attachProxies = function() {
 
   for (var proxy in proxies) {
     if (!proxies.hasOwnProperty(proxy)) continue;
-    target[proxy] = function() {
-      return self[proxies[proxy]].apply(self, arguments);
-    };
+    (function(proxy) {
+      target[proxy] = function() {
+        return self[proxies[proxy]].apply(self, arguments);
+      };
+    })(proxy);
   }
 };
 
@@ -668,12 +690,11 @@ Hydro.prototype.attachProxies = function() {
 
 Hydro.prototype.loadFormatter = function() {
   var name = this.get('formatter');
-  var tos = Object.prototype.toString;
   var formatter = null;
 
   if (!name) {
     return;
-  } else if (tos.call(name) === '[object String]') {
+  } else if (tostr.call(name) === '[object String]') {
     formatter = new (require(name));
   } else if (typeof name === 'function') {
     formatter = new name;
@@ -734,7 +755,13 @@ var AsyncTest = BaseTest.extend();
  * Default timeout.
  */
 
-AsyncTest.prototype.timeout = 1000 * 2;
+AsyncTest.prototype._timeout = 1000 * 2;
+
+/**
+ * Async.
+ */
+
+AsyncTest.prototype.async = true;
 
 /**
  * Execute the test.
@@ -751,6 +778,7 @@ AsyncTest.prototype.exec = function(events, done) {
   var context = this.context;
 
   function end(err) {
+    if (err && ended) throw err;
     if (ended) return;
     ended = true;
     clearTimeout(timeout);
@@ -759,7 +787,7 @@ AsyncTest.prototype.exec = function(events, done) {
 
   timeout = setTimeout(function() {
     end(new Error('Test timed out'));
-  }, this.timeout);
+  }, this._timeout);
 
   tryc(function(done) {
     fn.call(context, done);
@@ -811,6 +839,18 @@ function Base(title, fn, meta, suite) {
  */
 
 Base.extend = extend;
+
+/**
+ * Configure test timeout.
+ *
+ * @param {Number} ms
+ * @api public
+ */
+
+Base.prototype.timeout = function(ms) {
+  this._timeout = ms;
+  return this;
+};
 
 /**
  * Run the test.
@@ -916,7 +956,14 @@ var BaseTest = require('./base');
  *
  * @constructor
  */
+
 var SyncTest = BaseTest.extend();
+
+/**
+ * Sync.
+ */
+
+SyncTest.prototype.sync = true;
 
 /**
  * Execute the test.
