@@ -8,6 +8,7 @@ var flags = [
   '--help         show help information',
   '--version      show hydro version',
   '--no-colors    disable colors',
+  '--timeout      timeout for async tests',
 ];
 
 /**
