@@ -2,7 +2,8 @@ var DoubleRunner = require('./support/double-runner');
 
 t('Runner delegation', function() {
   var runner = new DoubleRunner;
-  var hydro = new Hydro(runner);
+  var hydro = new Hydro;
+  hydro.runner = runner;
 
   hydro.addTest('foo', 'bar');
 
