@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "nixt": "0.0.4",
-    "hydro-formatter": "*",
     "hydro-silent": "*",
     "hydro-simple": "*",
     "coveralls": "~2.3.0",
