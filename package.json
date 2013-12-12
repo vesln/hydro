@@ -18,22 +18,24 @@
     "_hydro": "./bin/_hydro"
   },
   "devDependencies": {
-    "nixt": "0.0.4",
+    "nixt": "*",
     "hydro-silent": "*",
     "hydro-simple": "*",
+    "hydro-file-suite": "*",
+    "hydro-minimal": "*",
+    "simple-assert": "*",
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
-    "component": "~0.18.0",
-    "simple-assert": "~1.0.0"
+    "component": "~0.18.0"
   },
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
   "dependencies": {
-    "super": "~0.2.1",
-    "evts": "0.0.1",
-    "tryc": "0.0.1",
-    "fload": "0.0.1",
-    "instance": "0.0.1",
+    "super": "*",
+    "evts": "*",
+    "tryc": "*",
+    "fload": "*",
+    "instance": "*",
     "v8-argv": "~0.1.0",
     "optimist": "~0.6.0"
   }
