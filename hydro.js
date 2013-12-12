@@ -336,6 +336,112 @@ function load(files, callbacks) {
 module.exports = load;
 
 });
+require.register("vesln-instance/index.js", function(exports, require, module){
+/**
+ * global || window
+ */
+
+var root = typeof global !== 'undefined'
+  ? global
+  : window;
+
+/**
+ * toString.
+ */
+
+var toString = Object.prototype.toString;
+
+/**
+ * Check if `input` is String, Function or Object.
+ *
+ * @param {String} type
+ * @param {Mixed} input
+ * @returns {Boolean}
+ * @api private
+ */
+
+function is(type, input) {
+  if (type === 'Object') return Object(input) === input;
+  return toString.call(input) === '[object ' + type + ']';
+}
+
+/**
+ * Check if `input` is a string and if so, either
+ * refer to the global scope or `require` it. Then
+ * call `instance` again in case the exported object
+ * is a function.
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function str(input) {
+  if (!is('String', input)) return;
+  return instance(root[input] || require(input));
+}
+
+/**
+ * Check if `input` is a function and if so instantiate it.
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function fn(input) {
+  if (!is('Function', input)) return;
+  return new input;
+}
+
+/**
+ * Check if `input` is an object and if so assume it
+ * is already an instance of something and return it
+ * back;
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function obj(input) {
+  if (!is('Object', input)) return;
+  return input;
+}
+
+/**
+ * Raise error.
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function raise(input) {
+  throw new TypeError("Can't handle: " + input);
+}
+
+/**
+ * input is String    - instnace(global[input] || require(input))
+ * input is Function  - `new input`
+ * input is Object    - return input
+ * else raise hell
+ *
+ * @param {Mixed} input
+ * @returns {Object}
+ * @api public
+ */
+
+function instance(input) {
+  return str(input)
+    || fn(input)
+    || obj(input)
+    || raise(input);
+};
+
+/**
+ * Primary export.
+ */
+
+module.exports = instance;
+
+});
 require.register("vesln-super/lib/super.js", function(exports, require, module){
 /**
  * slice
@@ -460,6 +566,7 @@ require.register("hydro/lib/hydro.js", function(exports, require, module){
  */
 
 var EventEmitter = require('evts');
+var instance = require('instance');
 var loader = require('fload');
 var merge = require('super').merge;
 
@@ -467,10 +574,9 @@ var merge = require('super').merge;
  * Internal dependencies.
  */
 
-var Runner = require('./hydro/runner');
+var RootSuite = require('./hydro/suite/root');
 var Suite = require('./hydro/suite');
 var Test = require('./hydro/test');
-
 
 /**
  * toString.
@@ -479,22 +585,27 @@ var Test = require('./hydro/test');
 var tostr = Object.prototype.toString;
 
 /**
+ * Slice.
+ */
+
+var slice = Array.prototype.slice;
+
+/**
  * Hydro - the main class that external parties
  * interact with.
  *
- * @param {Function} file loader (optional)
- * @param {Runner} runner (optional)
  * @constructor
  */
 
-function Hydro(runner) {
-  if (!(this instanceof Hydro)) return new Hydro(runner);
-  this.runner = runner || new Runner;
+function Hydro() {
+  if (!(this instanceof Hydro)) return new Hydro();
   this.loader = loader;
-  this.events = new EventEmitter;
+  this.emitter = new EventEmitter;
   this.plugins = [];
+  this.suites = [];
+  this.tests = [];
+  this.stack = [new RootSuite];
   this.options = {
-    cli: [],
     plugins: [],
     aliases: {},
     globals: {},
@@ -550,26 +661,69 @@ Hydro.prototype.get = function(key) {
 };
 
 /**
- * Runner#test proxy.
+ * Add a new test.
  *
+ * @param {String} title
+ * @param {Mixed} meta1 (optional)
+ * @param {Mixed} meta2 (optional)
+ * @param {Function} test (optional)
  * @api public
  */
 
 Hydro.prototype.addTest = function() {
-  var test = this.runner.addTest.apply(this.runner, arguments);
+  var test = this.createTest.apply(this, arguments);
+  this.tests.push(test);
+  this.stack[0].addTest(test);
+  return test;
+};
+
+/**
+ * Create a test.
+ *
+ * @param {String} title
+ * @param {Mixed} meta1 (optional)
+ * @param {Mixed} meta2 (optional)
+ * @param {Function} test (optional)
+ * @api public
+ */
+
+Hydro.prototype.createTest = function() {
+  var test = Test.create(slice.call(arguments));
   var timeout = this.get('timeout');
   if (timeout) test.timeout(timeout);
   return test;
 };
 
 /**
- * Runner#suite proxy.
+ * Add a test suite.
  *
+ * @param {String} title
+ * @param {Function} body
  * @api public
  */
 
-Hydro.prototype.addSuite = function() {
-  return this.runner.addSuite.apply(this.runner, arguments);
+Hydro.prototype.addSuite = function(title, fn) {
+  var suite = this.createSuite(title);
+  this.stack[0].addSuite(suite);
+  this.stack.unshift(suite);
+
+  if (fn) {
+    fn();
+    this.stack.shift();
+  }
+
+  return suite;
+};
+
+/**
+ * Create a test suite.
+ *
+ * @param {String} title
+ * @api public
+ */
+
+Hydro.prototype.createSuite = function(title) {
+  return new Suite(title);
 };
 
 /**
@@ -581,7 +735,7 @@ Hydro.prototype.addSuite = function() {
  */
 
 Hydro.prototype.on = function(evt, fn) {
-  this.events.on(evt, fn);
+  this.emitter.on(evt, fn);
 };
 
 /**
@@ -592,8 +746,7 @@ Hydro.prototype.on = function(evt, fn) {
  */
 
 Hydro.prototype.run = function(fn) {
-  var events = this.events;
-  var patterns = null;
+  var emitter = this.emitter;
   var suite = null;
   var self = this;
 
@@ -605,20 +758,22 @@ Hydro.prototype.run = function(fn) {
   this.loadFormatter();
 
   if (suite = this.get('suite')) {
-    this.addSuite(suite);
+    suite = this.createSuite(suite);
+    this.suites.push(suite);
+    this.stack[0].addSuite(suite);
+    this.stack.unshift(suite);
   }
 
-  patterns = this.get('tests');
-
-  this.loader(patterns, {
+  this.loader(this.get('tests'), {
     pre: function(file, done) {
-      events.emit('pre:file', file, done);
+      emitter.emit('pre:file', file, done);
     },
     post: function(file, contents, done) {
-      events.emit('post:file', file, done);
+      emitter.emit('post:file', file, done);
     },
     done: function() {
-      self.runner.run(events, fn);
+      if (suite) self.stack.shift();
+      self.stack[0].run(emitter, fn);
     }
   });
 };
@@ -626,7 +781,7 @@ Hydro.prototype.run = function(fn) {
 /**
  * Load all plugins.
  *
- * @api private
+ * @api public
  */
 
 Hydro.prototype.loadPlugins = function() {
@@ -691,43 +846,19 @@ Hydro.prototype.attachProxies = function() {
 Hydro.prototype.loadFormatter = function() {
   var name = this.get('formatter');
   var formatter = null;
-
-  if (!name) {
-    return;
-  } else if (tostr.call(name) === '[object String]') {
-    formatter = new (require(name));
-  } else if (typeof name === 'function') {
-    formatter = new name;
-  } else {
-    formatter = name;
-  }
-
+  if (!name) return;
+  formatter = instance(name);
   formatter.use(this);
 };
 
 /**
- * Primary export.
+ * Primary exports.
  */
 
 module.exports = Hydro;
-
-/**
- * Export `Runner`.
- */
-
-module.exports.Runner = Runner;
-
-/**
- * Export `Suite`.
- */
-
-module.exports.Suite = Suite;
-
-/**
- * Export `Test`.
- */
-
 module.exports.Test = Test;
+module.exports.Suite = Suite;
+module.exports.RootSuite = RootSuite;
 
 });
 require.register("hydro/lib/hydro/test/async.js", function(exports, require, module){
@@ -736,6 +867,13 @@ require.register("hydro/lib/hydro/test/async.js", function(exports, require, mod
  */
 
 var tryc = require('tryc');
+
+/**
+ * Store `setTimeout` locally since modules like `Timekeeper`
+ * can modify it.
+ */
+
+var sTimeout = setTimeout;
 
 /**
  * Internal dependencies.
@@ -766,12 +904,11 @@ AsyncTest.prototype.async = true;
 /**
  * Execute the test.
  *
- * @param {Object} events
  * @param {Function} done
  * @api private
  */
 
-AsyncTest.prototype.exec = function(events, done) {
+AsyncTest.prototype.exec = function(done) {
   var timeout = null;
   var ended = false;
   var fn = this.fn;
@@ -785,7 +922,7 @@ AsyncTest.prototype.exec = function(events, done) {
     done(err);
   }
 
-  timeout = setTimeout(function() {
+  timeout = sTimeout(function() {
     end(new Error('Test timed out'));
   }, this._timeout);
 
@@ -809,25 +946,34 @@ require.register("hydro/lib/hydro/test/base.js", function(exports, require, modu
 var extend = require('super').extend;
 
 /**
+ * Store `Date` locally since modules like `Timekeeper`
+ * can modify it.
+ */
+
+var D = Date;
+
+/**
  * Base Test.
  *
  * @param {String} title
  * @param {Function} fn
  * @param {Array} meta
- * @param {Suite} test suite
  * @constructor
  */
 
-function Base(title, fn, meta, suite) {
+function Base(title, fn, meta) {
   this.title = title;
   this.meta = meta || [];
   this.fn = fn;
-  this.suite = suite;
   this.failed = false;
   this.error = null;
   this.time = null;
   this.skipped = false;
   this.context = {};
+  this.events = {
+    pre: 'pre:test',
+    post: 'post:test',
+  };
   if (!fn) this.skip();
   if (!Array.isArray(this.meta)) {
     this.meta = [this.meta];
@@ -853,28 +999,6 @@ Base.prototype.timeout = function(ms) {
 };
 
 /**
- * Run the test.
- *
- * @param {Object} events
- * @param {Function} done
- * @api public
- */
-
-Base.prototype.run = function(events, done) {
-  var self = this;
-
-  events.emit('pre:test', this, function() {
-    if (self.skipped) return events.emit('post:test', self, done);
-    var start = (new Date).getTime();
-    self.exec(events, function(err) {
-      self.time = (new Date).getTime() - start;
-      if (err) self.fail(err);
-      events.emit('post:test', self, done);
-    });
-  });
-};
-
-/**
  * Mark the test as skipped.
  *
  * @api public
@@ -884,6 +1008,29 @@ Base.prototype.skip = function(condition) {
   if (arguments.length && !condition) return;
   this.skipped = true;
   this.time = 0;
+};
+
+/**
+ * Run the test.
+ *
+ * @param {Object} emitter
+ * @param {Function} done
+ * @api public
+ */
+
+Base.prototype.run = function(emitter, done) {
+  var self = this;
+  var events = this.events;
+
+  emitter.emit(events.pre, this, function() {
+    if (self.skipped) return emitter.emit(events.post, self, done);
+    var start = (new D).getTime();
+    self.exec(function(err) {
+      self.time = (new D).getTime() - start;
+      if (err) self.fail(err);
+      emitter.emit(events.post, self, done);
+    });
+  });
 };
 
 /**
@@ -916,19 +1063,18 @@ var AsyncTest = require('./async');
 /**
  * Test factory.
  *
- * @param {Suite} test suite
  * @param {Array} [title, meta, fn]
  * @returns {Base} test
  * @api public
  */
 
-exports.create = function(suite, params) {
+exports.create = function(params) {
   var title = params.shift();
   var fn = null;
   var klass = null;
   if (typeof params[params.length - 1] === 'function') fn = params.pop();
   klass = (fn && fn.length) ? AsyncTest : SyncTest;
-  return new klass(title, fn, params, suite);
+  return new klass(title, fn, params);
 };
 
 /**
@@ -968,12 +1114,11 @@ SyncTest.prototype.sync = true;
 /**
  * Execute the test.
  *
- * @param {Object} events
  * @param {Function} done
  * @api private
  */
 
-SyncTest.prototype.exec = function(events, done) {
+SyncTest.prototype.exec = function(done) {
   var err = null;
 
   try {
@@ -992,104 +1137,7 @@ SyncTest.prototype.exec = function(events, done) {
 module.exports = SyncTest;
 
 });
-require.register("hydro/lib/hydro/runner.js", function(exports, require, module){
-/**
- * Internal dependencies.
- */
-
-var Test = require('./test');
-var Suite = require('./suite');
-
-/**
- * Slice.
- */
-
-var slice = Array.prototype.slice;
-
-/**
- * Runner.
- *
- * @constructor
- */
-
-function Runner() {
-  this.suites = [];
-  this.currentSuite = null;
-}
-
-/**
- * Register a new test.
- *
- * @param {String} title
- * @param {Mixed} meta1 (optional)
- * @param {Mixed} meta2 (optional)
- * @param {Function} test (optional)
- * @api public
- */
-
-Runner.prototype.addTest = function(/* title, meta1, meta2, fn */) {
-  var suite = this.currentSuite;
-  if (!suite) throw new Error('Please register a test suite');
-  var test = Test.create(suite, slice.call(arguments, 0));
-  suite.addTest(test);
-  return test;
-};
-
-/**
- * Setup a new suite.
- *
- * @param {String} title
- * @param {Function} body (optional)
- * @api public
- */
-
-Runner.prototype.addSuite = function(title, fn) {
-  var parent = this.currentSuite;
-  var suite = new Suite(title, parent);
-  this.currentSuite = suite;
-
-  if (!parent) {
-    this.suites.push(suite);
-  } else {
-    parent.addSuite(suite);
-  }
-
-  if (fn) {
-    fn();
-    this.currentSuite = parent;
-  }
-
-  return suite;
-};
-
-/**
- * Run the test suites.
- *
- * @param {Function} fn
- * @api public
- */
-
-Runner.prototype.run = function(events, fn) {
-  var self = this;
-  var suites = this.suites.slice(0);
-  var suite = null;
-
-  function next() {
-    if (suite = suites.shift()) return suite.run(events, next);
-    events.emit('post:all', self, function() { fn(self); });
-  }
-
-  events.emit('pre:all', this, next);
-};
-
-/**
- * Primary export.
- */
-
-module.exports = Runner;
-
-});
-require.register("hydro/lib/hydro/suite.js", function(exports, require, module){
+require.register("hydro/lib/hydro/suite/index.js", function(exports, require, module){
 /**
  * Test suite.
  *
@@ -1097,11 +1145,15 @@ require.register("hydro/lib/hydro/suite.js", function(exports, require, module){
  * @constructor
  */
 
-function Suite(title, parent) {
+function Suite(title) {
   this.title = title;
-  this.parent = parent;
+  this.parent = null;
   this.tests = [];
   this.suites = [];
+  this.events = {
+    pre: 'pre:suite',
+    post: 'post:suite',
+  };
 }
 
 /**
@@ -1112,6 +1164,7 @@ function Suite(title, parent) {
  */
 
 Suite.prototype.addTest = function(test) {
+  test.suite = this;
   this.tests.push(test);
 };
 
@@ -1123,28 +1176,30 @@ Suite.prototype.addTest = function(test) {
  */
 
 Suite.prototype.addSuite = function(suite) {
+  suite.parent = this;
   this.suites.push(suite);
 };
 
 /**
  * Run the test suite.
  *
- * @param {Object} events
+ * @param {Object} emitter
  * @param {Function} fn
  * @api public
  */
 
-Suite.prototype.run = function(events, fn) {
+Suite.prototype.run = function(emitter, fn) {
   var self = this;
   var runnable = this.tests.slice(0).concat(this.suites.slice(0));
   var current = null;
+  var events = this.events;
 
   function next() {
-    if (current = runnable.shift()) return current.run(events, next);
-    events.emit('post:suite', self, function() { fn(self); });
+    if (current = runnable.shift()) return current.run(emitter, next);
+    emitter.emit(events.post, self, function() { fn(self); });
   }
 
-  events.emit('pre:suite', this, next);
+  emitter.emit(events.pre, this, next);
 };
 
 /**
@@ -1154,6 +1209,59 @@ Suite.prototype.run = function(events, fn) {
 module.exports = Suite;
 
 });
+require.register("hydro/lib/hydro/suite/root.js", function(exports, require, module){
+/**
+ * External dependencies.
+ */
+
+var inherits = require('super');
+
+/**
+ * Internal dependencies.
+ */
+
+var Suite = require('./index');
+
+/**
+ * Root suite.
+ *
+ * @constructor
+ */
+
+function RootSuite() {
+  Suite.call(this);
+
+  this.events = {
+    pre: 'pre:all',
+    post: 'post:all',
+  };
+}
+
+/**
+ * Inherit `Suite`.
+ */
+
+inherits(RootSuite, Suite);
+
+/**
+ * The root suite can't have any tests.
+ *
+ * @api public
+ */
+
+RootSuite.prototype.addTest = function() {
+  throw new Error('Please register a test suite');
+};
+
+/**
+ * Primary export.
+ */
+
+module.exports = RootSuite;
+
+});
+
+
 
 
 
@@ -1174,6 +1282,10 @@ require.alias("vesln-fload/lib/browser.js", "hydro/deps/fload/lib/browser.js");
 require.alias("vesln-fload/lib/browser.js", "hydro/deps/fload/index.js");
 require.alias("vesln-fload/lib/browser.js", "fload/index.js");
 require.alias("vesln-fload/lib/browser.js", "vesln-fload/index.js");
+require.alias("vesln-instance/index.js", "hydro/deps/instance/index.js");
+require.alias("vesln-instance/index.js", "hydro/deps/instance/index.js");
+require.alias("vesln-instance/index.js", "instance/index.js");
+require.alias("vesln-instance/index.js", "vesln-instance/index.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/lib/super.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/index.js");
 require.alias("vesln-super/lib/super.js", "super/index.js");

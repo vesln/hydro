@@ -21,7 +21,7 @@
     "lib/hydro/test/base.js",
     "lib/hydro/test/index.js",
     "lib/hydro/test/sync.js",
-    "lib/hydro/runner.js",
-    "lib/hydro/suite.js"
+    "lib/hydro/suite/index.js",
+    "lib/hydro/suite/root.js"
   ]
 }
