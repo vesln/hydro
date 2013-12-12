@@ -9,7 +9,7 @@ t('Runner contract', function() {
   hydro.run(fn);
 
   assert(runner.ran === fn);
-  assert(runner.events === hydro.events);
+  assert(runner.emitter === hydro.emitter);
 });
 
 t('no params', function() {

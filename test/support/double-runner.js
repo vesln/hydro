@@ -25,13 +25,13 @@ DoubleRunner.prototype.configure = function(options, fn) {
 /**
  * Run mock.
  *
- * @param {Object} events
+ * @param {Object} emitter
  * @param {Function} fn
  * @api public
  */
 
-DoubleRunner.prototype.run = function(events, fn) {
-  this.events = events;
+DoubleRunner.prototype.run = function(emitter, fn) {
+  this.emitter = emitter;
   this.ran = fn;
 };
 
