@@ -20,7 +20,6 @@ var Hydro = require('./');
 module.exports = function(hydro) {
   hydro.set({
     formatter: 'hydro-simple',
-    suite: 'Hydro',
     plugins: ['hydro-file-suite', 'hydro-minimal'],
     attach: global,
     globals: {
