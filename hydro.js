@@ -577,18 +577,7 @@ var merge = require('super').merge;
 var RootSuite = require('./hydro/suite/root');
 var Suite = require('./hydro/suite');
 var Test = require('./hydro/test');
-
-/**
- * toString.
- */
-
-var tostr = Object.prototype.toString;
-
-/**
- * Slice.
- */
-
-var slice = Array.prototype.slice;
+var util = require('./hydro/util');
 
 /**
  * Noop.
@@ -692,7 +681,7 @@ Hydro.prototype.addTest = function() {
  */
 
 Hydro.prototype.createTest = function() {
-  var test = Test.create(slice.call(arguments));
+  var test = Test.create(util.slice(arguments));
   var timeout = this.get('timeout');
   if (timeout) test.timeout(timeout);
   return test;
@@ -786,8 +775,8 @@ Hydro.prototype.traverse = function(handlers) {
 
   (function next(suite) {
     handlers.enterSuite(suite);
-    suite.suites.forEach(next);
-    suite.tests.forEach(function(test) { handlers.test(test); });
+    util.forEach(suite.suites, next);
+    util.forEach(suite.tests, handlers.test)
     handlers.leaveSuite(suite);
   })(this.root);
 };
@@ -838,19 +827,11 @@ Hydro.prototype.run = function(fn) {
  */
 
 Hydro.prototype.loadPlugins = function() {
-  var plugins = this.get('plugins');
-  var plugin = null;
-
-  for (var i = 0, len = plugins.length; i < len; i++) {
-    plugin = plugins[i];
-
-    if (tostr.call(plugin) === '[object String]') {
-      plugin = require(plugin);
-    }
-
-    plugin(this);
+  util.forEach(this.get('plugins'), function(plugin) {
+    plugin = !util.isString(plugin) ? plugin : require(plugin);
+    plugin(this, util);
     this.plugins.push(plugin);
-  }
+  }, this);
 };
 
 /**
@@ -861,12 +842,9 @@ Hydro.prototype.loadPlugins = function() {
 
 Hydro.prototype.attachGlobals = function() {
   var target = this.get('attach');
-  var globals = this.get('globals');
-
-  for (var prop in globals) {
-    if (!globals.hasOwnProperty(prop)) continue;
-    target[prop] = globals[prop];
-  }
+  util.eachKey(this.get('globals'), function(key, val) {
+    target[key] = val;
+  });
 };
 
 /**
@@ -880,14 +858,11 @@ Hydro.prototype.attachProxies = function() {
   var target = this.get('attach');
   var self = this;
 
-  for (var proxy in proxies) {
-    if (!proxies.hasOwnProperty(proxy)) continue;
-    (function(proxy) {
-      target[proxy] = function() {
-        return self[proxies[proxy]].apply(self, arguments);
-      };
-    })(proxy);
- }
+  util.eachKey(proxies, function(key, val) {
+    target[key] = function() {
+      return self[val].apply(self, arguments);
+    };
+  });
 };
 
 /**
@@ -909,9 +884,7 @@ Hydro.prototype.loadFormatter = function() {
  */
 
 module.exports = Hydro;
-module.exports.Test = Test;
-module.exports.Suite = Suite;
-module.exports.RootSuite = RootSuite;
+module.exports.util = util;
 
 });
 require.register("hydro/lib/hydro/test/async.js", function(exports, require, module){
@@ -999,6 +972,12 @@ require.register("hydro/lib/hydro/test/base.js", function(exports, require, modu
 var extend = require('super').extend;
 
 /**
+ * Internal dependencies.
+ */
+
+var util = require('../util');
+
+/**
  * Store `Date` locally since modules like `Timekeeper`
  * can modify it.
  */
@@ -1016,21 +995,18 @@ var D = Date;
 
 function Base(title, fn, meta) {
   this.title = title;
-  this.meta = meta || [];
   this.fn = fn;
+  this.meta = util.toArray(meta || []);
   this.status = null;
   this.error = null;
   this.time = null;
   this.context = {};
-  this.meta = Array.isArray(this.meta) ? this.meta : [this.meta];
   this.events = {
     pre: 'pre:test',
     post: 'post:test',
   };
 
-  if (!this.fn) {
-    this.pending();
-  }
+  if (!this.fn) this.pending();
 }
 
 /**
