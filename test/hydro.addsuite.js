@@ -11,7 +11,7 @@ t('add suites', function() {
   assert(suites[2].title === 'suite 2');
 });
 
-t('add suite without a bodu', function() {
+t('add suite without a body', function() {
   var hydro = Hydro();
 
   hydro.addSuite('suite 1');
