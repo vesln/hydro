@@ -591,6 +591,12 @@ var tostr = Object.prototype.toString;
 var slice = Array.prototype.slice;
 
 /**
+ * Noop.
+ */
+
+function noop(){}
+
+/**
  * Hydro - the main class that external parties
  * interact with.
  *
@@ -602,9 +608,8 @@ function Hydro() {
   this.loader = loader;
   this.emitter = new EventEmitter;
   this.plugins = [];
-  this.suites = [];
-  this.tests = [];
   this.stack = [new RootSuite];
+  this.root = this.stack[0];
   this.options = {
     plugins: [],
     aliases: {},
@@ -672,7 +677,6 @@ Hydro.prototype.get = function(key) {
 
 Hydro.prototype.addTest = function() {
   var test = this.createTest.apply(this, arguments);
-  this.tests.push(test);
   this.stack[0].addTest(test);
   return test;
 };
@@ -706,12 +710,8 @@ Hydro.prototype.addSuite = function(title, fn) {
   var suite = this.createSuite(title);
   this.stack[0].addSuite(suite);
   this.stack.unshift(suite);
-
-  if (fn) {
-    fn();
-    this.stack.shift();
-  }
-
+  fn();
+  this.stack.shift();
   return suite;
 };
 
@@ -739,6 +739,60 @@ Hydro.prototype.on = function(evt, fn) {
 };
 
 /**
+ * Return all test suites.
+ *
+ * @returns {Array}
+ * @api public
+ */
+
+Hydro.prototype.suites = function() {
+  var suites = [];
+  this.traverse({
+    enterSuite: function(suite) {
+      suites.push(suite);
+    }
+  });
+  return suites;
+};
+
+/**
+ * Return all tests.
+ *
+ * @returns {Array}
+ * @api public
+ */
+
+Hydro.prototype.tests = function() {
+  var tests = [];
+  this.traverse({
+    test: function(test) {
+      tests.push(test);
+    }
+  });
+  return tests;
+};
+
+/**
+ * Traverse.
+ *
+ * @param {Object} handlers
+ * @api public
+ */
+
+Hydro.prototype.traverse = function(handlers) {
+  handlers.test = handlers.test || noop;
+  handlers.enterSuite = handlers.enterSuite || noop;
+  handlers.leaveSuite = handlers.leaveSuite || noop;
+
+  (function next(suite) {
+    handlers.enterSuite(suite);
+    suite.suites.forEach(next);
+    suite.tests.forEach(function(test) { handlers.test(test); });
+    handlers.leaveSuite(suite);
+  })(this.root);
+};
+
+/**
  * Execute the tests.
  *
  * @param {Function} fn
@@ -759,8 +813,7 @@ Hydro.prototype.run = function(fn) {
 
   if (suite = this.get('suite')) {
     suite = this.createSuite(suite);
-    this.suites.push(suite);
-    this.stack[0].addSuite(suite);
+    this.root.addSuite(suite);
     this.stack.unshift(suite);
   }
 
@@ -773,7 +826,7 @@ Hydro.prototype.run = function(fn) {
     },
     done: function() {
       if (suite) self.stack.shift();
-      self.stack[0].run(emitter, fn);
+      self.root.run(emitter, fn);
     }
   });
 };
@@ -834,7 +887,7 @@ Hydro.prototype.attachProxies = function() {
         return self[proxies[proxy]].apply(self, arguments);
       };
     })(proxy);
-  }
+ }
 };
 
 /**
@@ -965,18 +1018,18 @@ function Base(title, fn, meta) {
   this.title = title;
   this.meta = meta || [];
   this.fn = fn;
-  this.failed = false;
+  this.status = null;
   this.error = null;
   this.time = null;
-  this.skipped = false;
   this.context = {};
+  this.meta = Array.isArray(this.meta) ? this.meta : [this.meta];
   this.events = {
     pre: 'pre:test',
     post: 'post:test',
   };
-  if (!fn) this.skip();
-  if (!Array.isArray(this.meta)) {
-    this.meta = [this.meta];
+
+  if (!this.fn) {
+    this.pending();
   }
 }
 
@@ -1006,8 +1059,21 @@ Base.prototype.timeout = function(ms) {
 
 Base.prototype.skip = function(condition) {
   if (arguments.length && !condition) return;
-  this.skipped = true;
+  this.status = 'skipped';
   this.time = 0;
+};
+
+/**
+ * Mark the test as pending.
+ *
+ * @returns {Base} self
+ * @api public
+ */
+
+Base.prototype.pending = function() {
+  this.status = 'pending';
+  this.time = 0;
+  return this;
 };
 
 /**
@@ -1021,13 +1087,16 @@ Base.prototype.skip = function(condition) {
 Base.prototype.run = function(emitter, done) {
   var self = this;
   var events = this.events;
+  var disabled = this.status === 'pending' || this.status === 'skipped';
 
   emitter.emit(events.pre, this, function() {
-    if (self.skipped) return emitter.emit(events.post, self, done);
+    var disabled = self.status === 'pending' || self.status === 'skipped';
+    if (disabled) return emitter.emit(events.post, self, done);
     var start = (new D).getTime();
     self.exec(function(err) {
       self.time = (new D).getTime() - start;
       if (err) self.fail(err);
+      else self.pass();
       emitter.emit(events.post, self, done);
     });
   });
@@ -1037,12 +1106,26 @@ Base.prototype.run = function(emitter, done) {
  * Mark the test as failed.
  *
  * @param {Object} error
+ * @returns {Base} self
  * @api private
  */
 
 Base.prototype.fail = function(err) {
-  this.failed = true;
+  this.status = 'failed';
   this.error = err;
+  return this;
+};
+
+/**
+ * Mark the test as passed.
+ *
+ * @returns {Base} self
+ * @api private
+ */
+
+Base.prototype.pass = function() {
+  this.status = 'passed';
+  return this;
 };
 
 /**

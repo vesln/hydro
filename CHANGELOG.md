@@ -1,4 +1,10 @@
 
+0.8.1 / 2013-12-13
+==================
+
+  * Allow tests to be skipped from a plugin
+  * Downgrade evts
+
 0.8.0 / 2013-12-13
 ==================
 
