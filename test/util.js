@@ -40,3 +40,15 @@ t('forEach', function() {
   assert(arr[1] == actual[1]);
   assert(arr[2] == actual[2]);
 });
+
+t('eachKey', function() {
+  function Klass(){}
+  Klass.prototype.unknown = 3;
+  var obj = new Klass;
+  obj.prop = 'test';
+
+  _.eachKey(obj, function(key, val) {
+    assert(key === 'prop');
+    assert(val === 'test');
+  });
+});

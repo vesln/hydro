@@ -28,3 +28,9 @@ t('test creation with meta and with body', function() {
   assert(test.meta[0] === 'bar');
   assert(test.meta[1] === 'baz');
 });
+
+t('setting test timeout', function() {
+  hydro.set('timeout', 42);
+  var test = hydro.createTest('foo', 'bar', 'baz', fn);
+  assert(test._timeout === 42);
+});
