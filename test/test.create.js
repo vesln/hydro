@@ -1,9 +1,9 @@
-var create = Hydro.Test.create;
+var hydro = new Hydro;
 var fn = function(){};
 
 t('test creation without meta', function() {
-  var a = create(['foo']);
-  var b = create(['foo', fn]);
+  var a = hydro.createTest('foo');
+  var b = hydro.createTest('foo', fn);
 
   assert(a.title === 'foo');
   assert(b.title === 'foo');
@@ -13,7 +13,7 @@ t('test creation without meta', function() {
 });
 
 t('test creation with meta and without body', function() {
-  var test = create(['foo', 'bar', 'baz']);
+  var test = hydro.createTest('foo', 'bar', 'baz');
 
   assert(test.title === 'foo');
   assert(test.meta[0] === 'bar');
@@ -21,7 +21,7 @@ t('test creation with meta and without body', function() {
 });
 
 t('test creation with meta and with body', function() {
-  var test = create(['foo', 'bar', 'baz', fn]);
+  var test = hydro.createTest('foo', 'bar', 'baz', fn);
 
   assert(test.title === 'foo');
   assert(test.fn === fn);
