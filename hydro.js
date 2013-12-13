@@ -1079,6 +1079,17 @@ Base.prototype.run = function(emitter, done) {
 };
 
 /**
+ * Return all parent suites.
+ *
+ * @returns {Array}
+ * @api public
+ */
+
+Base.prototype.parents = function() {
+  return this.suite.parents().concat(this.suite);
+};
+
+/**
  * Mark the test as failed.
  *
  * @param {Object} error
@@ -1262,6 +1273,17 @@ Suite.prototype.run = function(emitter, fn) {
 };
 
 /**
+ * Return all parent suites.
+ *
+ * @returns {Array}
+ * @api public
+ */
+
+Suite.prototype.parents = function() {
+  return this.parent.parents().concat(this.parent);
+};
+
+/**
  * Primary export.
  */
 
@@ -1313,10 +1335,114 @@ RootSuite.prototype.addTest = function() {
 };
 
 /**
+ * The root suite doesn't have any parent suites.
+ *
+ * @returns {Array}
+ * @api public
+ */
+
+RootSuite.prototype.parents = function() {
+  return [];
+};
+
+/**
  * Primary export.
  */
 
 module.exports = RootSuite;
+
+});
+require.register("hydro/lib/hydro/util.js", function(exports, require, module){
+/**
+ * toString.
+ */
+
+var toString = Object.prototype.toString;
+
+/**
+ * Slice.
+ */
+
+var slice = Array.prototype.slice;
+
+/**
+ * Check if `str` is string.
+ *
+ * @param {Mixed} str
+ * @returns {Boolean}
+ * @api public
+ */
+
+exports.isString = function(str) {
+  return toString.call(str) === '[object String]';
+};
+
+/**
+ * Check if `arr` is array.
+ *
+ * @param {Mixed} arr
+ * @returns {Boolean}
+ * @api private
+ */
+
+exports.isArray = function(arr) {
+  return toString.call(arr) === '[object Array]';
+};
+
+/**
+ * Convert `arguments` to array.
+ *
+ * @param {Arguments} args
+ * @returns {Array}
+ * @api public
+ */
+
+exports.slice = function(args) {
+  return slice.call(args);
+};
+
+/**
+ * Convert `arr` to array.
+ *
+ * @param {Mixed} arr
+ * @returns {Array}
+ * @api public
+ */
+
+exports.toArray = function(arr) {
+  if (exports.isArray(arr)) return arr;
+  return [arr];
+};
+
+/**
+ * forEach.
+ *
+ * @param {Array} arr
+ * @param {Function} fn
+ * @param {Object} context
+ * @api public
+ */
+
+exports.forEach = function(arr, fn, ctx) {
+  for (var i = 0, len = arr.length; i < len; i++) {
+    fn.call(ctx, arr[i]);
+  }
+};
+
+/**
+ * Call `fn` for each key in `obj`.
+ *
+ * @param {Object} obj
+ * @param {Function} fn
+ * @api public
+ */
+
+exports.eachKey = function(obj, fn) {
+  for (var key in obj) {
+    if (!obj.hasOwnProperty(key)) continue;
+    fn(key, obj[key]);
+  }
+};
 
 });
 
