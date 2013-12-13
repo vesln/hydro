@@ -1,4 +1,13 @@
 
+0.8.2 / 2013-12-13
+==================
+
+  * Tests passing on >= IE 7
+  * Allow adding a suite without a body
+  * Add Test#parents
+  * Supply the utils to plugins, similar to Chai.js
+  * Do not expose internals
+
 0.8.1 / 2013-12-13
 ==================
 
