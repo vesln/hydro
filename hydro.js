@@ -284,7 +284,9 @@ module.exports = function(fn, end) {
     end(err);
   }
 
-  window.onerror = handler;
+  window.onerror = function(msg, url, line) {
+    handler(new Error(msg + ' at ' + url + ':' + line));
+  };
 
   try {
     fn(handler)
@@ -317,7 +319,7 @@ function load(files, callbacks) {
 
       script.onload =
       script.onreadystatechange = function(e) {
-        if (e.type === 'load' || (/loaded|complete/.test(secript.readyState))) {
+        if ((e && e.type === 'load') || (/loaded|complete/.test(script.readyState))) {
           script.onload = null;
           script.onreadystatechange = null;
           callbacks.post(file, null, next);
@@ -531,14 +533,19 @@ exports.extend = function(proto, klass) {
 
 exports.inherits = function(ctor, superCtor) {
   ctor.super_ = superCtor;
-  ctor.prototype = Object.create(superCtor.prototype,
-    { constructor: {
-          value: ctor
-        , enumerable: false
-        , writable: true
-        , configurable: true
-      }
-  });
+  if (Object.create) {
+    ctor.prototype = Object.create(superCtor.prototype,
+      { constructor: {
+            value: ctor
+          , enumerable: false
+          , writable: true
+          , configurable: true
+        }
+    });
+  } else {
+    ctor.prototype = new superCtor();
+    ctor.prototype.constructor = ctor;
+  }
 }
 
 /**
@@ -550,12 +557,16 @@ exports.inherits = function(ctor, superCtor) {
 
 exports.merge = function (arr) {
   var main = arr.length === 2 ? arr.shift() : {};
-  arr.forEach(function(obj) {
+  var obj = null;
+
+  for (var i = 0, len = arr.length; i < len; i++) {
+    obj = arr[i];
     for (var p in obj) {
       if (!obj.hasOwnProperty(p)) continue;
       main[p] = obj[p];
     }
-  });
+  }
+
   return main;
 };
 
@@ -698,9 +709,11 @@ Hydro.prototype.createTest = function() {
 Hydro.prototype.addSuite = function(title, fn) {
   var suite = this.createSuite(title);
   this.stack[0].addSuite(suite);
-  this.stack.unshift(suite);
-  fn();
-  this.stack.shift();
+  if (fn) {
+    this.stack.unshift(suite);
+    fn();
+    this.stack.shift();
+  }
   return suite;
 };
 
@@ -1003,7 +1016,7 @@ function Base(title, fn, meta) {
   this.context = {};
   this.events = {
     pre: 'pre:test',
-    post: 'post:test',
+    post: 'post:test'
   };
 
   if (!this.fn) this.pending();
@@ -1222,7 +1235,7 @@ function Suite(title) {
   this.suites = [];
   this.events = {
     pre: 'pre:suite',
-    post: 'post:suite',
+    post: 'post:suite'
   };
 }
 
@@ -1314,7 +1327,7 @@ function RootSuite() {
 
   this.events = {
     pre: 'pre:all',
-    post: 'post:all',
+    post: 'post:all'
   };
 }
 

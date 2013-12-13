@@ -4,8 +4,23 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../../../build/build.js"></script>
     <script>
+      function assert (expr, msg) {
+        if (expr) return;
+        throw new Error(msg || 'Assertion Failed');
+      }
+
+      assert.not = function(expr, msg) {
+        assert(!expr, msg)
+      };
+
       var Hydro = require('hydro');
       var runner = Hydro();
+      var map = {
+        passed: 'OK',
+        skipped: 'SKIPPED',
+        pending: 'PENDING',
+        failed: 'NOT OK'
+      };
 
       runner.set({
         attach: window,
@@ -14,8 +29,7 @@
           t: 'addTest'
         },
         globals: {
-          Hydro: Hydro,
-          assert: require('simple-assert')
+          Hydro: Hydro
         },
         tests: [
           '../../hydro.addsuite.js',
@@ -37,17 +51,14 @@
           '../../hydro.traverse.js',
           '../../root-suite.js',
           '../../test.parents.js',
-          '../../util.js',
+          '../../util.js'
         ]
       });
 
       runner.on('post:test', function(test) {
-        if (!test.failed) {
-          console.log('Test: %s ... OK', test.title);
-        } else {
-          console.error('Test: %s ... NOT OK', test.title);
-          console.error(test.error.stack);
-        }
+
+        console.log('Test: %s ... ' + map[test.status], test.title);
+        if (test.error) console.error(test.error.message);
       });
 
       runner.run();

@@ -9,7 +9,7 @@ standalone: node_modules lib/* components
 # Make a new browser build
 
 build: components lib/*
-	@./node_modules/.bin/component-build --dev
+	@./node_modules/.bin/component-build
 
 release: test build browsers
 	@git changelog
