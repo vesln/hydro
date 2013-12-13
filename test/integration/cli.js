@@ -6,6 +6,7 @@ t('--version', function(done) {
   cli()
   .stdout(require('../../package.json').version)
   .run('--version')
+  .code(0)
   .end(done);
 });
 
@@ -13,6 +14,7 @@ t('--help', function(done) {
   cli()
   .stdout(/Usage: hydro \[debug\] \[options\]/)
   .run('--help')
+  .code(0)
   .end(done);
 });
 
