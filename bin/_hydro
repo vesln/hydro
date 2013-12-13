@@ -73,7 +73,7 @@ commands.forEach(function(command) {
 var failures = 0;
 
 hydro.on('post:test', function(test) {
-  failures += test.failed ? 1 : 0;
+  failures += test.status === 'failed' ? 1 : 0;
 });
 
 /**

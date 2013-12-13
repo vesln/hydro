@@ -16,7 +16,13 @@ var fixtures = require('path').join(__dirname, 'fixtures');
 module.exports = function(test, fn) {
   var options = { tests: [fixtures + '/' + test], formatter: null };
   var hydro = Hydro();
-  var result = { failed: 0, passed: 0, skipped: 0, tests: [] };
+  var result = {
+    pending: 0,
+    failed: 0,
+    passed: 0,
+    skipped: 0,
+    tests: []
+  };
 
   hydro.set(options);
 
@@ -29,10 +35,8 @@ module.exports = function(test, fn) {
   };
 
   hydro.on('post:test', function(test) {
+    result[test.status]++;
     result.tests.push(test);
-    if (test.skipped) return result.skipped++;
-    if (test.failed) return result.failed++;
-    result.passed++;
   });
 
   hydro.run(function() {

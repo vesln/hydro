@@ -16,7 +16,14 @@ t('failing tests', function(done) {
 
 t('skipped tests', function(done) {
   run('skipped.js', function(result) {
-    assert(result.skipped === 3);
+    assert(result.skipped === 2);
+    done();
+  });
+});
+
+t('pending tests', function(done) {
+  run('pending.js', function(result) {
+    assert(result.pending === 2);
     done();
   });
 });
