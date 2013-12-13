@@ -1,4 +1,21 @@
 
+0.8.0 / 2013-12-13
+==================
+
+  * Introduce pending tests
+  * Add traverse and other helper methods
+  * Browser build
+  * Docs
+  * Make test symmetric to suite
+  * Use some plugins
+  * Introduce RootSuite
+  * events -> emitter
+  * Depend on instance
+  * Tests
+  * Simplify expected dependencies
+  * Cache `Date` etc since modules like Timekeeper can modify it
+  * Add more dev tasks
+
 0.7.2 / 2013-12-11
 ==================
 
