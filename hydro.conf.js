@@ -2,7 +2,7 @@
  * External dependencies.
  */
 
-var assert = require('simple-assert');
+var assert = require('assert');
 
 /**
  * Internal dependencies.

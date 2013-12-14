@@ -1344,7 +1344,7 @@ inherits(RootSuite, Suite);
  */
 
 RootSuite.prototype.addTest = function() {
-  throw new Error('Please register a test suite');
+  throw new Error('Please add a test suite');
 };
 
 /**

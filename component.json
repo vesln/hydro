@@ -12,9 +12,6 @@
     "vesln/instance": "0.0.1",
     "vesln/super": "0.2.3"
   },
-  "development": {
-    "chaijs/simple-assert": "1.0.0"
-  },
   "scripts": [
     "lib/hydro.js",
     "lib/hydro/test/async.js",

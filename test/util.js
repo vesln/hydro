@@ -5,21 +5,21 @@ t('isString', function() {
   assert(_.isString(new String('foo')));
   assert(_.isString(String('foo')));
 
-  assert.not(_.isString({}));
-  assert.not(_.isString(/foo/));
-  assert.not(_.isString(true));
-  assert.not(_.isString(null));
-  assert.not(_.isString(undefined));
+  assert(!_.isString({}));
+  assert(!_.isString(/foo/));
+  assert(!_.isString(true));
+  assert(!_.isString(null));
+  assert(!_.isString(undefined));
 });
 
 t('isArray native', function() {
   assert(_.isArray([]));
-  assert.not(_.isArray({}));
+  assert(!_.isArray({}));
 });
 
 t('isArray custom', function() {
   assert(_.isArray([]));
-  assert.not(_.isArray({}));
+  assert(!_.isArray({}));
 });
 
 t('toArray', function() {

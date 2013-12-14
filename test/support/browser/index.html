@@ -4,23 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="../../../build/build.js"></script>
     <script>
-      function assert (expr, msg) {
+      function assert(expr, msg) {
         if (expr) return;
         throw new Error(msg || 'Assertion Failed');
       }
 
-      assert.not = function(expr, msg) {
-        assert(!expr, msg)
-      };
-
       var Hydro = require('hydro');
       var runner = Hydro();
-      var map = {
-        passed: 'OK',
-        skipped: 'SKIPPED',
-        pending: 'PENDING',
-        failed: 'NOT OK'
-      };
 
       runner.set({
         attach: window,
@@ -55,13 +45,25 @@
         ]
       });
 
-      runner.on('post:test', function(test) {
+      var aliases = {
+        passed: 'OK',
+        skipped: 'SKIPPED',
+        pending: 'PENDING',
+        failed: 'NOT OK'
+      };
 
-        console.log('Test: %s ... ' + map[test.status], test.title);
+      runner.on('post:test', function(test) {
+        var parents = test.parents();
+        var title = '';
+        for (var i = 0, len = parents.length; i < len; i++) title = parents[i].title + ' - ';
+        title += test.title;
+        console.log('%s ... ' + aliases[test.status], title);
         if (test.error) console.error(test.error.message);
       });
 
-      runner.run();
+      window.onload = function() {
+        runner.run();
+      };
     </script>
   </head>
 
