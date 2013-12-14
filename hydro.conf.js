@@ -21,7 +21,6 @@ module.exports = function(hydro) {
   hydro.set({
     formatter: 'hydro-simple',
     plugins: ['hydro-file-suite', 'hydro-minimal'],
-    attach: global,
     globals: {
       assert: assert,
       Hydro: Hydro

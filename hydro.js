@@ -444,6 +444,33 @@ function instance(input) {
 module.exports = instance;
 
 });
+require.register("vesln-globalo/index.js", function(exports, require, module){
+/**
+ * Return the top-level object for the current
+ * platform.
+ *
+ *  - Node.js: `global`
+ *  - Browsers: `window`
+ *  - Titanium + Alloy: `Alloy.Globals`
+ *  - Titanium  `Ti.App`
+ *
+ * @returns {Object}
+ * @api public
+ */
+
+module.exports = function() {
+  if (typeof global !== 'undefined') {
+    return global;
+  } else if (typeof window !== 'undefined') {
+    return window;
+  } else if (typeof Alloy !== 'undefined' && typeof Alloy.Globals !== 'undefined') {
+    return Alloy.Globals;
+  } else if (typeof Ti !== 'undefined' && typeof Ti.App !== 'undefined') {
+    return Ti.App;
+  }
+};
+
+});
 require.register("vesln-super/lib/super.js", function(exports, require, module){
 /**
  * slice
@@ -578,6 +605,7 @@ require.register("hydro/lib/hydro.js", function(exports, require, module){
 
 var EventEmitter = require('evts');
 var instance = require('instance');
+var globalo = require('globalo');
 var loader = require('fload');
 var merge = require('super').merge;
 
@@ -854,7 +882,7 @@ Hydro.prototype.loadPlugins = function() {
  */
 
 Hydro.prototype.attachGlobals = function() {
-  var target = this.get('attach');
+  var target = this.global();
   util.eachKey(this.get('globals'), function(key, val) {
     target[key] = val;
   });
@@ -868,7 +896,7 @@ Hydro.prototype.attachGlobals = function() {
 
 Hydro.prototype.attachProxies = function() {
   var proxies = this.get('proxies');
-  var target = this.get('attach');
+  var target = this.global();
   var self = this;
 
   util.eachKey(proxies, function(key, val) {
@@ -876,6 +904,18 @@ Hydro.prototype.attachProxies = function() {
       return self[val].apply(self, arguments);
     };
   });
+};
+
+/**
+ * Return the attach target or the top-level
+ * object of the current platform.
+ *
+ * @returns {Object}
+ * @api private
+ */
+
+Hydro.prototype.global = function() {
+  return this.get('attach') || globalo();
 };
 
 /**
@@ -1468,6 +1508,8 @@ exports.eachKey = function(obj, fn) {
 
 
 
+
+
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/lib/evts.js");
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/index.js");
 require.alias("vesln-evts/lib/evts.js", "evts/index.js");
@@ -1484,6 +1526,10 @@ require.alias("vesln-instance/index.js", "hydro/deps/instance/index.js");
 require.alias("vesln-instance/index.js", "hydro/deps/instance/index.js");
 require.alias("vesln-instance/index.js", "instance/index.js");
 require.alias("vesln-instance/index.js", "vesln-instance/index.js");
+require.alias("vesln-globalo/index.js", "hydro/deps/globalo/index.js");
+require.alias("vesln-globalo/index.js", "hydro/deps/globalo/index.js");
+require.alias("vesln-globalo/index.js", "globalo/index.js");
+require.alias("vesln-globalo/index.js", "vesln-globalo/index.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/lib/super.js");
 require.alias("vesln-super/lib/super.js", "hydro/deps/super/index.js");
 require.alias("vesln-super/lib/super.js", "super/index.js");
