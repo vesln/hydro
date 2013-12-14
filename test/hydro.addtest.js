@@ -23,5 +23,5 @@ t('add a test without a suite', function() {
     err = e;
   }
 
-  assert(err.message === 'Please register a test suite');
+  assert(err.message === 'Please add a test suite');
 });
