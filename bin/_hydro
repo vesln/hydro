@@ -50,6 +50,21 @@ if (fs.existsSync(conf)) {
 }
 
 /**
+ * Convert dashed keys to camel case. Basically
+ * this will prettify the config. Things like
+ * "clean-stacks" become "cleanStacks".
+ */
+
+Object.keys(options).forEach(function(key) {
+  var camel = key.replace(/(\-[a-z])/g, function(match) {
+    return match.replace('-', '').toUpperCase();
+  });
+  if (camel === key) return;
+  options[camel] = options[key];
+  delete options[key];
+});
+
+/**
  * Override the default options.
  */
 
