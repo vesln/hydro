@@ -619,12 +619,6 @@ var Test = require('./hydro/test');
 var util = require('./hydro/util');
 
 /**
- * Noop.
- */
-
-function noop(){}
-
-/**
  * Hydro - the main class that external parties
  * interact with.
  *
@@ -810,9 +804,9 @@ Hydro.prototype.tests = function() {
  */
 
 Hydro.prototype.traverse = function(handlers) {
-  handlers.test = handlers.test || noop;
-  handlers.enterSuite = handlers.enterSuite || noop;
-  handlers.leaveSuite = handlers.leaveSuite || noop;
+  handlers.test = handlers.test || util.noop;
+  handlers.enterSuite = handlers.enterSuite || util.noop;
+  handlers.leaveSuite = handlers.leaveSuite || util.noop;
 
   (function next(suite) {
     handlers.enterSuite(suite);
@@ -823,18 +817,16 @@ Hydro.prototype.traverse = function(handlers) {
 };
 
 /**
- * Execute the tests.
+ * Setup plugins, globals, proxies, formatters
+ * and root test suite.
  *
- * @param {Function} fn
  * @api public
  */
 
-Hydro.prototype.run = function(fn) {
+Hydro.prototype.setup = function() {
   var emitter = this.emitter;
   var suite = null;
   var self = this;
-
-  fn = fn || function(){};
 
   this.loadPlugins();
   this.attachGlobals();
@@ -846,6 +838,21 @@ Hydro.prototype.run = function(fn) {
     this.root.addSuite(suite);
     this.stack.unshift(suite);
   }
+};
+
+/**
+ * Load tests if any are specified and then run them.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Hydro.prototype.exec = function(fn) {
+  var emitter = this.emitter;
+  var self = this;
+  var suite = this.get('suite');
+
+  fn = fn || function(){};
 
   this.loader(this.get('tests'), {
     pre: function(file, done) {
@@ -859,6 +866,18 @@ Hydro.prototype.run = function(fn) {
       self.root.run(emitter, fn);
     }
   });
+};
+
+/**
+ * Sugar for `setup` and `exec`.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Hydro.prototype.run = function(fn) {
+  this.setup();
+  this.exec(fn);
 };
 
 /**
@@ -1497,6 +1516,14 @@ exports.eachKey = function(obj, fn) {
   }
 };
 
+/**
+ * Noop.
+ *
+ * @api public
+ */
+
+exports.noop = function(){};
+
 });
 
 
@@ -1539,5 +1566,5 @@ require.alias("hydro/lib/hydro.js", "hydro/index.js");if (typeof exports == "obj
 } else if (typeof define == "function" && define.amd) {
   define(function(){ return require("hydro"); });
 } else {
-  this["hydro"] = require("hydro");
+  this["Hydro"] = require("hydro");
 }})();
