@@ -1,4 +1,10 @@
 
+0.8.4 / 2013-12-21
+==================
+
+  * Extract `run` into separate methods
+  * Improve browser support
+
 0.8.3 / 2013-12-15
 ==================
 
