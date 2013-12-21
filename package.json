@@ -48,6 +48,16 @@
       ]
     }
   },
+  "dependencies": {
+    "super": "*",
+    "evts": "0.0.1",
+    "tryc": "*",
+    "fload": "*",
+    "instance": "*",
+    "globalo": "*",
+    "v8-argv": "~0.2.0",
+    "argvee": "~0.1.1"
+  },
   "devDependencies": {
     "nixt": "*",
     "hydro-silent": "*",
@@ -58,15 +68,5 @@
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
     "component": "~0.18.0"
-  },
-  "dependencies": {
-    "super": "*",
-    "evts": "0.0.1",
-    "tryc": "*",
-    "fload": "*",
-    "instance": "*",
-    "globalo": "*",
-    "v8-argv": "~0.1.0",
-    "optimist": "~0.6.0"
   }
 }
