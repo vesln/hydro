@@ -30,4 +30,4 @@ t('subscribing to events', function(done) {
     assert(called);
     done();
   });
-}).skip(typeof window === 'undefined');
+}).skip(typeof BROWSER_STANDALONE === 'undefined');
