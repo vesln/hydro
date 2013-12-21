@@ -1,9 +1,13 @@
 all: test
 
-# Standalone browser build
+# Install
 
-standalone: node_modules lib/* components
-	@./node_modules/.bin/component-build -s hydro -o .
+install: node_modules components browser
+
+# Browser build
+
+browser: node_modules lib/* components
+	@./node_modules/.bin/component-build -s Hydro -o .
 	@mv build.js hydro.js
 
 # Make a new browser build
