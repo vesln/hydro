@@ -34,6 +34,7 @@
     "evts": "0.0.1",
     "tryc": "*",
     "fload": "*",
+    "loa": "0.0.2",
     "instance": "*",
     "globalo": "*",
     "v8-argv": "~0.1.0",

@@ -6,10 +6,10 @@
   "license": "MIT",
   "main": "lib/hydro.js",
   "dependencies": {
+    "hydrojs/loa": "0.0.2",
     "vesln/evts": "0.0.1",
     "vesln/tryc": "0.0.2",
     "vesln/fload": "0.0.2",
-    "vesln/instance": "0.0.1",
     "vesln/globalo": "0.0.1",
     "vesln/super": "0.2.3"
   },
