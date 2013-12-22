@@ -52,7 +52,7 @@ module.exports = function(config) {
     ? process.env.BROWSERS.split(',')
     : Object.keys(browsers);
 
-  // Do not run when on Travis CI when the current node version
+  // Do not run when on Travis CI and the current node version
   // doesn't match the configured one
   if (process.version.indexOf(process.env.KARMA_RUN_ON) !== 0 && process.env.TRAVIS) {
     process.exit(0);
