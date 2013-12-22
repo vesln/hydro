@@ -2,7 +2,7 @@
   "name": "hydro",
   "repo": "vesln/hydro",
   "description": "",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "license": "MIT",
   "main": "lib/hydro.js",
   "dependencies": {

@@ -1,4 +1,9 @@
 
+0.8.5 / 2013-12-22
+==================
+
+  * `run` will setup the environment only if not done yet
+
 0.8.4 / 2013-12-21
 ==================
 

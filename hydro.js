@@ -838,6 +838,8 @@ Hydro.prototype.setup = function() {
     this.root.addSuite(suite);
     this.stack.unshift(suite);
   }
+
+  this._init = true;
 };
 
 /**
@@ -876,7 +878,7 @@ Hydro.prototype.exec = function(fn) {
  */
 
 Hydro.prototype.run = function(fn) {
-  this.setup();
+  if (!this._init) this.setup();
   this.exec(fn);
 };
 
