@@ -807,6 +807,7 @@ Hydro.prototype.traverse = function(handlers) {
 Hydro.prototype.setup = function() {
   var emitter = this.emitter;
   var suite = null;
+  var stackLimit = null;
   var self = this;
 
   this.loadPlugins();
@@ -818,6 +819,10 @@ Hydro.prototype.setup = function() {
     suite = this.createSuite(suite);
     this.root.addSuite(suite);
     this.stack.unshift(suite);
+  }
+
+  if (stackLimit = this.get('stackLimit')) {
+    Error.stackTraceLimit = stackLimit;
   }
 
   this._init = true;

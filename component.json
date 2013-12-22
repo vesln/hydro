@@ -13,6 +13,9 @@
     "vesln/globalo": "0.0.1",
     "vesln/super": "0.2.3"
   },
+  "development": {
+    "hydrojs/hydro-minimal": "0.0.1"
+  },
   "scripts": [
     "lib/hydro.js",
     "lib/hydro/test/async.js",
