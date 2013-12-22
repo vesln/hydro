@@ -15,9 +15,6 @@ browser: node_modules lib/* components
 build: components lib/*
 	@./node_modules/.bin/component-build --dev
 
-release: test build browsers
-	@git changelog
-
 # Clean
 
 clean: clean-node clean-browser clean-components clean-cov
