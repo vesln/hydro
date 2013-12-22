@@ -9,6 +9,7 @@ var flags = [
   '--version      show hydro version',
   '--no-colors    disable colors',
   '--timeout      timeout for async tests',
+  '--stack-limit  stack trace limit',
 ];
 
 /**
