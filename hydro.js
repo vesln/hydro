@@ -200,6 +200,93 @@ require.relative = function(parent) {
 
   return localRequire;
 };
+require.register("hydrojs-loa/index.js", function(exports, require, module){
+/**
+ * global || window
+ */
+
+var root = typeof global !== 'undefined' ? global : window;
+
+/**
+ * toString.
+ */
+
+var toString = Object.prototype.toString;
+
+/**
+ * Check if `input` is String, Function or Object.
+ *
+ * @param {String} type
+ * @param {Mixed} input
+ * @returns {Boolean}
+ * @api private
+ */
+
+function is(type, input) {
+  if (type === 'Object') return Object(input) === input;
+  return toString.call(input) === '[object ' + type + ']';
+}
+
+/**
+ * Check if `input` is a string and if so, either
+ * refer to the global scope or `require` it. Then
+ * call `loa` again in case the exported object
+ * is a function.
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function str(input) {
+  if (!is('String', input)) return;
+  return root[input] || (root.require || require)(input);
+}
+
+/**
+ * Check if `input` is an object and if so assume it
+ * is already an loa of something and return it
+ * back;
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function handeled(input) {
+  if (is('Object', input) || is('Function', input)) return input;
+}
+
+/**
+ * Raise error.
+ *
+ * @param {Mixed} input
+ * @api private
+ */
+
+function raise(input) {
+  throw new TypeError("loa: Can't handle: " + input);
+}
+
+/**
+ * input is String             - global[input] || require(input)
+ * input is Object|Function    - return input
+ * else                        - throw
+ *
+ * @param {Mixed} input
+ * @returns {Object}
+ * @api public
+ */
+
+function loa(input) {
+  return handeled(input) || str(input) || raise(input);
+};
+
+/**
+ * Primary export.
+ */
+
+module.exports = loa;
+
+});
 require.register("vesln-evts/lib/evts.js", function(exports, require, module){
 /**
  * slice.
@@ -336,112 +423,6 @@ function load(files, callbacks) {
  */
 
 module.exports = load;
-
-});
-require.register("vesln-instance/index.js", function(exports, require, module){
-/**
- * global || window
- */
-
-var root = typeof global !== 'undefined'
-  ? global
-  : window;
-
-/**
- * toString.
- */
-
-var toString = Object.prototype.toString;
-
-/**
- * Check if `input` is String, Function or Object.
- *
- * @param {String} type
- * @param {Mixed} input
- * @returns {Boolean}
- * @api private
- */
-
-function is(type, input) {
-  if (type === 'Object') return Object(input) === input;
-  return toString.call(input) === '[object ' + type + ']';
-}
-
-/**
- * Check if `input` is a string and if so, either
- * refer to the global scope or `require` it. Then
- * call `instance` again in case the exported object
- * is a function.
- *
- * @param {Mixed} input
- * @api private
- */
-
-function str(input) {
-  if (!is('String', input)) return;
-  return instance(root[input] || require(input));
-}
-
-/**
- * Check if `input` is a function and if so instantiate it.
- *
- * @param {Mixed} input
- * @api private
- */
-
-function fn(input) {
-  if (!is('Function', input)) return;
-  return new input;
-}
-
-/**
- * Check if `input` is an object and if so assume it
- * is already an instance of something and return it
- * back;
- *
- * @param {Mixed} input
- * @api private
- */
-
-function obj(input) {
-  if (!is('Object', input)) return;
-  return input;
-}
-
-/**
- * Raise error.
- *
- * @param {Mixed} input
- * @api private
- */
-
-function raise(input) {
-  throw new TypeError("Can't handle: " + input);
-}
-
-/**
- * input is String    - instnace(global[input] || require(input))
- * input is Function  - `new input`
- * input is Object    - return input
- * else raise hell
- *
- * @param {Mixed} input
- * @returns {Object}
- * @api public
- */
-
-function instance(input) {
-  return str(input)
-    || fn(input)
-    || obj(input)
-    || raise(input);
-};
-
-/**
- * Primary export.
- */
-
-module.exports = instance;
 
 });
 require.register("vesln-globalo/index.js", function(exports, require, module){
@@ -604,7 +585,7 @@ require.register("hydro/lib/hydro.js", function(exports, require, module){
  */
 
 var EventEmitter = require('evts');
-var instance = require('instance');
+var loa = require('loa');
 var globalo = require('globalo');
 var loader = require('fload');
 var merge = require('super').merge;
@@ -890,7 +871,7 @@ Hydro.prototype.run = function(fn) {
 
 Hydro.prototype.loadPlugins = function() {
   util.forEach(this.get('plugins'), function(plugin) {
-    plugin = !util.isString(plugin) ? plugin : require(plugin);
+    plugin = loa(plugin);
     plugin(this, util);
     this.plugins.push(plugin);
   }, this);
@@ -949,7 +930,8 @@ Hydro.prototype.loadFormatter = function() {
   var name = this.get('formatter');
   var formatter = null;
   if (!name) return;
-  formatter = instance(name);
+  formatter = loa(name);
+  if (util.isFunction(formatter)) formatter = new formatter;
   formatter.use(this);
 };
 
@@ -1452,6 +1434,18 @@ exports.isString = function(str) {
 };
 
 /**
+ * Check if `fn` is function.
+ *
+ * @param {Mixed} fn
+ * @returns {Boolean}
+ * @api public
+ */
+
+exports.isFunction = function(fn) {
+  return toString.call(fn) === '[object Function]';
+};
+
+/**
  * Check if `arr` is array.
  *
  * @param {Mixed} arr
@@ -1539,6 +1533,10 @@ exports.noop = function(){};
 
 
 
+require.alias("hydrojs-loa/index.js", "hydro/deps/loa/index.js");
+require.alias("hydrojs-loa/index.js", "hydro/deps/loa/index.js");
+require.alias("hydrojs-loa/index.js", "loa/index.js");
+require.alias("hydrojs-loa/index.js", "hydrojs-loa/index.js");
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/lib/evts.js");
 require.alias("vesln-evts/lib/evts.js", "hydro/deps/evts/index.js");
 require.alias("vesln-evts/lib/evts.js", "evts/index.js");
@@ -1551,10 +1549,6 @@ require.alias("vesln-fload/lib/browser.js", "hydro/deps/fload/lib/browser.js");
 require.alias("vesln-fload/lib/browser.js", "hydro/deps/fload/index.js");
 require.alias("vesln-fload/lib/browser.js", "fload/index.js");
 require.alias("vesln-fload/lib/browser.js", "vesln-fload/index.js");
-require.alias("vesln-instance/index.js", "hydro/deps/instance/index.js");
-require.alias("vesln-instance/index.js", "hydro/deps/instance/index.js");
-require.alias("vesln-instance/index.js", "instance/index.js");
-require.alias("vesln-instance/index.js", "vesln-instance/index.js");
 require.alias("vesln-globalo/index.js", "hydro/deps/globalo/index.js");
 require.alias("vesln-globalo/index.js", "hydro/deps/globalo/index.js");
 require.alias("vesln-globalo/index.js", "globalo/index.js");
