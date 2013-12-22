@@ -36,8 +36,8 @@ test-browser: components build
 
 # Run the tests on SauceLabs
 
-test-sauce:
-	@TEST_ENV=sauce RUN_ON=$(NODE_VERSION) ./node_modules/.bin/karma start
+test-sauce: components build
+	@TEST_ENV=sauce KARMA_RUN_ON=$(NODE_VERSION) ./node_modules/.bin/karma start
 
 # Clean
 

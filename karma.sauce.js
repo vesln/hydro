@@ -41,6 +41,7 @@ var browsers = {
 module.exports = function(config) {
   var package = require('./package.json');
   var branch = process.env.TRAVIS_BRANCH || 'local';
+  var tags = [package.name + '_' + package.version, user + '@' + branch];
 
   // Credentials
   var user = process.env.SAUCE_HYDRO_USERNAME || process.env.SAUCE_USERNAME;
@@ -51,10 +52,14 @@ module.exports = function(config) {
     ? process.env.BROWSERS.split(',')
     : Object.keys(browsers);
 
-  // Do not run when on Travis CI and the current node version
+  // Do not run when on Travis CI when the current node version
   // doesn't match the configured one
-  if (process.version.indexOf(process.env.RUN_ON) !== 0 && process.env.TRAVIS) {
+  if (process.version.indexOf(process.env.KARMA_RUN_ON) !== 0 && process.env.TRAVIS) {
     process.exit(0);
+  }
+
+  if (process.env.TRAVIS_JOB_NUMBER) {
+    tags.push('travis@' + process.env.TRAVIS_JOB_NUMBER);
   }
 
   config.browsers = versions;
@@ -71,7 +76,7 @@ module.exports = function(config) {
     username: user,
     accessKey: key,
     startConnect: true,
-    tags: [package.name + '_' + package.version, user + '@' + branch],
+    tags: tags,
     testName: package.name,
     tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER || new Date().getTime()
   };
