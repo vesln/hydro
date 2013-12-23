@@ -39,7 +39,7 @@
   "dependencies": {
     "super": "*",
     "evts": "0.0.1",
-    "tryc": "*",
+    "tryc": "~0.0.3",
     "fload": "*",
     "loa": "0.0.2",
     "globalo": "*",
