@@ -1,12 +1,12 @@
 {
   "name": "hydro",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/hydro.js",
   "homepage": "https://github.com/hydrojs/hydro",
   "scripts": {
-    "test": "bin/hydro",
+    "test": "bin/hydro && karma start",
     "coverage": "istanbul cover bin/_hydro -- --formatter hydro-silent"
   },
   "repository": {
