@@ -22,6 +22,7 @@ install: node_modules components build browser
 browser: node_modules lib/* components
 	@./node_modules/.bin/component-build -s Hydro -o .
 	@mv build.js hydro.js
+	@$(UGLIFY) hydro.js --output hydro.min.js
 
 #
 # Make a new development build
@@ -74,6 +75,7 @@ clean-node:
 
 clean-browser:
 	@rm -f hydro.js
+	@rm -f hydro.min.js
 
 #
 # Clean components & build

@@ -28,6 +28,7 @@
     "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
     "component": "~0.18.0",
+    "uglify-js": "*",
     "karma": "~0.10.8",
     "karma-chrome-launcher": "~0.1.1",
     "karma-firefox-launcher": "~0.1.2",
