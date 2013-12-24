@@ -1,13 +1,27 @@
 # Run the tests on SauceLabs only when
 # the current node version is the following:
 
-NODE_VERSION = v0.10.
+SAUCE_NODE_VERSION = v0.10.
 
-# Path to uglify.js
+#
+# Variables
+#
 
+MIN = hydro.min.js
+KARMA = node_modules/.bin/karma
 UGLIFY = node_modules/uglify-js/bin/uglifyjs
+BROWSER = hydro.js
+COV_EXEC = bin/_hydro
+ISTANBUL = node_modules/.bin/istanbul
+COVERALLS = ./node_modules/coveralls/bin/coveralls.js
+COMPONENT_BUILD = node_modules/.bin/component-build
+COMPONENT_INSTALL = node_modules/.bin/component-install
 
-all: install
+#
+# All
+#
+
+all: install test
 
 #
 # Install
@@ -19,17 +33,17 @@ install: node_modules components build browser
 # Browser build
 #
 
-browser: node_modules lib/* components
-	@./node_modules/.bin/component-build -s Hydro -o .
-	@mv build.js hydro.js
-	@$(UGLIFY) hydro.js --output hydro.min.js
+browser: node_modules components
+	@$(COMPONENT_BUILD) -s Hydro -o .
+	@mv build.js $(BROWSER)
+	@$(UGLIFY) $(BROWSER) --output $(MIN)
 
 #
 # Make a new development build
 #
 
-build: components lib/*
-	@./node_modules/.bin/component-build --dev
+build: node_modules components
+	@$(COMPONENT_BUILD) --dev
 
 #
 # Run all tests
@@ -39,22 +53,29 @@ test: test-node test-browser
 
 # Run the Node.js tests
 
-test-node:
+test-node: node_modules
 	@bin/hydro
 
 #
 # Run the browser tests
 #
 
-test-browser: components build
-	@./node_modules/.bin/karma start
+test-browser: node_modules components build
+	@$(KARMA) start
+
+#
+# Test coverage
+#
+
+test-cov: node_modules
+	@$(ISTANBUL) cover $(COV_EXEC) -- --formatter hydro-silent
 
 #
 # Run the tests on SauceLabs
 #
 
-test-sauce: components build
-	@TEST_ENV=sauce KARMA_RUN_ON=$(NODE_VERSION) ./node_modules/.bin/karma start
+test-sauce: node_modules components build
+	@TEST_ENV=sauce KARMA_RUN_ON=$(SAUCE_NODE_VERSION) $(KARMA) start
 
 #
 # Clean all
@@ -74,8 +95,8 @@ clean-node:
 #
 
 clean-browser:
-	@rm -f hydro.js
-	@rm -f hydro.min.js
+	@rm -f $(BROWSER)
+	@rm -f $(MIN)
 
 #
 # Clean components & build
@@ -102,27 +123,27 @@ ci: test-node test-sauce coveralls
 # Send coverage to coveralls
 #
 
-coveralls:
-	@./node_modules/.bin/istanbul cover bin/_hydro --report lcovonly -- \
+coveralls: node_modules
+	@$(ISTANBUL) cover $(COV_EXEC) --report lcovonly -- \
 		--formatter hydro-silent \
-		&& cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+		&& cat ./coverage/lcov.info | $(COVERALLS)
 
 #
 # Install all components (+ dev)
 #
 
 components: node_modules component.json
-	@./node_modules/.bin/component-install --dev
+	@$(COMPONENT_INSTALL) --dev
 
 #
 # Install Node.js modules
 #
 
-node_modules: package.json
+node_modules:
 	@npm install
 
 #
 # Instructions
 #
 
-.PHONY: all test coverage browser
+.PHONY: all test coverage browser build components
