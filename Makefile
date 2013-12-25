@@ -13,7 +13,7 @@ UGLIFY = node_modules/uglify-js/bin/uglifyjs
 BROWSER = hydro.js
 COV_EXEC = bin/_hydro
 ISTANBUL = node_modules/.bin/istanbul
-COVERALLS = ./node_modules/coveralls/bin/coveralls.js
+COVERALLS = node_modules/coveralls/bin/coveralls.js
 COMPONENT_BUILD = node_modules/.bin/component-build
 COMPONENT_INSTALL = node_modules/.bin/component-install
 
