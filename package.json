@@ -33,8 +33,9 @@
     "karma-firefox-launcher": "~0.1.2",
     "karma-phantomjs-launcher": "~0.1.1",
     "karma-safari-launcher": "~0.1.1",
-    "karma-sauce-launcher": "git://github.com/embarkmobile/karma-sauce-launcher.git#feature-passfail",
-    "karma-hydro": "*"
+    "karma-sauce-launcher": "embarkmobile/karma-sauce-launcher#feature-passfail",
+    "karma-hydro": "*",
+    "serve": "jkroso/serve#1.5.1"
   },
   "dependencies": {
     "super": "*",
