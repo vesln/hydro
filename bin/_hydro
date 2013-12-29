@@ -98,12 +98,6 @@ Object.keys(options).forEach(function(key) {
 });
 
 /**
- * Stack trace limit.
- */
-
-//Error.stackTraceLimit = options.stackLimit || Infinity;
-
-/**
  * Override the default options.
  */
 
