@@ -4,89 +4,89 @@
 <div id="hydro"></div>
 
 <script>
-	var Hydro = require('../lib/hydro')
-	var hydro = new Hydro
+  var Hydro = require('../lib/hydro')
+  var hydro = new Hydro
 
-	var result = {
-		start: new Date,
-		suites: 0,
-		failed: 0,
-		tests: 0,
-		failures: 0,
-		failed: [],
-		passes: 0,
-		pending: 0,
-	}
+  var result = {
+    start: new Date,
+    suites: 0,
+    failed: 0,
+    tests: 0,
+    failures: 0,
+    failed: [],
+    passes: 0,
+    pending: 0,
+  }
 
-	hydro.on('post:test', function(test) {
-		result.tests++
-		switch (test.status) {
-			case 'failed':
-				result.failed.push({
-					title: test.title,
-					fullTitle: test.title,
-					error: {
-						message: test.error.message,
-						stack: test.error.stack
-					}
-				})
-				result.failures++
-				console.log(test.title)
-				console.log(test.error)
-				break
-			case 'passed':
-				result.passes++
-				break
-			case 'pending':
-			case 'skipped':
-				result.pending++
-		}
+  hydro.on('post:test', function(test) {
+    result.tests++
+    switch (test.status) {
+      case 'failed':
+        result.failed.push({
+          title: test.title,
+          fullTitle: test.title,
+          error: {
+            message: test.error.message,
+            stack: test.error.stack
+          }
+        })
+        result.failures++
+        console.log(test.title)
+        console.log(test.error)
+        break
+      case 'passed':
+        result.passes++
+        break
+      case 'pending':
+      case 'skipped':
+        result.pending++
+    }
   });
 
   hydro.on('post:suite', function(suite){
-  	result.suites++
+    result.suites++
   });
 
   hydro.on('post:all', function(){
-		result.end = new Date
-		result.duration = Number(result.end) - Number(result.start)
-  	window.mochaResults = result // expose results
+    result.end = new Date
+    result.duration = Number(result.end) - Number(result.start)
+    window.mochaResults = result // expose results
   });
 
-	hydro.set({
-		suite: 'hydro',
-		plugins: [
-			require('hydro-minimal')
-		],
-		globals: {
-			assert: require('assert'),
-			Hydro: Hydro
-		}
-	});
+  hydro.set({
+    suite: 'hydro',
+    plugins: [
+      require('hydro-minimal')
+    ],
+    globals: {
+      assert: require('assert'),
+      Hydro: Hydro
+    }
+  });
 
-	hydro.setup()
+  hydro.setup()
 
-	require('./hydro.addsuite')
-	require('./hydro.addtest')
-	require('./hydro.attach')
-	require('./hydro.createsuite')
-	require('./hydro.createtest')
-	require('./hydro.formatter')
-	require('./hydro.get')
-	require('./hydro.globals')
-	require('./hydro.on')
-	require('./hydro.plugins')
-	require('./hydro.proxies')
-	require('./hydro.push')
-	require('./hydro.run')
-	require('./hydro.set')
-	require('./hydro.suites')
-	require('./hydro.tests')
-	require('./hydro.traverse')
-	require('./root-suite')
-	require('./stack-limit')
-	require('./test.parents')
-	require('./util')
+  require('./hydro.addsuite')
+  require('./hydro.addtest')
+  require('./hydro.attach')
+  require('./hydro.createsuite')
+  require('./hydro.createtest')
+  require('./hydro.formatter')
+  require('./hydro.get')
+  require('./hydro.globals')
+  require('./hydro.on')
+  require('./hydro.plugins')
+  require('./hydro.proxies')
+  require('./hydro.push')
+  require('./hydro.run')
+  require('./hydro.set')
+  require('./hydro.suites')
+  require('./hydro.tests')
+  require('./hydro.traverse')
+  require('./root-suite')
+  require('./stack-limit')
+  require('./test.parents')
+  require('./util')
 
-	hydro.run()
+  hydro.run()
 </script>
