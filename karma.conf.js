@@ -3,9 +3,7 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['hydro'],
     files: [
-      'build/build.js',
-      'hydro.karma.js',
-      'test/*.js'
+      'build/browserify.js'
     ],
     reporters: ['progress'],
     port: 9876,

@@ -149,7 +149,7 @@ node_modules:
 #
 
 server:
-	@node_modules/serve/bin/serve -Lop 0
+	@node_modules/serve/bin/serve -LoJp 0
 
 #
 # Instructions

@@ -1,0 +1,48 @@
+
+var Hydro = require('../lib/hydro')
+var hydro = new Hydro
+
+hydro.on('post:test', function(test) {
+  if (test.status == 'failed') {
+    console.log(test.title)
+    console.log(test.error)
+  }
+});
+
+hydro.set({
+  suite: 'hydro',
+  plugins: [
+    require('hydro-minimal'),
+    require('hydro-karma-adapter')
+  ],
+  globals: {
+    assert: require('assert'),
+    Hydro: Hydro
+  }
+});
+
+hydro.setup()
+
+require('./hydro.addsuite')
+require('./hydro.addtest')
+require('./hydro.attach')
+require('./hydro.createsuite')
+require('./hydro.createtest')
+require('./hydro.formatter')
+require('./hydro.get')
+require('./hydro.globals')
+require('./hydro.on')
+require('./hydro.plugins')
+require('./hydro.proxies')
+require('./hydro.push')
+require('./hydro.run')
+require('./hydro.set')
+require('./hydro.suites')
+require('./hydro.tests')
+require('./hydro.traverse')
+require('./root-suite')
+require('./stack-limit')
+require('./test.parents')
+require('./util')
+
+hydro.run()
