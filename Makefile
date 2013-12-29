@@ -143,7 +143,16 @@ node_modules:
 	@npm install
 
 #
+# start a server for running the browser tests
+# once started navigate the browser tab to the
+# test directory
+#
+
+server:
+	@node_modules/serve/bin/serve -Lop 0
+
+#
 # Instructions
 #
 
-.PHONY: all test coverage browser build components
+.PHONY: all test coverage browser build components server
