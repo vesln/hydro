@@ -17,4 +17,4 @@ t('plugins as modules', function(done) {
   assert(plugin.called);
   plugin.called = false;
   done();
-}).skip(typeof __dirname === 'undefined' || typeof __testlingErrorHandler !== 'undefined');
+}).skip(typeof window !== 'undefined' || typeof __testlingErrorHandler !== 'undefined');
