@@ -2,15 +2,9 @@
 var Hydro = require('../lib/hydro')
 var hydro = new Hydro
 
-hydro.on('post:test', function(test) {
-  if (test.status == 'failed') {
-    console.log(test.title)
-    console.log(test.error)
-  }
-});
-
 hydro.set({
   suite: 'hydro',
+  formatter: require('hydro-html'),
   plugins: [
     require('hydro-minimal'),
     require('hydro-karma-adapter')

@@ -22,6 +22,7 @@
     "nixt": "*",
     "hydro-silent": "*",
     "hydro-simple": "*",
+    "hydro-html": "*",
     "hydro-file-suite": "*",
     "hydro-minimal": "*",
     "coveralls": "~2.3.0",
