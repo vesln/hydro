@@ -1,10 +1,7 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['hydro'],
-    files: [
-      'build/browserify.js'
-    ],
+    files: [ 'build/browserify.js'],
     reporters: ['progress'],
     port: 9876,
     colors: true,

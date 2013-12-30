@@ -34,8 +34,9 @@
     "karma-phantomjs-launcher": "~0.1.1",
     "karma-safari-launcher": "~0.1.1",
     "karma-sauce-launcher": "embarkmobile/karma-sauce-launcher#feature-passfail",
-    "karma-hydro": "*",
-    "serve": "jkroso/serve#1.5.1"
+    "hydro-karma-adapter": "*",
+    "serve": "jkroso/serve#1.5.1",
+    "browserify": "~3.18.0"
   },
   "dependencies": {
     "super": "*",

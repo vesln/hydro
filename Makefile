@@ -139,7 +139,7 @@ components: node_modules component.json
 # Install Node.js modules
 #
 
-node_modules:
+node_modules: package.json
 	@npm install
 
 #
@@ -150,6 +150,13 @@ node_modules:
 
 server:
 	@node_modules/serve/bin/serve -LoJp 0
+
+#
+# the browserified test suite
+#
+
+build/browserify.js: build
+	@node_modules/browserify/bin/cmd.js test/browserify -d > $@
 
 #
 # Instructions
