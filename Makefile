@@ -61,8 +61,20 @@ test-node: node_modules
 # Run the browser tests
 #
 
-test-browser: node_modules components build build/browserify.js
-	@$(KARMA) start
+test-browser: test-component test-browserify
+
+test-component: node_modules components build
+	@KARMA_TARGET=component $(KARMA) start
+
+test-browserify: node_modules build/browserify.js
+	@KARMA_TARGET=browserify $(KARMA) start
+
+#
+# the browserified test suite
+#
+
+build/browserify.js: build
+	@node_modules/browserify/bin/cmd.js test/browserify -d > $@
 
 #
 # Test coverage
@@ -152,13 +164,6 @@ node_modules: package.json
 
 server:
 	@node_modules/serve/bin/serve -LoJp 0
-
-#
-# the browserified test suite
-#
-
-build/browserify.js: build
-	@node_modules/browserify/bin/cmd.js test/browserify -d > $@
 
 #
 # commands to always run regardless of timestamps

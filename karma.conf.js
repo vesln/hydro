@@ -1,7 +1,6 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
-    files: [ 'build/browserify.js'],
     reporters: ['progress'],
     port: 9876,
     colors: true,
@@ -17,6 +16,23 @@ module.exports = function(config) {
       }
     },
   });
+
+  if (process.env.KARMA_TARGET === 'browserify') {
+    // browserify
+    config.set({
+      files: [ 'build/browserify.js']
+    });
+  } else {
+    // component
+    config.set({
+      frameworks: ['hydro'],
+      files: [
+        'build/build.js',
+        'hydro.karma.js',
+        'test/*.js'
+      ]
+    });
+  }
 
   if (process.env.TEST_ENV === 'sauce') {
     require('./karma.sauce')(config);
