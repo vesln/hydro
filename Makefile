@@ -44,6 +44,7 @@ browser: node_modules components
 
 build: node_modules components
 	@$(COMPONENT_BUILD) --dev
+	@touch $@
 
 #
 # Run all tests
@@ -60,7 +61,7 @@ test-node: node_modules
 # Run the browser tests
 #
 
-test-browser: node_modules components build
+test-browser: node_modules components build build/browserify.js
 	@$(KARMA) start
 
 #
@@ -141,6 +142,7 @@ components: node_modules component.json
 
 node_modules: package.json
 	@npm install
+	@touch $@
 
 #
 # start a server for running the browser tests
@@ -159,7 +161,7 @@ build/browserify.js: build
 	@node_modules/browserify/bin/cmd.js test/browserify -d > $@
 
 #
-# Instructions
+# commands to always run regardless of timestamps
 #
 
-.PHONY: all test coverage browser build components server
+.PHONY: all test coverage browser server
