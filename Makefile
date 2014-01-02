@@ -44,6 +44,7 @@ browser: node_modules components
 
 build: node_modules components
 	@$(COMPONENT_BUILD) --dev
+	@touch $@
 
 #
 # Run all tests
@@ -60,8 +61,20 @@ test-node: node_modules
 # Run the browser tests
 #
 
-test-browser: node_modules components build
-	@$(KARMA) start
+test-browser: test-component test-browserify
+
+test-component: node_modules components build
+	@KARMA_TARGET=component $(KARMA) start
+
+test-browserify: node_modules build/browserify.js
+	@KARMA_TARGET=browserify $(KARMA) start
+
+#
+# the browserified test suite
+#
+
+build/browserify.js: build
+	@node_modules/browserify/bin/cmd.js test/browserify -d > $@
 
 #
 # Test coverage
@@ -139,11 +152,21 @@ components: node_modules component.json
 # Install Node.js modules
 #
 
-node_modules:
+node_modules: package.json
 	@npm install
+	@touch $@
 
 #
-# Instructions
+# start a server for running the browser tests
+# once started navigate the browser tab to the
+# test directory
 #
 
-.PHONY: all test coverage browser build components
+server:
+	@node_modules/serve/bin/serve -LoJp 0
+
+#
+# commands to always run regardless of timestamps
+#
+
+.PHONY: all test coverage browser server

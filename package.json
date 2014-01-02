@@ -22,6 +22,7 @@
     "nixt": "*",
     "hydro-silent": "*",
     "hydro-simple": "*",
+    "hydro-html": "*",
     "hydro-file-suite": "*",
     "hydro-minimal": "*",
     "coveralls": "~2.3.0",
@@ -33,8 +34,11 @@
     "karma-firefox-launcher": "~0.1.2",
     "karma-phantomjs-launcher": "~0.1.1",
     "karma-safari-launcher": "~0.1.1",
-    "karma-sauce-launcher": "git://github.com/embarkmobile/karma-sauce-launcher.git#feature-passfail",
-    "karma-hydro": "*"
+    "karma-sauce-launcher": "embarkmobile/karma-sauce-launcher#feature-passfail",
+    "karma-hydro": "*",
+    "hydro-karma-adapter": "*",
+    "serve": "jkroso/serve#1.5.1",
+    "browserify": "~3.18.0"
   },
   "dependencies": {
     "super": "*",
