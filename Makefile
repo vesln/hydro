@@ -8,14 +8,20 @@ SAUCE_NODE_VERSION = v0.10.
 #
 
 MIN = hydro.min.js
-KARMA = node_modules/.bin/karma
 UGLIFY = node_modules/uglify-js/bin/uglifyjs
 BROWSER = hydro.js
 COV_EXEC = bin/_hydro
 ISTANBUL = node_modules/.bin/istanbul
 COVERALLS = node_modules/coveralls/bin/coveralls.js
+KARMA_EXEC = node_modules/.bin/karma start
 COMPONENT_BUILD = node_modules/.bin/component-build
 COMPONENT_INSTALL = node_modules/.bin/component-install
+
+#
+# Browser for Karma
+#
+
+BROWSERS=
 
 #
 # All
@@ -63,11 +69,27 @@ test-node: node_modules
 
 test-browser: test-component test-browserify
 
+#
+# Run the browser tests for the component build
+#
+
 test-component: node_modules components build
-	@KARMA_TARGET=component $(KARMA) start
+ifdef BROWSERS
+	@KARMA_TARGET=component $(KARMA_EXEC) --browsers $(BROWSERS)
+else
+	@KARMA_TARGET=component $(KARMA_EXEC)
+endif
+
+#
+# Run the browser tests for the browserify build
+#
 
 test-browserify: node_modules build/browserify.js
-	@KARMA_TARGET=browserify $(KARMA) start
+ifdef BROWSERS
+	@KARMA_TARGET=browserify $(KARMA_EXEC) --browsers $(BROWSERS)
+else
+	@KARMA_TARGET=browserify $(KARMA_EXEC)
+endif
 
 #
 # the browserified test suite
@@ -88,7 +110,7 @@ test-cov: node_modules
 #
 
 test-sauce: node_modules components build
-	@TEST_ENV=sauce KARMA_RUN_ON=$(SAUCE_NODE_VERSION) $(KARMA) start
+	@TEST_ENV=sauce KARMA_RUN_ON=$(SAUCE_NODE_VERSION) $(KARMA_EXEC)
 
 #
 # Clean all
