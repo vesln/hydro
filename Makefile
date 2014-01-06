@@ -13,6 +13,7 @@ BROWSER = hydro.js
 COV_EXEC = bin/_hydro
 ISTANBUL = node_modules/.bin/istanbul
 COVERALLS = node_modules/coveralls/bin/coveralls.js
+BROWSERIFY = node_modules/browserify/bin/cmd.js
 KARMA_EXEC = node_modules/.bin/karma start
 COMPONENT_BUILD = node_modules/.bin/component-build
 COMPONENT_INSTALL = node_modules/.bin/component-install
@@ -92,11 +93,11 @@ else
 endif
 
 #
-# the browserified test suite
+# The browserified test suite
 #
 
 build/browserify.js: build
-	@node_modules/browserify/bin/cmd.js test/browserify -d > $@
+	@$(BROWSERIFY) test/browserify -d > $@
 
 #
 # Test coverage
@@ -179,7 +180,7 @@ node_modules: package.json
 	@touch $@
 
 #
-# start a server for running the browser tests
+# Start a server for running the browser tests
 # once started navigate the browser tab to the
 # test directory
 #
@@ -188,7 +189,7 @@ server:
 	@node_modules/serve/bin/serve -LoJp 0
 
 #
-# commands to always run regardless of timestamps
+# Commands to always run regardless of timestamps
 #
 
 .PHONY: all test coverage browser server
