@@ -1,4 +1,13 @@
 
+0.8.8 / 2014-01-18
+==================
+
+  * Support named functions for suite titles
+  * Use browserifyable tryc
+  * Use new browserifyable fload
+  * Include --setup in the help output
+  * Fix browser detection
+
 0.8.7 / 2013-12-23
 ==================
 

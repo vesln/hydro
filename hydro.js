@@ -585,10 +585,10 @@ require.register("hydro/lib/hydro.js", function(exports, require, module){
  */
 
 var EventEmitter = require('evts');
-var loa = require('loa');
 var globalo = require('globalo');
 var loader = require('fload');
 var merge = require('super').merge;
+var loa = require('loa');
 
 /**
  * Internal dependencies.
@@ -1269,6 +1269,8 @@ module.exports = SyncTest;
 
 });
 require.register("hydro/lib/hydro/suite/index.js", function(exports, require, module){
+var util = require('../util');
+
 /**
  * Test suite.
  *
@@ -1277,7 +1279,7 @@ require.register("hydro/lib/hydro/suite/index.js", function(exports, require, mo
  */
 
 function Suite(title) {
-  this.title = title;
+  this.title = util.isFunction(title) ? title.name : title;
   this.parent = null;
   this.tests = [];
   this.suites = [];
