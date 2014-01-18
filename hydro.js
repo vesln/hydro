@@ -1279,7 +1279,7 @@ var util = require('../util');
  */
 
 function Suite(title) {
-  this.title = util.isFunction(title) ? title.name : title;
+  this.title = util.isFunction(title) ? util.fnName(title) : title;
   this.parent = null;
   this.tests = [];
   this.suites = [];
@@ -1517,6 +1517,20 @@ exports.eachKey = function(obj, fn) {
     if (!obj.hasOwnProperty(key)) continue;
     fn(key, obj[key]);
   }
+};
+
+/**
+ * Get function name.
+ *
+ * @param {Function} fn
+ * @returns {String}
+ * @api public
+ */
+
+exports.fnName = function(fn) {
+  if (fn.name) return fn.name;
+  var match = /^\s?function ([^(]*)\(/.exec(fn);
+  return match && match[1] ? match[1] : '';
 };
 
 /**
