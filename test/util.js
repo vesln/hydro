@@ -52,3 +52,8 @@ t('eachKey', function() {
     assert(val === 'test');
   });
 });
+
+t('fnName', function() {
+  var fn = function TestFunction() {};
+  assert(_.fnName(fn) === 'TestFunction');
+});
