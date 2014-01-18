@@ -51,7 +51,6 @@ browser: node_modules components
 
 build: node_modules components
 	@$(COMPONENT_BUILD) --dev
-	@touch $@
 
 #
 # Run all tests
@@ -192,4 +191,4 @@ server:
 # Commands to always run regardless of timestamps
 #
 
-.PHONY: all test coverage browser server
+.PHONY: all test coverage browser server build
