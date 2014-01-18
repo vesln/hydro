@@ -32,5 +32,5 @@ t('add suite with named function as a title', function() {
   hydro.addSuite(testSuite);
   var suites = hydro.suites();
 
-  assert(suites[1].title === 'TestSuite', 'bad title');
+  assert(suites[1].title === 'TestSuite', 'bad title: ' + suites[1].title);
 });
