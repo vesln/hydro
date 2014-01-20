@@ -24,6 +24,7 @@
     "lib/hydro/test/sync.js",
     "lib/hydro/suite/index.js",
     "lib/hydro/suite/root.js",
+    "lib/hydro/interface.js",
     "lib/hydro/util.js"
   ]
 }
