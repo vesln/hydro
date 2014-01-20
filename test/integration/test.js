@@ -47,3 +47,11 @@ t('nested suites', function(done) {
     done();
   });
 });
+
+t('multiple errors', function(done) {
+  run('multiple-errors.js', function(result) {
+    assert(result.passed === 2, 'passed test: ' + result.passed);
+    assert(result.failed === 1, 'failed tests: ' + result.failed);
+    done();
+  });
+});
