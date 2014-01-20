@@ -1002,7 +1002,6 @@ AsyncTest.prototype.exec = function(done) {
   var context = this.context;
 
   function end(err) {
-    if (err && ended) throw err;
     if (ended) return;
     ended = true;
     clearTimeout(timeout);
@@ -1269,6 +1268,10 @@ module.exports = SyncTest;
 
 });
 require.register("hydro/lib/hydro/suite/index.js", function(exports, require, module){
+/**
+ * Internal dependencies.
+ */
+
 var util = require('../util');
 
 /**
@@ -1328,8 +1331,13 @@ Suite.prototype.run = function(emitter, fn) {
   var events = this.events;
 
   function next() {
-    if (current = runnable.shift()) return current.run(emitter, next);
-    emitter.emit(events.post, self, function() { fn(self); });
+    if (current = runnable.shift()) {
+      return current.run(emitter, next);
+    }
+
+    emitter.emit(events.post, self, function() {
+      fn(self);
+    });
   }
 
   emitter.emit(events.pre, this, next);
