@@ -595,6 +595,7 @@ var loa = require('loa');
  */
 
 var RootSuite = require('./hydro/suite/root');
+var Interface = require('./hydro/interface');
 var Suite = require('./hydro/suite');
 var Test = require('./hydro/test');
 var util = require('./hydro/util');
@@ -610,6 +611,7 @@ function Hydro() {
   if (!(this instanceof Hydro)) return new Hydro();
   this.loader = loader;
   this.emitter = new EventEmitter;
+  this.interface = new Interface(this);
   this.plugins = [];
   this.stack = [new RootSuite];
   this.root = this.stack[0];
@@ -666,69 +668,6 @@ Hydro.prototype.push = function(key, val) {
 
 Hydro.prototype.get = function(key) {
   return this.options[key];
-};
-
-/**
- * Add a new test.
- *
- * @param {String} title
- * @param {Mixed} meta1 (optional)
- * @param {Mixed} meta2 (optional)
- * @param {Function} test (optional)
- * @api public
- */
-
-Hydro.prototype.addTest = function() {
-  var test = this.createTest.apply(this, arguments);
-  this.stack[0].addTest(test);
-  return test;
-};
-
-/**
- * Create a test.
- *
- * @param {String} title
- * @param {Mixed} meta1 (optional)
- * @param {Mixed} meta2 (optional)
- * @param {Function} test (optional)
- * @api public
- */
-
-Hydro.prototype.createTest = function() {
-  var test = Test.create(util.slice(arguments));
-  var timeout = this.get('timeout');
-  if (timeout) test.timeout(timeout);
-  return test;
-};
-
-/**
- * Add a test suite.
- *
- * @param {String} title
- * @param {Function} body
- * @api public
- */
-
-Hydro.prototype.addSuite = function(title, fn) {
-  var suite = this.createSuite(title);
-  this.stack[0].addSuite(suite);
-  if (fn) {
-    this.stack.unshift(suite);
-    fn();
-    this.stack.shift();
-  }
-  return suite;
-};
-
-/**
- * Create a test suite.
- *
- * @param {String} title
- * @api public
- */
-
-Hydro.prototype.createSuite = function(title) {
-  return new Suite(title);
 };
 
 /**
@@ -883,6 +822,71 @@ Hydro.prototype.loadPlugins = function() {
 };
 
 /**
+ * Add a new test.
+ *
+ * @param {String} title
+ * @param {Mixed} meta1 (optional)
+ * @param {Mixed} meta2 (optional)
+ * @param {Function} test (optional)
+ * @api public
+ */
+
+Hydro.prototype.addTest = function() {
+  var test = this.createTest.apply(this, arguments);
+  this.stack[0].addTest(test);
+  return test;
+};
+
+/**
+ * Create a test.
+ *
+ * @param {String} title
+ * @param {Mixed} meta1 (optional)
+ * @param {Mixed} meta2 (optional)
+ * @param {Function} test (optional)
+ * @api public
+ */
+
+Hydro.prototype.createTest = function() {
+  var test = Test.create(util.slice(arguments));
+  var timeout = this.get('timeout');
+  if (timeout) test.timeout(timeout);
+  return test;
+};
+
+/**
+ * Add a test suite.
+ *
+ * @param {String} title
+ * @param {Function} body
+ * @api public
+ */
+
+Hydro.prototype.addSuite = function(title, fn) {
+  var suite = this.createSuite(title);
+  this.stack[0].addSuite(suite);
+
+  if (fn) {
+    this.stack.unshift(suite);
+    fn();
+    this.stack.shift();
+  }
+
+  return suite;
+};
+
+/**
+ * Create a test suite.
+ *
+ * @param {String} title
+ * @api public
+ */
+
+Hydro.prototype.createSuite = function(title) {
+  return new Suite(title);
+};
+
+/**
  * Attach global methods and properties.
  *
  * @api private
@@ -908,7 +912,7 @@ Hydro.prototype.attachProxies = function() {
 
   util.eachKey(proxies, function(key, val) {
     target[key] = function() {
-      return self[val].apply(self, arguments);
+      return self.interface[val].apply(self.interface, arguments);
     };
   });
 };
@@ -946,6 +950,8 @@ Hydro.prototype.loadFormatter = function() {
 
 module.exports = Hydro;
 module.exports.util = util;
+module.exports.Test = Test;
+module.exports.Suite = Suite;
 
 });
 require.register("hydro/lib/hydro/test/async.js", function(exports, require, module){
@@ -1421,6 +1427,41 @@ RootSuite.prototype.parents = function() {
  */
 
 module.exports = RootSuite;
+
+});
+require.register("hydro/lib/hydro/interface.js", function(exports, require, module){
+/**
+ * Internal dependencies.
+ */
+
+var util = require('./util');
+
+/**
+ * Public interface for proxy methods.
+ *
+ * @param {Hydro} hydro
+ * @constructor
+ */
+
+function Interface(hydro) {
+  this.hydro = hydro;
+}
+
+/**
+ * Delegate to Hydro.
+ */
+
+util.forEach(['addTest', 'addSuite', 'createTest', 'createSuite'], function(method) {
+  Interface.prototype[method] = function() {
+    return this.hydro[method].apply(this.hydro, arguments);
+  };
+});
+
+/**
+ * Primary export.
+ */
+
+module.exports = Interface;
 
 });
 require.register("hydro/lib/hydro/util.js", function(exports, require, module){
