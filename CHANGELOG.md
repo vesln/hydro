@@ -1,4 +1,10 @@
 
+0.8.11 / 2014-01-21
+==================
+
+  * Export `Test` and `Suite`
+  * Extract a new Interface class
+
 0.8.10 / 2014-01-20
 ==================
 
