@@ -119,7 +119,7 @@ test-ci: test-node test-sauce
 #
 
 test-sauce: node_modules components build/build.js
-	@TEST_ENV=sauce KARMA_RUN_ON=$(sauce_node_version) $(karma_exec)
+	@TEST_ENV=sauce KARMA_RUN_ON=$(SAUCE_NODE_VERSION) $(karma_exec)
 
 #
 # Clean node_modules
