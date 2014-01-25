@@ -5,6 +5,8 @@
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/hydro.js",
   "homepage": "https://github.com/hydrojs/hydro",
+  "author": "Veselin Todorov <hi@vesln.com>",
+  "license": "MIT",
   "scripts": {
     "test": "make test"
   },
@@ -16,8 +18,16 @@
     "hydro": "./bin/hydro",
     "_hydro": "./bin/_hydro"
   },
-  "author": "Veselin Todorov <hi@vesln.com>",
-  "license": "MIT",
+  "dependencies": {
+    "super": "*",
+    "evts": "0.0.1",
+    "tryc": "~0.0.5",
+    "fload": "*",
+    "loa": "0.0.2",
+    "globalo": "*",
+    "v8-argv": "~0.2.0",
+    "argvee": "~0.1.1"
+  },
   "devDependencies": {
     "nixt": "*",
     "hydro-silent": "*",
@@ -25,7 +35,6 @@
     "hydro-html": "*",
     "hydro-file-suite": "*",
     "hydro-minimal": "*",
-    "coveralls": "~2.3.0",
     "istanbul": "~0.1.46",
     "component": "~0.18.0",
     "uglify-js": "*",
@@ -39,15 +48,5 @@
     "hydro-karma-adapter": "*",
     "serve": "jkroso/serve#1.5.1",
     "browserify": "~3.18.0"
-  },
-  "dependencies": {
-    "super": "*",
-    "evts": "0.0.1",
-    "tryc": "~0.0.5",
-    "fload": "*",
-    "loa": "0.0.2",
-    "globalo": "*",
-    "v8-argv": "~0.2.0",
-    "argvee": "~0.1.1"
   }
 }

@@ -12,7 +12,6 @@ UGLIFY = node_modules/uglify-js/bin/uglifyjs
 BROWSER = hydro.js
 COV_EXEC = bin/_hydro
 ISTANBUL = node_modules/.bin/istanbul
-COVERALLS = node_modules/coveralls/bin/coveralls.js
 BROWSERIFY = node_modules/browserify/bin/cmd.js
 KARMA_EXEC = node_modules/.bin/karma start
 COMPONENT_BUILD = node_modules/.bin/component-build
@@ -154,16 +153,7 @@ clean-cov:
 # CI
 #
 
-ci: test-node test-sauce coveralls
-
-#
-# Send coverage to coveralls
-#
-
-coveralls: node_modules
-	@$(ISTANBUL) cover $(COV_EXEC) --report lcovonly -- \
-		--formatter hydro-silent \
-		&& cat ./coverage/lcov.info | $(COVERALLS)
+ci: test-node test-sauce
 
 #
 # Install all components (+ dev)
