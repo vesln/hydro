@@ -39,6 +39,18 @@ all: clean install test
 install: node_modules components build browser
 
 #
+# Run all tests
+#
+
+test: test-node test-browser
+
+#
+# Clean all
+#
+
+clean: clean-node clean-browser clean-components clean-cov
+
+#
 # Browser build
 #
 
@@ -53,12 +65,6 @@ browser: node_modules components
 
 build: node_modules components
 	@$(component_build) --dev
-
-#
-# Run all tests
-#
-
-test: test-node test-browser
 
 #
 # Run the Node.js tests
@@ -115,12 +121,6 @@ test-cov: node_modules
 
 test-sauce: node_modules components build
 	@TEST_ENV=sauce KARMA_RUN_ON=$(sauce_node_version) $(karma_exec)
-
-#
-# Clean all
-#
-
-clean: clean-node clean-browser clean-components clean-cov
 
 #
 # Clean node_modules
