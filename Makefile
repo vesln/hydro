@@ -4,30 +4,30 @@
 SAUCE_NODE_VERSION = v0.10.
 
 #
-# Variables
-#
-
-MIN = hydro.min.js
-UGLIFY = node_modules/uglify-js/bin/uglifyjs
-BROWSER = hydro.js
-COV_EXEC = bin/_hydro
-ISTANBUL = node_modules/.bin/istanbul
-BROWSERIFY = node_modules/browserify/bin/cmd.js
-KARMA_EXEC = node_modules/.bin/karma start
-COMPONENT_BUILD = node_modules/.bin/component-build
-COMPONENT_INSTALL = node_modules/.bin/component-install
-
-#
 # Browser for Karma
 #
 
 BROWSERS=
 
 #
+# Variables
+#
+
+min               := hydro.min.js
+uglify            := node_modules/uglify-js/bin/uglifyjs
+browser           := hydro.js
+cov_exec          := bin/_hydro
+istanbul          := node_modules/.bin/istanbul
+browserify        := node_modules/browserify/bin/cmd.js
+karma_exec        := node_modules/.bin/karma start
+component_build   := node_modules/.bin/component-build
+component_install := node_modules/.bin/component-install
+
+#
 # All
 #
 
-all: install test
+all: clean install test
 
 #
 # Install
@@ -40,16 +40,16 @@ install: node_modules components build browser
 #
 
 browser: node_modules components
-	@$(COMPONENT_BUILD) -s Hydro -o .
-	@mv build.js $(BROWSER)
-	@$(UGLIFY) $(BROWSER) --output $(MIN)
+	@$(component_build) -s Hydro -o .
+	@mv build.js $(browser)
+	@$(uglify) $(browser) --output $(min)
 
 #
 # Make a new development build
 #
 
 build: node_modules components
-	@$(COMPONENT_BUILD) --dev
+	@$(component_build) --dev
 
 #
 # Run all tests
@@ -76,9 +76,9 @@ test-browser: test-component test-browserify
 
 test-component: node_modules components build
 ifdef BROWSERS
-	@KARMA_TARGET=component $(KARMA_EXEC) --browsers $(BROWSERS)
+	@KARMA_TARGET=component $(karma_exec) --browsers $(browsers)
 else
-	@KARMA_TARGET=component $(KARMA_EXEC)
+	@KARMA_TARGET=component $(karma_exec)
 endif
 
 #
@@ -87,9 +87,9 @@ endif
 
 test-browserify: node_modules build/browserify.js
 ifdef BROWSERS
-	@KARMA_TARGET=browserify $(KARMA_EXEC) --browsers $(BROWSERS)
+	@KARMA_TARGET=browserify $(karma_exec) --browsers $(browsers)
 else
-	@KARMA_TARGET=browserify $(KARMA_EXEC)
+	@KARMA_TARGET=browserify $(karma_exec)
 endif
 
 #
@@ -97,21 +97,21 @@ endif
 #
 
 build/browserify.js: build
-	@$(BROWSERIFY) test/browserify -d > $@
+	@$(browserify) test/browserify -d > $@
 
 #
 # Test coverage
 #
 
 test-cov: node_modules
-	@$(ISTANBUL) cover $(COV_EXEC) -- --formatter hydro-silent
+	@$(istanbul) cover $(cov_exec) -- --formatter hydro-silent
 
 #
 # Run the tests on SauceLabs
 #
 
 test-sauce: node_modules components build
-	@TEST_ENV=sauce KARMA_RUN_ON=$(SAUCE_NODE_VERSION) $(KARMA_EXEC)
+	@TEST_ENV=sauce KARMA_RUN_ON=$(sauce_node_version) $(karma_exec)
 
 #
 # Clean all
@@ -131,8 +131,8 @@ clean-node:
 #
 
 clean-browser:
-	@rm -f $(BROWSER)
-	@rm -f $(MIN)
+	@rm -f $(browser)
+	@rm -f $(min)
 
 #
 # Clean components & build
@@ -160,7 +160,7 @@ ci: test-node test-sauce
 #
 
 components: node_modules component.json
-	@$(COMPONENT_INSTALL) --dev
+	@$(component_install) --dev
 
 #
 # Install Node.js modules
