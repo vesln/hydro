@@ -22,6 +22,9 @@ browserify        := node_modules/browserify/bin/cmd.js
 karma_exec        := node_modules/.bin/karma start
 component_build   := node_modules/.bin/component-build
 component_install := node_modules/.bin/component-install
+global_name       := Hydro
+test_exec         := bin/hydro
+npm               := npm
 
 #
 # All
@@ -40,7 +43,7 @@ install: node_modules components build browser
 #
 
 browser: node_modules components
-	@$(component_build) -s Hydro -o .
+	@$(component_build) -s $(global_name) -o .
 	@mv build.js $(browser)
 	@$(uglify) $(browser) --output $(min)
 
@@ -62,7 +65,7 @@ test: test-node test-browser
 #
 
 test-node: node_modules
-	@bin/hydro
+	@$(test_exec)
 
 #
 # Run the browser tests
@@ -167,7 +170,7 @@ components: node_modules component.json
 #
 
 node_modules: package.json
-	@npm install
+	@$(npm) install
 	@touch $@
 
 #
