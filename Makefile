@@ -25,6 +25,7 @@ component_install := node_modules/.bin/component-install
 global_name       := Hydro
 test_exec         := bin/hydro
 npm               := npm
+source            := $(shell find lib -name '*.js')
 
 #
 # All
@@ -36,7 +37,7 @@ all: clean install test
 # Install
 #
 
-install: node_modules components build browser
+install: node_modules components build/build.js browser
 
 #
 # Run all tests
@@ -58,13 +59,6 @@ browser: node_modules components
 	@$(component_build) -s $(global_name) -o .
 	@mv build.js $(browser)
 	@$(uglify) $(browser) --output $(min)
-
-#
-# Make a new development build
-#
-
-build: node_modules components
-	@$(component_build) --dev
 
 #
 # Run the Node.js tests
@@ -105,8 +99,15 @@ endif
 # The browserified test suite
 #
 
-build/browserify.js: build
+build/browserify.js: node_modules components $(source)
 	@$(browserify) test/browserify -d > $@
+
+#
+# Make a new development build
+#
+
+build/build.js: node_modules components $(source)
+	@$(component_build) --dev
 
 #
 # Test coverage
@@ -125,7 +126,7 @@ test-ci: test-node test-sauce
 # Run the tests on SauceLabs
 #
 
-test-sauce: node_modules components build
+test-sauce: node_modules components build/build.js
 	@TEST_ENV=sauce KARMA_RUN_ON=$(sauce_node_version) $(karma_exec)
 
 #
