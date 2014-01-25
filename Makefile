@@ -116,6 +116,12 @@ test-cov: node_modules
 	@$(istanbul) cover $(cov_exec) -- --formatter hydro-silent
 
 #
+# CI
+#
+
+test-ci: test-node test-sauce
+
+#
 # Run the tests on SauceLabs
 #
 
@@ -151,12 +157,6 @@ clean-components:
 
 clean-cov:
 	@rm -rf coverage
-
-#
-# CI
-#
-
-ci: test-node test-sauce
 
 #
 # Install all components (+ dev)
