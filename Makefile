@@ -186,4 +186,5 @@ server:
 # Commands to always run regardless of timestamps
 #
 
-.PHONY: all test coverage browser server build
+.PHONY: test-node test-component test-browserify test-cov test-ci test-sauce
+.PHONY: clean-node clean-browser clean-components clean-cov server
