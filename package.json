@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "super": "*",
-    "evts": "0.0.1",
+    "evts": "0.1.0",
     "tryc": "~0.0.5",
     "fload": "*",
     "loa": "0.0.2",
@@ -32,7 +32,7 @@
     "nixt": "*",
     "hydro-silent": "*",
     "hydro-simple": "*",
-    "hydro-html": "*",
+    "hydro-tap": "*",
     "hydro-file-suite": "*",
     "hydro-minimal": "*",
     "istanbul": "~0.1.46",

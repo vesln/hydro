@@ -335,12 +335,17 @@ EventEmitter.prototype.emit = function(evt, /* arg1, arg2 */ fn) {
   var done = args.pop();
   if (!listeners) return done();
 
-  (function next() {
+  (function next(err) {
+    if (err) return done(err);
     var handler = listeners[i];
     if (!handler) return done();
     i++;
     if (handler.length > args.length) return handler.apply(null, args.concat(next));
-    handler.apply(null, args);
+    try {
+      handler.apply(null, args);
+    } catch(e) {
+      return next(e);
+    }
     next();
   })();
 };
@@ -610,17 +615,16 @@ var util = require('./hydro/util');
 function Hydro() {
   if (!(this instanceof Hydro)) return new Hydro();
   this.loader = loader;
-  this.emitter = new EventEmitter;
-  this.interface = new Interface(this);
   this.plugins = [];
-  this.stack = [new RootSuite];
-  this.root = this.stack[0];
   this.options = {
     plugins: [],
     aliases: {},
     globals: {},
     tests: []
   };
+  this.root = new RootSuite;
+  this.emitter = new EventEmitter;
+  this.interface = new Interface(this);
 }
 
 /**
@@ -755,9 +759,7 @@ Hydro.prototype.setup = function() {
   this.loadFormatter();
 
   if (suite = this.get('suite')) {
-    suite = this.createSuite(suite);
-    this.root.addSuite(suite);
-    this.stack.unshift(suite);
+    this.interface.pushSuite(suite);
   }
 
   if (stackLimit = this.get('stackLimit')) {
@@ -789,7 +791,7 @@ Hydro.prototype.exec = function(fn) {
       emitter.emit('post:file', file, done);
     },
     done: function() {
-      if (suite) self.stack.shift();
+      if (suite) self.interface.popSuite();
       self.root.run(emitter, fn);
     }
   });
@@ -822,22 +824,6 @@ Hydro.prototype.loadPlugins = function() {
 };
 
 /**
- * Add a new test.
- *
- * @param {String} title
- * @param {Mixed} meta1 (optional)
- * @param {Mixed} meta2 (optional)
- * @param {Function} test (optional)
- * @api public
- */
-
-Hydro.prototype.addTest = function() {
-  var test = this.createTest.apply(this, arguments);
-  this.stack[0].addTest(test);
-  return test;
-};
-
-/**
  * Create a test.
  *
  * @param {String} title
@@ -855,27 +841,6 @@ Hydro.prototype.createTest = function() {
 };
 
 /**
- * Add a test suite.
- *
- * @param {String} title
- * @param {Function} body
- * @api public
- */
-
-Hydro.prototype.addSuite = function(title, fn) {
-  var suite = this.createSuite(title);
-  this.stack[0].addSuite(suite);
-
-  if (fn) {
-    this.stack.unshift(suite);
-    fn();
-    this.stack.shift();
-  }
-
-  return suite;
-};
-
-/**
  * Create a test suite.
  *
  * @param {String} title
@@ -885,6 +850,18 @@ Hydro.prototype.addSuite = function(title, fn) {
 Hydro.prototype.createSuite = function(title) {
   return new Suite(title);
 };
+
+/**
+ * proxy to interface
+ *
+ * TODO: consider refactoring
+ */
+
+util.forEach(['addTest', 'addSuite'], function(method) {
+  Hydro.prototype[method] = function(){
+    return this.interface[method].apply(this.interface, arguments);
+  };
+});
 
 /**
  * Attach global methods and properties.
@@ -1036,6 +1013,8 @@ require.register("hydro/lib/hydro/test/base.js", function(exports, require, modu
  */
 
 var extend = require('super').extend;
+var inherits = require('super');
+var Emitter = require('evts');
 
 /**
  * Internal dependencies.
@@ -1080,6 +1059,12 @@ function Base(title, fn, meta) {
  */
 
 Base.extend = extend;
+
+/**
+ * inherit from Emitter
+ */
+
+inherits(Base, Emitter);
 
 /**
  * Configure test timeout.
@@ -1129,17 +1114,22 @@ Base.prototype.pending = function() {
 Base.prototype.run = function(emitter, done) {
   var self = this;
   var events = this.events;
-  var disabled = this.status === 'pending' || this.status === 'skipped';
 
   emitter.emit(events.pre, this, function() {
     var disabled = self.status === 'pending' || self.status === 'skipped';
     if (disabled) return emitter.emit(events.post, self, done);
-    var start = (new D).getTime();
-    self.exec(function(err) {
-      self.time = (new D).getTime() - start;
-      if (err) self.fail(err);
-      else self.pass();
-      emitter.emit(events.post, self, done);
+    self.emit('before', function(err) {
+      if (err) return done(err);
+      var start = (new D).getTime();
+      self.exec(function(err) {
+        self.time = (new D).getTime() - start;
+        if (err) self.fail(err);
+        else self.pass();
+        self.emit('after', function(err) {
+          if (err) return done(err);
+          emitter.emit(events.post, self, done);
+        });
+      });
     });
   });
 };
@@ -1275,6 +1265,13 @@ module.exports = SyncTest;
 });
 require.register("hydro/lib/hydro/suite/index.js", function(exports, require, module){
 /**
+ * External dependencies.
+ */
+
+var inherits = require('super');
+var Emitter = require('evts');
+
+/**
  * Internal dependencies.
  */
 
@@ -1297,6 +1294,12 @@ function Suite(title) {
     post: 'post:suite'
   };
 }
+
+/**
+ * inherit from Emitter
+ */
+
+inherits(Suite, Emitter)
 
 /**
  * Register test `fn` with `title`.
@@ -1336,17 +1339,22 @@ Suite.prototype.run = function(emitter, fn) {
   var current = null;
   var events = this.events;
 
-  function next() {
+  function next(err) {
+    if (err) return fn(err);
     if (current = runnable.shift()) {
       return current.run(emitter, next);
     }
 
-    emitter.emit(events.post, self, function() {
-      fn(self);
-    });
+    self.emit('after', function(err){
+      if (err) return fn(err);
+      emitter.emit(events.post, self, fn);
+    })
   }
 
-  emitter.emit(events.pre, this, next);
+  emitter.emit(events.pre, this, function(err){
+    if (err) return fn(err);
+    self.emit('before', next);
+  });
 };
 
 /**
@@ -1434,6 +1442,7 @@ require.register("hydro/lib/hydro/interface.js", function(exports, require, modu
  * Internal dependencies.
  */
 
+var Suite = require('./suite');
 var util = require('./util');
 
 /**
@@ -1445,17 +1454,192 @@ var util = require('./util');
 
 function Interface(hydro) {
   this.hydro = hydro;
+  this.ctx = new Frame(hydro.root);
+  this.stack = [this.ctx];
 }
 
 /**
  * Delegate to Hydro.
  */
 
-util.forEach(['addTest', 'addSuite', 'createTest', 'createSuite'], function(method) {
+util.forEach(['createTest', 'createSuite'], function(method) {
   Interface.prototype[method] = function() {
     return this.hydro[method].apply(this.hydro, arguments);
   };
 });
+
+/**
+ * Add a test suite.
+ *
+ * @param {String} title
+ * @param {Function} body
+ * @api public
+ */
+
+Interface.prototype.addSuite = function(title, fn) {
+  var suite = this.pushSuite(title);
+  if (fn) fn.call(suite);
+  this.popSuite();
+  return suite;
+};
+
+/**
+ * Open a new suite.
+ *
+ * @param {Suite|String} title
+ * @return {Suite}
+ * @api public
+ */
+
+Interface.prototype.pushSuite = function(title) {
+  var suite = !(title instanceof Suite)
+    ? this.hydro.createSuite.apply(this.hydro, arguments)
+    : title;
+  this.ctx.suite.addSuite(suite);
+  this.ctx = new Frame(suite);
+  this.stack.push(this.ctx);
+  return suite;
+};
+
+/**
+ * Close the current suite.
+ *
+ * @return {Suite}
+ * @api public
+ */
+
+Interface.prototype.popSuite = function() {
+  this.ctx = this.stack[this.stack.length - 2];
+  return this.stack.pop();
+};
+
+/**
+ * Add a new test.
+ *
+ * @param {String} title
+ * @param {Mixed} meta1 (optional)
+ * @param {Mixed} meta2 (optional)
+ * @param {Function} test (optional)
+ * @api public
+ */
+
+Interface.prototype.addTest = function() {
+  var test = this.hydro.createTest.apply(this.hydro, arguments)
+
+  each('beforeEach', this, before);
+  each('afterEach', this, after);
+
+  util.forEach(this.ctx.beforeNext, before);
+  this.ctx.beforeNext.length = 0;
+
+  util.forEach(this.ctx.afterNext, after);
+  this.ctx.afterNext.length = 0;
+
+  this.ctx.suite.addTest(test);
+
+  function before(fn){ test.on('before', fn); }
+  function after(fn){ test.on('after', fn); }
+
+  return test
+};
+
+/**
+ * Before next.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Interface.prototype.beforeNext = function(fn) {
+  this.ctx.beforeNext.push(fn);
+};
+
+/**
+ * After next.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Interface.prototype.afterNext = function(fn) {
+  this.ctx.afterNext.push(fn);
+};
+
+/**
+ * Before each.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Interface.prototype.before = function(fn) {
+  this.ctx.beforeEach.push(fn);
+};
+
+/**
+ * After each.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Interface.prototype.after = function(fn) {
+  this.ctx.afterEach.push(fn);
+};
+
+/**
+ * Before all.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Interface.prototype.beforeAll = function(fn) {
+  this.ctx.suite.on('before', fn);
+};
+
+/**
+ * After all.
+ *
+ * @param {Function} fn
+ * @api public
+ */
+
+Interface.prototype.afterAll = function(fn) {
+  this.ctx.suite.on('after', fn);
+};
+
+/**
+ * Hook storage container.
+ *
+ * @param {Suite} suite
+ * @api private
+ */
+
+function Frame(suite) {
+  this.suite = suite;
+  this.beforeNext = [];
+  this.beforeEach = [];
+  this.afterEach = [];
+  this.afterNext = [];
+}
+
+/**
+ * Interate through all functions in the stack.
+ *
+ * @param {String} key
+ * @param {Interface} interface
+ * @param {Function} fn
+ * @api private
+ */
+
+function each(key, interface, fn){
+  var stack = interface.stack;
+
+  for (var i = 0, len = stack.length; i < len; i++) {
+    util.forEach(stack[i][key], fn);
+  }
+}
 
 /**
  * Primary export.

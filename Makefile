@@ -4,12 +4,6 @@
 SAUCE_NODE_VERSION = v0.10.
 
 #
-# Browser for Karma
-#
-
-BROWSERS=
-
-#
 # Variables
 #
 
@@ -77,21 +71,21 @@ test-browser: test-component test-browserify
 # Run the browser tests for the component build
 #
 
-test-component: node_modules components build
-	@KARMA_TARGET=component $(karma_exec) --browsers $(browsers)
+test-component: node_modules components build/build.js
+	@KARMA_TARGET=component $(karma_exec)
 
 #
 # Run the browser tests for the browserify build
 #
 
 test-browserify: node_modules build/browserify.js
-	@KARMA_TARGET=browserify $(karma_exec) --browsers $(browsers)
+	@KARMA_TARGET=browserify $(karma_exec)
 
 #
 # The browserified test suite
 #
 
-build/browserify.js: node_modules components $(source)
+build/browserify.js: node_modules $(source) test/browserify
 	@$(browserify) test/browserify -d > $@
 
 #

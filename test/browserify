@@ -3,7 +3,7 @@ var hydro = new Hydro;
 
 hydro.set({
   suite: 'hydro',
-  formatter: require('hydro-html'),
+  formatter: require('hydro-tap'),
   plugins: [
     require('hydro-minimal'),
     require('hydro-karma-adapter')
@@ -16,6 +16,7 @@ hydro.set({
 
 hydro.setup();
 
+require('./hydro.interface');
 require('./hydro.addsuite');
 require('./hydro.addtest');
 require('./hydro.attach');
@@ -36,6 +37,8 @@ require('./hydro.traverse');
 require('./root-suite');
 require('./stack-limit');
 require('./test.parents');
+require('./suite.on');
+require('./test.on');
 require('./util');
 
 hydro.run();

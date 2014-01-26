@@ -9,20 +9,6 @@ var env = require('envc');
  */
 
 var browsers = {
-  'SL_Chrome': {
-    base: 'SauceLabs',
-    browserName: 'chrome'
-  },
-  'SL_Firefox': {
-    base: 'SauceLabs',
-    browserName: 'firefox'
-  },
-  'SL_Safari': {
-    base: 'SauceLabs',
-    browserName: 'safari',
-    platform: 'Mac 10.8',
-    version: '6'
-  },
   'SL_IE_8': {
     base: 'SauceLabs',
     browserName: 'internet explorer',
@@ -54,7 +40,7 @@ module.exports = function(config) {
   var key = process.env.SAUCE_HYDRO_ACCESS_KEY || process.env.SAUCE_ACCESS_KEY;
 
   // Browser versions
-  var versions = process.env.BROWSERS
+  var versions = process.env.BROWSER
     ? process.env.BROWSERS.split(',')
     : Object.keys(browsers);
 
