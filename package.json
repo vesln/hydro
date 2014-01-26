@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "super": "*",
-    "evts": "0.0.1",
+    "evts": "0.1.0",
     "tryc": "~0.0.5",
     "fload": "*",
     "loa": "0.0.2",
