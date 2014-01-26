@@ -1,4 +1,14 @@
 
+0.9.0 / 2014-01-26
+==================
+
+  * Update evts
+  * Add interface tests
+  * Implement hooks on interface
+  * Add suite[before/after] hooks
+  * Add error handling in test[before/after] hooks
+  * Add per test before/after events
+
 0.8.11 / 2014-01-21
 ==================
 
