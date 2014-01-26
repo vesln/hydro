@@ -3,7 +3,7 @@ var hydro = new Hydro;
 
 hydro.set({
   suite: 'hydro',
-  formatter: require('hydro-html'),
+  formatter: require('hydro-tap'),
   plugins: [
     require('hydro-minimal'),
     require('hydro-karma-adapter')

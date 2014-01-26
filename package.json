@@ -32,7 +32,7 @@
     "nixt": "*",
     "hydro-silent": "*",
     "hydro-simple": "*",
-    "hydro-html": "*",
+    "hydro-tap": "*",
     "hydro-file-suite": "*",
     "hydro-minimal": "*",
     "istanbul": "~0.1.46",
