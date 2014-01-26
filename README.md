@@ -6,19 +6,11 @@ version](https://badge.fury.io/js/hydro.png)](http://badge.fury.io/js/hydro)
 
 Teeny-weeny test runner for Node.js
 
-## Contributors
+## Authors
 
-```
- project  : hydro
- repo age : 3 weeks
- active   : 18 days
- commits  : 218
- files    : 57
- authors  :
-   214	Veselin Todorov         98.2%
-     2	Jake Luer               0.9%
-     2	Radoslav Stankov        0.9%
-```
+- [Veselin Todorov](https://github.com/vesln)
+- [Jake Rosoman](https://github.com/jkroso)
+- [Jake Luer](https://github.com/logicalparadox)
 
 ## License
 
