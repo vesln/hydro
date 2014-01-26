@@ -24,7 +24,7 @@ module.exports = function(config) {
   } else {
     // component
     config.set({
-      frameworks: ['hydro'],
+      frameworks: [ 'hydro' ],
       files: [
         'build/build.js',
         'hydro.karma.js',
