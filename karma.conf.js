@@ -1,13 +1,12 @@
 module.exports = function(config) {
   config.set({
-    basePath: '',
-    reporters: ['progress'],
-    port: 9876,
+    reporters: [ 'progress' ],
+    browserDisconnectTimeout: 10000,
+    browserDisconnectTolerance: 2,
+    browserNoActivityTimeout: 20000,
     colors: true,
-    logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Safari'],
-    captureTimeout: 60000,
+    browsers: [ 'PhantomJS', 'Chrome', 'Firefox', 'Safari' ],
     singleRun: true,
     client: {
       hydro: {
