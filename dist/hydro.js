@@ -1104,6 +1104,26 @@ Base.prototype.pending = function() {
 };
 
 /**
+ * Return the titles of all parent suites +
+ * the test title.
+ *
+ * @returns {String}
+ * @api public
+ */
+
+Base.prototype.fullTitle = function() {
+  var parents = this.parents().splice(1);
+  var fullTitle = [];
+
+  for (var i = 0, len = parents.length; i < len; i++) {
+    fullTitle.push(parents[i].title);
+  }
+
+  fullTitle.push(this.title);
+  return fullTitle.join(' ');
+};
+
+/**
  * Run the test.
  *
  * @param {Object} emitter
@@ -1185,6 +1205,7 @@ require.register("hydro/lib/hydro/test/index.js", function(exports, require, mod
 
 var SyncTest = require('./sync');
 var AsyncTest = require('./async');
+var BaseTest = require('./base');
 
 /**
  * Test factory.
@@ -1214,6 +1235,12 @@ exports.SyncTest = SyncTest;
  */
 
 exports.AsyncTest = AsyncTest;
+
+/**
+ * Export `BaseTest`.
+ */
+
+exports.BaseTest = BaseTest;
 
 });
 require.register("hydro/lib/hydro/test/sync.js", function(exports, require, module){

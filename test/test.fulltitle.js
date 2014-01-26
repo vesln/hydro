@@ -1,9 +1,9 @@
 t('returns the full title', function() {
   var hydro = new Hydro;
+
   hydro.addSuite('suite 1', function() {
     hydro.addSuite('suite 2', function() {
-      hydro.addTest('test', function() {
-      });
+      hydro.addTest('test', function() {});
     });
   });
 
