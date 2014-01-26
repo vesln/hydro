@@ -7,9 +7,9 @@ SAUCE_NODE_VERSION = v0.10.
 # Variables
 #
 
-min               := hydro.min.js
+min               := dist/hydro.min.js
 uglify            := node_modules/uglify-js/bin/uglifyjs
-browser           := hydro.js
+browser           := dist/hydro.js
 cov_exec          := bin/_hydro
 istanbul          := node_modules/.bin/istanbul
 browserify        := node_modules/browserify/bin/cmd.js
