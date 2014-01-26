@@ -54,8 +54,8 @@ module.exports = function(config) {
   var key = process.env.SAUCE_HYDRO_ACCESS_KEY || process.env.SAUCE_ACCESS_KEY;
 
   // Browser versions
-  var versions = process.env.BROWSERS
-    ? process.env.BROWSERS.split(',')
+  var versions = process.env.BROWSER
+    ? process.env.BROWSER.split(',')
     : Object.keys(browsers);
 
   // Do not run when on Travis CI and the current node version

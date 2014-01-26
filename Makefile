@@ -78,14 +78,14 @@ test-browser: test-component test-browserify
 #
 
 test-component: node_modules components build/build.js
-	@KARMA_TARGET=component $(karma_exec) --browsers $(browsers)
+	@KARMA_TARGET=component $(karma_exec) --browser $(browsers)
 
 #
 # Run the browser tests for the browserify build
 #
 
 test-browserify: node_modules build/browserify.js
-	@KARMA_TARGET=browserify $(karma_exec) --browsers $(browsers)
+	@KARMA_TARGET=browserify $(karma_exec) --browser $(browsers)
 
 #
 # The browserified test suite
