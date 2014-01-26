@@ -55,7 +55,7 @@ module.exports = function(config) {
 
   // Browser versions
   var versions = process.env.BROWSER
-    ? process.env.BROWSER.split(',')
+    ? process.env.BROWSERS.split(',')
     : Object.keys(browsers);
 
   // Do not run when on Travis CI and the current node version
