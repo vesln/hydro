@@ -9,6 +9,22 @@ var env = require('envc');
  */
 
 var browsers = {
+  'SL_Chrome': {
+    base: 'SauceLabs',
+    browserName: 'chrome'
+  },
+  'SL_Firefox_26': {
+    base: 'SauceLabs',
+    browserName: 'firefox',
+    platform: 'Windows XP',
+    version: '26'
+  },
+  'SL_Safari': {
+    base: 'SauceLabs',
+    browserName: 'safari',
+    platform: 'OS X 10.9',
+    version: '7'
+  },
   'SL_IE_8': {
     base: 'SauceLabs',
     browserName: 'internet explorer',
