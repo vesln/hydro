@@ -30,7 +30,7 @@ t('throw error if there is no callback', function(done) {
     hydro.run();
   }, function(err){
     assert(err instanceof Error);
-    assert(err.message == 'boom');
+    assert(/boom/.test(err.message));
     done();
   });
 });
