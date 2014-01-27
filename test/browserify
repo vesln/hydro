@@ -42,4 +42,6 @@ require('./test.on');
 require('./test.fullTitle');
 require('./util');
 
-hydro.run();
+global.__karma__.start = function() {
+  hydro.run();
+};
