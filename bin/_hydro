@@ -66,12 +66,18 @@ conf.forEach(function(file) {
   }
 });
 
+/**
+ * Params which are always arrays
+ */
+
+var arrayParams = { plugins: true };
+
 /*!
  * Migrate options
  */
 
 for (var key in argv.params) {
-  if (argv.params[key].length == 1) {
+  if (argv.params[key].length == 1 && !arrayParams[key]) {
     options[key] = argv.params[key][0];
   } else {
     options[key] = argv.params[key];
