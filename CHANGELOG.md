@@ -1,4 +1,14 @@
 
+0.9.1 / 2014-02-15
+==================
+
+ * Add fullTitle() on tests/suites
+ * Fix plugins CLI argument
+ * Fix hook error handling
+ * Update tryc
+ * IE8 fixes
+ * Export `BaseTest`
+
 0.9.0 / 2014-01-26
 ==================
 
