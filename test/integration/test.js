@@ -37,12 +37,12 @@ t('nested suites', function(done) {
     assert(result.tests[1].suite.title === 'suite 1');
     assert(result.tests[1].suite.parent.title === 'root');
 
-    assert(result.tests[2].title === 'test 1.1');
-    assert(result.tests[2].suite.title === 'suite 1');
+    assert(result.tests[2].title === 'test 2');
+    assert(result.tests[2].suite.title === 'suite 2');
+    assert(result.tests[2].suite.parent.title === 'suite 1');
 
-    assert(result.tests[3].title === 'test 2');
-    assert(result.tests[3].suite.title === 'suite 2');
-    assert(result.tests[3].suite.parent.title === 'suite 1');
+    assert(result.tests[3].title === 'test 1.1');
+    assert(result.tests[3].suite.title === 'suite 1');
 
     done();
   });

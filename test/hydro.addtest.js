@@ -8,9 +8,8 @@ t('add tests', function() {
   });
 
   var tests = hydro.tests();
-
-  assert(tests[0].title === 'test 2.1');
-  assert(tests[1].title === 'test 1.1');
+  assert(tests[0].title === 'test 1.1');
+  assert(tests[1].title === 'test 2.1');
 });
 
 t('add a test without a suite', function() {

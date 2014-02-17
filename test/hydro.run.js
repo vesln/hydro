@@ -26,11 +26,31 @@ t('throw error if there is no callback', function(done) {
     throw new Error('boom');
   });
 
-  tryc(function(){
+  tryc(function() {
     hydro.run();
-  }, function(err){
+  }, function(err) {
     assert(err instanceof Error);
     assert(/boom/.test(err.message));
     done();
   });
+});
+
+t('should maintain ordering', function(done) {
+  var hydro = new Hydro;
+  var c = 0;
+
+  hydro.addSuite('top', function() {
+    hydro.addSuite('a', function() {
+      hydro.addTest('test a', function() {
+        assert(c++ == 0);
+      });
+    });
+
+    hydro.addTest('test b', function() {
+      assert(c++ == 1);
+      done();
+    });
+  });
+
+  hydro.run();
 });
