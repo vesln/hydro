@@ -134,6 +134,7 @@ hydro.on('post:test', function(test) {
  * Seek and destroy.
  */
 
-hydro.run(function() {
+hydro.run(function(e) {
+  if (e) throw e;
   process.exit(failures);
 });
