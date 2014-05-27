@@ -49,5 +49,6 @@
     "serve": "jkroso/serve#1.5.1",
     "browserify": "~3.18.0",
     "envc": "~1.0.0"
-  }
+  },
+  "files": ["bin", "lib"]
 }
