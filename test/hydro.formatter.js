@@ -1,30 +1,9 @@
-t('formatter as object', function(done) {
-  var hydro = new Hydro;
-  var called = false;
-  var formatter = {
-    use: function() {
-      called = true
-    }
-  };
-
-  hydro.set('formatter', formatter);
-
-  hydro.run(function() {
-    assert(called);
-    done();
-  });
-});
 
 t('formatter as function', function(done) {
   var hydro = new Hydro;
   var called = false;
 
-  function Formatter() {}
-  Formatter.prototype.use = function() {
-    called = true;
-  };
-
-  hydro.set('formatter', Formatter);
+  hydro.set('formatter', function() { called = true; });
 
   hydro.run(function() {
     assert(called);
