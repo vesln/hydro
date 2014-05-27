@@ -26,6 +26,20 @@ t('after', function(done) {
   });
 });
 
+t('should share context with the test body', function(done) {
+  var hydro = new Hydro;
+  var test = new Hydro.Test.SyncTest('hooks', function() {
+    assert(this.sharesContext);
+  });
+  test.on('before', function(){
+    this.sharesContext = true;
+  });
+  test.run(hydro.emitter, function(){
+    assert(test.status == 'passed');
+    done();
+  });
+});
+
 s('error handling', function() {
   t('async before hook', function(done){
     var hydro = new Hydro;
