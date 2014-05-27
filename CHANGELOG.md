@@ -1,4 +1,13 @@
 
+0.10.0 / 2014-05-27
+==================
+
+ * run hooks and test bodies in the same context
+ * allow adding tests to the root suite
+ * make formatters share thier API with plugins
+ * cli: resolve --formatter relative to $PWD
+ * cli: display error when suite crashes
+
 0.9.2 / 2014-03-25
 ==================
 

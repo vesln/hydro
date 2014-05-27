@@ -1,6 +1,6 @@
 {
   "name": "hydro",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
   "main": "./lib/hydro.js",
