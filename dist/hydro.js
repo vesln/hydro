@@ -734,8 +734,10 @@ Hydro.prototype.traverse = function(handlers) {
 
   (function next(suite) {
     handlers.enterSuite(suite);
-    util.forEach(suite.suites, next);
-    util.forEach(suite.tests, handlers.test)
+    util.forEach(suite.runnables, function(runnable){
+      if (runnable instanceof Suite) next(runnable);
+      else handlers.test(runnable);
+    });
     handlers.leaveSuite(suite);
   })(this.root);
 };
@@ -748,15 +750,15 @@ Hydro.prototype.traverse = function(handlers) {
  */
 
 Hydro.prototype.setup = function() {
-  var emitter = this.emitter;
   var suite = null;
   var stackLimit = null;
-  var self = this;
+
+  var formatter = this.get('formatter');
+  if (formatter) this.push('plugins', loa(formatter));
 
   this.loadPlugins();
   this.attachGlobals();
   this.attachProxies();
-  this.loadFormatter();
 
   if (suite = this.get('suite')) {
     this.interface.pushSuite(suite);
@@ -781,7 +783,7 @@ Hydro.prototype.exec = function(fn) {
   var self = this;
   var suite = this.get('suite');
 
-  fn = fn || function(){};
+  fn = fn || util.rethrow;
 
   this.loader(this.get('tests'), {
     pre: function(file, done) {
@@ -904,21 +906,6 @@ Hydro.prototype.attachProxies = function() {
 
 Hydro.prototype.global = function() {
   return this.get('attach') || globalo();
-};
-
-/**
- * Load the specified formatter if any.
- *
- * @api private
- */
-
-Hydro.prototype.loadFormatter = function() {
-  var name = this.get('formatter');
-  var formatter = null;
-  if (!name) return;
-  formatter = loa(name);
-  if (util.isFunction(formatter)) formatter = new formatter;
-  formatter.use(this);
 };
 
 /**
@@ -1067,6 +1054,20 @@ Base.extend = extend;
 inherits(Base, Emitter);
 
 /**
+ * ensure callbacks are called in the correct context
+ */
+
+Base.prototype.on = function(event, fn) {
+  var self = this
+  return Emitter.prototype.on.call(this, event, function(done){
+    if (fn.length) return fn.call(self.context, done);
+    try { fn.call(self.context); }
+    catch (e) { return done(e); }
+    done();
+  });
+};
+
+/**
  * Configure test timeout.
  *
  * @param {Number} ms
@@ -1112,15 +1113,7 @@ Base.prototype.pending = function() {
  */
 
 Base.prototype.fullTitle = function() {
-  var parents = this.parents().splice(1);
-  var fullTitle = [];
-
-  for (var i = 0, len = parents.length; i < len; i++) {
-    fullTitle.push(parents[i].title);
-  }
-
-  fullTitle.push(this.title);
-  return fullTitle.join(' ');
+  return this.suite.fullTitle() + ' ' + this.title;
 };
 
 /**
@@ -1135,7 +1128,8 @@ Base.prototype.run = function(emitter, done) {
   var self = this;
   var events = this.events;
 
-  emitter.emit(events.pre, this, function() {
+  emitter.emit(events.pre, this, function(err) {
+    if (err) return done(err);
     var disabled = self.status === 'pending' || self.status === 'skipped';
     if (disabled) return emitter.emit(events.post, self, done);
     self.emit('before', function(err) {
@@ -1314,8 +1308,7 @@ var util = require('../util');
 function Suite(title) {
   this.title = util.isFunction(title) ? util.fnName(title) : title;
   this.parent = null;
-  this.tests = [];
-  this.suites = [];
+  this.runnables = [];
   this.events = {
     pre: 'pre:suite',
     post: 'post:suite'
@@ -1337,7 +1330,7 @@ inherits(Suite, Emitter)
 
 Suite.prototype.addTest = function(test) {
   test.suite = this;
-  this.tests.push(test);
+  this.runnables.push(test);
 };
 
 /**
@@ -1349,7 +1342,7 @@ Suite.prototype.addTest = function(test) {
 
 Suite.prototype.addSuite = function(suite) {
   suite.parent = this;
-  this.suites.push(suite);
+  this.runnables.push(suite);
 };
 
 /**
@@ -1362,7 +1355,7 @@ Suite.prototype.addSuite = function(suite) {
 
 Suite.prototype.run = function(emitter, fn) {
   var self = this;
-  var runnable = this.tests.slice(0).concat(this.suites.slice(0));
+  var runnable = this.runnables.slice();
   var current = null;
   var events = this.events;
 
@@ -1393,6 +1386,19 @@ Suite.prototype.run = function(emitter, fn) {
 
 Suite.prototype.parents = function() {
   return this.parent.parents().concat(this.parent);
+};
+
+/**
+ * Return the suites full title
+ *
+ * @return {String}
+ * @api public
+ */
+
+Suite.prototype.fullTitle = function() {
+  var base = this.parent.fullTitle();
+  if (base) base += ' ';
+  return base + this.title;
 };
 
 /**
@@ -1437,16 +1443,6 @@ function RootSuite() {
 inherits(RootSuite, Suite);
 
 /**
- * The root suite can't have any tests.
- *
- * @api public
- */
-
-RootSuite.prototype.addTest = function() {
-  throw new Error('Please add a test suite');
-};
-
-/**
  * The root suite doesn't have any parent suites.
  *
  * @returns {Array}
@@ -1455,6 +1451,17 @@ RootSuite.prototype.addTest = function() {
 
 RootSuite.prototype.parents = function() {
   return [];
+};
+
+/**
+ * The root suite has an empty title
+ *
+ * @returns {String}
+ * @api public
+ */
+
+RootSuite.prototype.fullTitle = function() {
+  return '';
 };
 
 /**
@@ -1800,6 +1807,17 @@ exports.fnName = function(fn) {
  */
 
 exports.noop = function(){};
+
+/**
+ * a callback which ensures users hear about errors
+ *
+ * @param {Error} err
+ * @api public
+ */
+
+exports.rethrow = function(err) {
+  if (err) setTimeout(function(){ throw err; }, 0);
+};
 
 });
 
