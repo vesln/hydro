@@ -35,9 +35,7 @@
     "hydro-tap": "*",
     "hydro-file-suite": "*",
     "hydro-minimal": "*",
-    "istanbul": "~0.1.46",
-    "serve": "jkroso/serve#1.5.1",
-    "envc": "~1.0.0"
+    "istanbul": "~0.1.46"
   },
   "files": ["bin", "lib"]
 }
