@@ -1,27 +1,22 @@
 #!/usr/bin/env node
 
 /**
- * Core dependencies.
+ * Dependencies.
  */
 
 var fs = require('fs');
 var resolve = require('path').resolve;
+var argv = require('argvee')();
+var hydro = require('..')();
 
 /**
- * External dependencies.
+ * Locals.
  */
 
-var argv = require('argvee')();
+var conf = [];
 var options = {};
 
 /**
- * Internal dependencies.
- */
-
-var hydro = require('..')();
-var conf = [];
-
-/*!
  * Setup files
  */
 
@@ -72,7 +67,7 @@ conf.forEach(function(file) {
 
 var arrayParams = { plugins: true };
 
-/*!
+/**
  * Migrate options
  */
 
@@ -104,7 +99,7 @@ Object.keys(options).forEach(function(key) {
 });
 
 /**
- * resolve formatter relative to $PWD
+ * Resolve formatter relative to $PWD
  */
 
 if ('formatter' in options) {
