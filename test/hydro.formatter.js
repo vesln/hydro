@@ -16,4 +16,4 @@ t('formatter as string', function(done) {
   hydro.run(function() {
     done();
   });
-}).skip(typeof window !== 'undefined');
+});
