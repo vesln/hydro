@@ -1,4 +1,3 @@
-
 t('formatter as function', function(done) {
   var hydro = new Hydro;
   var called = false;

@@ -1,4 +1,3 @@
-
 var tryc = require('tryc');
 
 t('no params', function() {
