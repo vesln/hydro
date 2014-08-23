@@ -1,13 +1,8 @@
 /**
- * External dependencies.
+ * Dependencies.
  */
 
 var assert = require('assert');
-
-/**
- * Internal dependencies.
- */
-
 var Hydro = require('./');
 
 /**

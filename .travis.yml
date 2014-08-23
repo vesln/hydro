@@ -1,11 +1,6 @@
 language: node_js
 node_js:
-  - 0.8
-  - 0.1
+  - 0.10
   - 0.11
 script:
   - make test-ci
-env:
-  global:
-  - secure: AVgw3uojXICy8fZTblAGVLoTplp0RiXYki0GDRuvDJmR6nVW1NXBN4iQh27uocWX4HRiuUBefrtYw3DBleQ4rR9z4yPi/LrGmpNqWJMDwCg6uoPOcNgkSmnV7p027HXdRHJtNECapKT8g8o+grDFo87tG7XeAmlGaMc8jLzYWzE=
-  - secure: gVsX8b1AH25BhlAY/KXZKMmNQJntYjfs37ezamN9mEgzExAIWD+tgMF4m+G9wmEmVkoSDDa7OWDLnGbNB9FsDQ0NAjOTsktPxGqTPAUW2+do2gmydddABVRz7sLfXlGTp+gqX/mXqZSKT7qQ0T8BnDJwahqZ9NLwz9cdHDc86QA=
