@@ -3,11 +3,9 @@
 #
 
 cov_exec    := bin/_hydro
-istanbul    := node_modules/.bin/istanbul
-global_name := Hydro
 test_exec   := bin/hydro
+istanbul    := node_modules/.bin/istanbul
 npm         := npm
-source      := $(shell find lib -name '*.js')
 
 #
 # All

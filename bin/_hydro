@@ -99,14 +99,6 @@ Object.keys(options).forEach(function(key) {
 });
 
 /**
- * Resolve formatter relative to $PWD
- */
-
-if ('formatter' in options) {
-  options.formatter = resolve(options.formatter);
-}
-
-/**
  * Override the default options.
  */
 
