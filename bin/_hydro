@@ -15,6 +15,9 @@ var hydro = require('..')();
 
 var conf = [];
 var options = {};
+var commands = [ 'help', 'version' ];
+var arrayParams = { plugins: true };
+var failures = 0;
 
 /**
  * Setup files
@@ -29,12 +32,6 @@ if (argv.param('setup')) {
 }
 
 delete argv.params['setup'];
-
-/**
- * Commands.
- */
-
-var commands = ['help', 'version'];
 
 /**
  * Set `NODE_ENV` to test if none
@@ -60,12 +57,6 @@ conf.forEach(function(file) {
     if ('function' === typeof setup) setup(hydro);
   }
 });
-
-/**
- * Params which are always arrays
- */
-
-var arrayParams = { plugins: true };
 
 /**
  * Migrate options
@@ -119,8 +110,6 @@ commands.forEach(function(command) {
  * Failed tests counter.
  */
 
-var failures = 0;
-
 hydro.on('post:test', function(test) {
   failures += test.status === 'failed' ? 1 : 0;
 });
@@ -129,7 +118,7 @@ hydro.on('post:test', function(test) {
  * Seek and destroy.
  */
 
-hydro.run(function(e) {
-  if (e) throw e;
+hydro.run(function(err) {
+  if (err) throw err;
   process.exit(failures);
 });
