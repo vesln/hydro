@@ -1,6 +1,8 @@
 [![NPM
-version](https://badge.fury.io/js/hydro.png)](http://badge.fury.io/js/hydro)
-[![Build Status](https://secure.travis-ci.org/hydrojs/hydro.png)](http://travis-ci.org/hydrojs/hydro)
+version](https://img.shields.io/npm/v/hydro.svg?style=flat-square)](https://www.npmjs.org/package/hydro)
+[![Build Status](https://img.shields.io/travis/hydrojs/hydro.svg?style=flat-square)](http://travis-ci.org/hydrojs/hydro)
+[![Dependencies](http://img.shields.io/david/hydrojs/hydro.svg?style=flat-square)](https://david-dm.org/hydrojs/hydro)
+[![Dev Dependencies](http://img.shields.io/david/dev/hydrojs/hydro.svg?style=flat-square)](https://david-dm.org/hydrojs/hydro)
 
 # hydro
 
