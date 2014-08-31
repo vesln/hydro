@@ -28,19 +28,6 @@ t('toArray', function() {
   assert(_.toArray('foo')[0] === 'foo');
 });
 
-t('forEach', function() {
-  var arr = [1, 2 ,3];
-  var actual = [];
-
-  _.forEach(arr, function(i) {
-    actual.push(i);
-  });
-
-  assert(arr[0] == actual[0]);
-  assert(arr[1] == actual[1]);
-  assert(arr[2] == actual[2]);
-});
-
 t('eachKey', function() {
   function Klass(){}
   Klass.prototype.unknown = 3;
