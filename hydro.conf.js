@@ -3,7 +3,7 @@
  */
 
 var assert = require('assert');
-var Hydro = require('.');
+var Hydro = require('./');
 var fileSuite = require('./test/support/plugins/file-suite');
 var interface = require('./test/support/plugins/interface');
 var Formatter = require('./test/support/plugins/formatter');
