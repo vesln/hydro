@@ -1,4 +1,4 @@
-t('root suite', function() {
+t('top-level suite', function() {
   var hydro = new Hydro;
 
   hydro.set('suite', 'default');
