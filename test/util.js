@@ -1,4 +1,4 @@
-var _ = Hydro.util;
+var _ = require('../lib/hydro/util');
 
 t('isString', function() {
   assert(_.isString('str'));
