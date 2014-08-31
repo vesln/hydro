@@ -1,4 +1,4 @@
-var Suite = require('../lib/hydro/suite');
+var Suite = require('../lib/suite');
 
 t('before', function(done) {
   var called = false;

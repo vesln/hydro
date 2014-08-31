@@ -1,4 +1,4 @@
-var Test = require('../lib/hydro/test');
+var Test = require('../lib/test');
 
 t('before', function(done) {
   var called = false;
