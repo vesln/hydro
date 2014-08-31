@@ -8,7 +8,7 @@
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
   "scripts": {
-    "test": "make test"
+    "test": "hydro"
   },
   "repository": {
     "type": "git",
