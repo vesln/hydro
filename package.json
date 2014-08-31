@@ -7,6 +7,7 @@
   "homepage": "https://github.com/hydrojs/hydro",
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
+  "files": [ "bin", "lib" ],
   "scripts": {
     "test": "hydro"
   },
@@ -15,8 +16,8 @@
     "url": "https://github.com/hydrojs/hydro"
   },
   "bin": {
-    "hydro": "./bin/hydro",
-    "_hydro": "./bin/_hydro"
+    "hydro": "bin/hydro",
+    "_hydro": "bin/_hydro"
   },
   "dependencies": {
     "super": "*",
@@ -29,13 +30,10 @@
     "argvee": "~0.1.1"
   },
   "devDependencies": {
-    "nixt": "*",
+    "eyehurt": "0.0.1",
     "hydro-silent": "*",
-    "hydro-simple": "*",
-    "hydro-tap": "*",
-    "hydro-file-suite": "*",
-    "hydro-minimal": "*",
-    "istanbul": "~0.1.46"
-  },
-  "files": ["bin", "lib"]
+    "istanbul": "~0.1.46",
+    "nixt": "*",
+    "printr": "^1.0.0"
+  }
 }

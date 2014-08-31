@@ -3,7 +3,10 @@
  */
 
 var assert = require('assert');
-var Hydro = require('./');
+var Hydro = require('.');
+var fileSuite = require('./test/support/plugins/file-suite');
+var interface = require('./test/support/plugins/interface');
+var Formatter = require('./test/support/plugins/formatter');
 
 /**
  * Setup `hydro`.
@@ -14,15 +17,9 @@ var Hydro = require('./');
 
 module.exports = function(hydro) {
   hydro.set({
-    formatter: 'hydro-simple',
-    plugins: [
-      'hydro-file-suite',
-      'hydro-minimal'
-    ],
-    globals: {
-      assert: assert,
-      Hydro: Hydro
-    },
+    formatter: Formatter,
+    plugins: [ fileSuite, interface ],
+    globals: { assert: assert, Hydro: Hydro },
     tests: [
       'test/*.js',
       'test/integration/',

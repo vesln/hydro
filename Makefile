@@ -43,7 +43,7 @@ test-node: node_modules
 #
 
 test-cov: node_modules
-	@$(istanbul) cover $(cov_exec) -- --formatter hydro-silent
+	@$(istanbul) cover $(cov_exec)
 
 #
 # CI
