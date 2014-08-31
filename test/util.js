@@ -57,3 +57,11 @@ t('fnName', function() {
   var fn = function TestFunction() {};
   assert(_.fnName(fn) === 'TestFunction');
 });
+
+t('title', function() {
+  var fn = function TestFunction() {};
+  var str = 'title';
+
+  assert.equal(_.title(fn), 'TestFunction');
+  assert.equal(_.title(str), 'title');
+});
