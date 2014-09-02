@@ -13,20 +13,18 @@ t('test creation without meta', function() {
 });
 
 t('test creation with meta and without body', function() {
-  var test = hydro.createTest('foo', 'bar', 'baz');
+  var test = hydro.createTest('foo', { foo: 'bar' });
 
   assert(test.title === 'foo');
-  assert(test.meta[0] === 'bar');
-  assert(test.meta[1] === 'baz');
+  assert(test.meta.foo === 'bar');
 });
 
 t('test creation with meta and with body', function() {
-  var test = hydro.createTest('foo', 'bar', 'baz', fn);
+  var test = hydro.createTest('foo', { foo: 'bar' }, fn);
 
   assert(test.title === 'foo');
   assert(test.fn === fn);
-  assert(test.meta[0] === 'bar');
-  assert(test.meta[1] === 'baz');
+  assert(test.meta.foo === 'bar');
 });
 
 t('setting test timeout', function() {
