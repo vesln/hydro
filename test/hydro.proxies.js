@@ -3,7 +3,7 @@ t('attaching a proxy', function(done) {
   var target = {};
 
   hydro.set({
-    attach: target,
+    global: target,
     proxies: { 't': 'addTest' }
   });
 

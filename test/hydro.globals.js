@@ -2,7 +2,7 @@ t('setting globals to target', function() {
   var hydro = new Hydro;
   var obj = {};
 
-  hydro.set('attach', obj);
+  hydro.set('global', obj);
   hydro.push('plugins', plugin);
 
   hydro.run(function() {

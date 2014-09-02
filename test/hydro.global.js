@@ -1,8 +1,8 @@
-t('specifying attach target', function(done) {
+t('specifying global target', function(done) {
   var hydro = new Hydro;
   var obj = {};
 
-  hydro.set('attach', obj);
+  hydro.set('global', obj);
   hydro.set('globals', { foo: 'bar' });
 
   hydro.run(function() {
