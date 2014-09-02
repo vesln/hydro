@@ -18,6 +18,14 @@ t('--help', function(done) {
   .end(done);
 });
 
+t('--help with custom plugin paths', function(done) {
+  cli()
+  .stdout(/foo Bar/)
+  .run('--help --plugins ' + fixturePath('plugin.js') + ' ' + fixturePath('ensure-plugin-loaded.js'))
+  .code(0)
+  .end(done);
+});
+
 t('--plugins', function(done) {
   cli()
   .stdout(/fixturePlugin is set to 1/)
