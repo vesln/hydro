@@ -5,6 +5,6 @@
  */
 
 var argv = require('argvee')();
-var cli = require('../lib/cli/');
+var hydro = require('..')();
 
-cli(argv).run();
+hydro.cli(argv);
