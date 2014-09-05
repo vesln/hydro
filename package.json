@@ -1,13 +1,14 @@
 {
   "name": "hydro",
   "version": "0.10.1",
-  "preferGlobal": true,
   "description": "Teeny-weeny test runner for Node.js",
   "main": "lib/hydro.js",
   "homepage": "https://github.com/hydrojs/hydro",
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
-  "files": [ "bin", "lib" ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "test": "hydro"
   },
@@ -15,21 +16,16 @@
     "type": "git",
     "url": "https://github.com/hydrojs/hydro"
   },
-  "bin": {
-    "hydro": "bin/hydro",
-    "_hydro": "bin/_hydro"
-  },
   "dependencies": {
     "super": "*",
     "evts": "0.1.0",
     "tryc": "~0.1.0",
     "fload": "~0.1.0",
-    "loa": "0.0.2",
-    "v8-argv": "~0.2.0",
-    "argvee": "~0.1.1"
+    "loa": "0.0.2"
   },
   "devDependencies": {
     "eyehurt": "0.0.1",
+    "hydro-cli": "^0.1.0",
     "hydro-silent": "*",
     "istanbul": "~0.1.46",
     "nixt": "*",
