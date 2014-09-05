@@ -1,6 +1,7 @@
 var join = require('path').join;
 var nixt = require('nixt');
-var bin = join(__dirname, '..', '..', 'bin');
+var basedir = join(__dirname, '..', '..');
+var hydroExec = join(basedir, 'node_modules', '.bin', 'hydro');
 
 t('--version', function(done) {
   cli()
@@ -43,7 +44,9 @@ t('two --plugins', function(done) {
 });
 
 function cli() {
-  return nixt({ newlines: false }).cwd(bin).base('./hydro ');
+  return nixt({ newlines: false })
+    .cwd(basedir)
+    .base(hydroExec + ' ');
 }
 
 function fixturePath(fileName) {

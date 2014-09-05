@@ -1,4 +1,0 @@
-#!/usr/bin/env node
-
-var join = require('path').join;
-require('v8-argv')(join(__dirname, '_hydro'));

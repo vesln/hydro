@@ -6,9 +6,11 @@
   "homepage": "https://github.com/hydrojs/hydro",
   "author": "Veselin Todorov <hi@vesln.com>",
   "license": "MIT",
-  "files": [ "lib" ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "test": "bin/_hydro"
+    "test": "hydro"
   },
   "repository": {
     "type": "git",
@@ -19,12 +21,11 @@
     "evts": "0.1.0",
     "tryc": "~0.1.0",
     "fload": "~0.1.0",
-    "loa": "0.0.2",
-    "v8-argv": "~0.2.0",
-    "argvee": "~0.1.1"
+    "loa": "0.0.2"
   },
   "devDependencies": {
     "eyehurt": "0.0.1",
+    "hydro-cli": "^0.1.0",
     "hydro-silent": "*",
     "istanbul": "~0.1.46",
     "nixt": "*",
