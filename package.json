@@ -10,7 +10,8 @@
     "lib"
   ],
   "scripts": {
-    "test": "hydro"
+    "test": "hydro",
+    "test-cov": "istanbul cover _hydro"
   },
   "repository": {
     "type": "git",

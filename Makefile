@@ -2,8 +2,8 @@
 # Variables
 #
 
-cov_exec    := bin/_hydro
-test_exec   := bin/hydro
+cov_exec    := node_modules/.bin/_hydro
+test_exec   := node_modules/.bin/hydro
 istanbul    := node_modules/.bin/istanbul
 npm         := npm
 
@@ -46,12 +46,6 @@ test-cov: node_modules
 	@$(istanbul) cover $(cov_exec)
 
 #
-# CI
-#
-
-test-ci: test-node
-
-#
 # Clean node_modules
 #
 
@@ -77,5 +71,5 @@ node_modules: package.json
 # Commands to always run regardless of timestamps
 #
 
-.PHONY: test-node test-cov test-ci test-sauce
+.PHONY: test-node test-cov
 .PHONY: clean-node clean-cov
