@@ -52,18 +52,3 @@ t('title', function() {
   assert.equal(_.title(fn), 'TestFunction');
   assert.equal(_.title(str), 'title');
 });
-
-t('delegate', function() {
-  var called = false;
-  var source = {};
-  var target = {
-    work: function() {
-      called = true;
-    }
-  };
-
-  _.delegate(source, target, [ 'work' ]);
-  source.work();
-
-  assert(called);
-});

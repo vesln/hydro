@@ -18,11 +18,12 @@
     "url": "https://github.com/hydrojs/hydro"
   },
   "dependencies": {
-    "super": "*",
+    "delegates": "0.0.3",
     "evts": "0.1.0",
-    "tryc": "~0.1.0",
     "fload": "~0.1.0",
-    "loa": "0.0.2"
+    "loa": "0.0.2",
+    "super": "*",
+    "tryc": "~0.1.0"
   },
   "devDependencies": {
     "eyehurt": "0.0.1",
