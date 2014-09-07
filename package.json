@@ -23,6 +23,7 @@
     "fload": "~0.1.0",
     "loa": "0.0.2",
     "super": "*",
+    "timer-ref": "^1.0.0",
     "tryc": "~0.1.0"
   },
   "devDependencies": {
